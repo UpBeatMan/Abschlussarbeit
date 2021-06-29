@@ -1,4 +1,4 @@
-# fiprotima
+# Digital Forensics Scenario Creator - DFSC (fomer: fiprotima)
 
 Browser Profile Timestamp Manipulator forked from hirthirt
 
