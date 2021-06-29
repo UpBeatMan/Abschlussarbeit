@@ -19,9 +19,16 @@ VALIDNOTBEFORE = "Nicht valide vor"
 
 
 class Extension(BaseJSONClass):
-    def __init__(self, id, name, install_timestamp,
-                update_timestamp, signed_timestamp, 
-                validnotafter_timestamp, validnotbefore_timestamp):
+    def __init__(
+        self,
+        id,
+        name,
+        install_timestamp,
+        update_timestamp,
+        signed_timestamp,
+        validnotafter_timestamp,
+        validnotbefore_timestamp,
+    ):
         self.id = id
         self.name = name
         self.install_timestamp = int(install_timestamp)
@@ -47,21 +54,35 @@ class Extension(BaseJSONClass):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.name))
-        self.attr_list.append(BaseAttribute(INSTALLDDATE, DT_SEC_ZEROED_MILLI, self.install_timestamp))
+        self.attr_list.append(
+            BaseAttribute(INSTALLDDATE, DT_SEC_ZEROED_MILLI, self.install_timestamp)
+        )
         if self.update_timestamp:
-            self.attr_list.append(BaseAttribute(UPDATEDATE, DT_SEC_ZEROED_MILLI, self.update_timestamp))
+            self.attr_list.append(
+                BaseAttribute(UPDATEDATE, DT_SEC_ZEROED_MILLI, self.update_timestamp)
+            )
         else:
             self.attr_list.append(BaseAttribute(UPDATEDATE, OTHER, "None"))
         if self.signed_timestamp:
-            self.attr_list.append(BaseAttribute(SIGNEDDATE, DT_SEC_ZEROED_MILLI, self.signed_timestamp))
+            self.attr_list.append(
+                BaseAttribute(SIGNEDDATE, DT_SEC_ZEROED_MILLI, self.signed_timestamp)
+            )
         else:
             self.attr_list.append(BaseAttribute(SIGNEDDATE, OTHER, "None"))
         if self.validnotafter_timestamp:
-            self.attr_list.append(BaseAttribute(VALIDNOTAFTER, DT_SEC_ZEROED_MILLI, self.validnotafter_timestamp))
+            self.attr_list.append(
+                BaseAttribute(
+                    VALIDNOTAFTER, DT_SEC_ZEROED_MILLI, self.validnotafter_timestamp
+                )
+            )
         else:
             self.attr_list.append(BaseAttribute(VALIDNOTAFTER, OTHER, "None"))
         if self.validnotbefore_timestamp:
-            self.attr_list.append(BaseAttribute(VALIDNOTBEFORE, DT_SEC_ZEROED_MILLI, self.validnotbefore_timestamp))
+            self.attr_list.append(
+                BaseAttribute(
+                    VALIDNOTBEFORE, DT_SEC_ZEROED_MILLI, self.validnotbefore_timestamp
+                )
+            )
         else:
             self.attr_list.append(BaseAttribute(VALIDNOTBEFORE, OTHER, "None"))
 
@@ -76,7 +97,9 @@ class Extension(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.install_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == UPDATEDATE:
@@ -85,7 +108,9 @@ class Extension(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.update_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == SIGNEDDATE:
@@ -94,7 +119,9 @@ class Extension(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.signed_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == VALIDNOTAFTER:
@@ -103,7 +130,9 @@ class Extension(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.validnotafter_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == VALIDNOTBEFORE:
@@ -112,7 +141,9 @@ class Extension(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.validnotbefore_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -120,13 +151,23 @@ class Extension(BaseJSONClass):
 class ExtensionsHandler(BaseJSONHandler):
     name = "Extensions"
 
-    attr_names = [NAME, INSTALLDDATE, UPDATEDATE, SIGNEDDATE, VALIDNOTAFTER, VALIDNOTBEFORE]
+    attr_names = [
+        NAME,
+        INSTALLDDATE, # FIXME: TYPO "INSTALLDATE" _
+        UPDATEDATE,
+        SIGNEDDATE,
+        VALIDNOTAFTER,
+        VALIDNOTBEFORE,
+    ]
 
     extensions = []
     json_all = dict
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name: str = "extensions.json",
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name: str = "extensions.json",
     ):
         super().__init__(profile_path, file_name)
 
@@ -156,11 +197,18 @@ class ExtensionsHandler(BaseJSONHandler):
             except:
                 validnotafter = None
             try:
-                 validnotbefore = json_extension["recommendationState"]["validNotBefore"]
+                validnotbefore = json_extension["recommendationState"]["validNotBefore"]
             except:
                 validnotbefore = None
-            extension = Extension(id, name, installdate, updatedate, signeddate,
-                        validnotafter, validnotbefore)
+            extension = Extension(
+                id,
+                name,
+                installdate,
+                updatedate,
+                signeddate,
+                validnotafter,
+                validnotbefore,
+            )
             self.caretakers.append(Caretaker(extension))
             self.extensions.append(extension)
 
@@ -175,10 +223,13 @@ class ExtensionsHandler(BaseJSONHandler):
             if self.extensions[id].signed_timestamp:
                 json_extension["signedDate"] = self.extensions[id].signed_timestamp
             if self.extensions[id].validnotafter_timestamp:
-                json_extension["recommendationState"]["validNotAfter"] = self.extensions[id].validnotafter_timestamp
+                json_extension["recommendationState"][
+                    "validNotAfter"
+                ] = self.extensions[id].validnotafter_timestamp
             if self.extensions[id].validnotbefore_timestamp:
-                json_extension["recommendationState"]["validNotBefore"] = self.extensions[id].validnotbefore_timestamp
-
+                json_extension["recommendationState"][
+                    "validNotBefore"
+                ] = self.extensions[id].validnotbefore_timestamp
 
         self.json_all["extensions"] = json_extensions
 

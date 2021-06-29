@@ -26,7 +26,9 @@ class Addon(BaseJSONClass):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.name))
-        self.attr_list.append(BaseAttribute(UPDATEDATE, DT_SEC_ZEROED_MILLI, self.update_timestamp))
+        self.attr_list.append(
+            BaseAttribute(UPDATEDATE, DT_SEC_ZEROED_MILLI, self.update_timestamp)
+        )
 
     def update(self, delta):
         if not delta:
@@ -53,7 +55,10 @@ class AddonsHandler(BaseJSONHandler):
     json_all = dict
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name: str = "addons.json",
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name: str = "addons.json",
     ):
         super().__init__(profile_path, file_name)
 

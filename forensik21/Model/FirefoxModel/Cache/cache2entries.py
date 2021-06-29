@@ -37,9 +37,15 @@ class CacheEntry(BaseCacheClass):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.url))
-        self.attr_list.append(BaseAttribute(LASTFETCHED, DT_SEC, self.last_fetched_timestamp))
-        self.attr_list.append(BaseAttribute(LASTMODIFIED, DT_SEC, self.last_modified_timestamp))
-        self.attr_list.append(BaseAttribute(EXPIRATION, DT_SEC, self.expiration_timestamp))
+        self.attr_list.append(
+            BaseAttribute(LASTFETCHED, DT_SEC, self.last_fetched_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(LASTMODIFIED, DT_SEC, self.last_modified_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(EXPIRATION, DT_SEC, self.expiration_timestamp)
+        )
 
     def update(self, delta):
         if not delta:
@@ -84,7 +90,10 @@ class CacheEntryHandler(BaseCacheHandler):
     cache_entries = []
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name=os.path.join("cache2", "entries")
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name=os.path.join("cache2", "entries"),
     ):
         super().__init__(cache_path, file_name)
 

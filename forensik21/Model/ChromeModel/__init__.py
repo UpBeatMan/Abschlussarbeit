@@ -8,8 +8,8 @@ from Model.ChromeModel.SQLite.base import OTHER
 
 from Model.util import log_message
 
-class ChromeModel:
 
+class ChromeModel:
     def __init__(self, profile_path: str = None):
         if profile_path is None:
             return
@@ -24,13 +24,20 @@ class ChromeModel:
         self.save_state = {}
         for key in self.data_dict:
             self.save_state[key] = True
-        
 
     def get_unsaved_handlers(self):
-        return [self.save_state[handler] for handler in self.save_state if self.save_state[handler] == False ]
+        return [
+            self.save_state[handler]
+            for handler in self.save_state
+            if self.save_state[handler] == False
+        ]
 
     def get_saved_handlers(self):
-        return [self.save_state[handler] for handler in self.save_state if self.save_state[handler] == True ]
+        return [
+            self.save_state[handler]
+            for handler in self.save_state
+            if self.save_state[handler] == True
+        ]
 
     def get_data(self):
         data_dict = {}
@@ -45,7 +52,7 @@ class ChromeModel:
                     item.reload_attributes()
                 except:
                     pass
-    
+
     def get_history(self):
         histroy_tree = {}
         for entry in self.data_dict["VisitsHandler"]:
@@ -53,7 +60,9 @@ class ChromeModel:
                 histroy_tree[entry] = []
             else:
                 for tree_entry in histroy_tree:
-                    if entry.from_visit == tree_entry.id or entry.from_visit in [sube.id for sube in histroy_tree[tree_entry]]:
+                    if entry.from_visit == tree_entry.id or entry.from_visit in [
+                        sube.id for sube in histroy_tree[tree_entry]
+                    ]:
                         histroy_tree[tree_entry].append(entry)
         return histroy_tree
 
@@ -66,17 +75,17 @@ class ChromeModel:
                     history_last_time = attr.value
         except:
             last_history_item = datetime.now()
-        
+
         return history_last_time
 
     def get_additional_info(self, data_type, identifier):
         if data_type == "history":
             data_dict = {
-                "Cookies" : [],
-                "Favicons" : [],
-                "Downloads" : [],
-                "Logins" : [],
-                "CompromisedCreds" : []
+                "Cookies": [],
+                "Favicons": [],
+                "Downloads": [],
+                "Logins": [],
+                "CompromisedCreds": [],
             }
 
             try:
@@ -127,13 +136,13 @@ class ChromeModel:
 
     def get_keywords(self):
         return self.data_dict["KeywordHandler"]
-    
+
     def get_form_history(self):
         return self.data_dict["AutofillHandler"]
 
     def get_cache(self):
         return self.data_dict["CacheEntryHandler"]
-    
+
     def get_specific_data(self, id):
         if id in self.data_dict:
             if self.data_dict[id]:
@@ -185,7 +194,7 @@ class ChromeModel:
                     for attr in item.attr_list:
                         if attr.type != OTHER:
                             delta = attr.value.timestamp() - date.timestamp()
-                            break  
+                            break
                     item.update(delta)
                     self.save_state[selected[0]] = False
                     try:

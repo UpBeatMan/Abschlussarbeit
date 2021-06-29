@@ -51,10 +51,11 @@ class ContentPref(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.created_at_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Extensions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Extensions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
-
 
 
 class ContentPrefGroup(BaseSession, BaseSQLiteClass):

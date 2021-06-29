@@ -12,7 +12,7 @@ from Model.EdgeModel.JSON.base import (
     DT_SIMPLE_STRING,
     DT_WEBKIT,
     DT_WEBKIT_SEC,
-    DT_SEC_DOT_MICRO
+    DT_SEC_DOT_MICRO,
 )
 
 ACCTRKUPDATE = "Account Tracker Update"
@@ -29,17 +29,22 @@ LASTCREDREMOVED = "Anmeldedaten entfernt"
 LASTSAFEBROWSLOGTIME = "Letzter Safebrowsing-Log"
 
 
-
-
 class Profile(BaseJSONClass):
-    def __init__(self, account_tracker_service_update, 
-                notification_service_first_run, default_browser_declined,
-                last_update, domain_diversity_last_reporting,
-                extension_sig_expire, extension_sig_timestamp,
-                gaia_cookie_changed, profile_create_time,
-                profile_last_engagement, profile_last_credential_remove,
-                safebrowsing_last_log
-        ):
+    def __init__(
+        self,
+        account_tracker_service_update,
+        notification_service_first_run,
+        default_browser_declined,
+        last_update,
+        domain_diversity_last_reporting,
+        extension_sig_expire,
+        extension_sig_timestamp,
+        gaia_cookie_changed,
+        profile_create_time,
+        profile_last_engagement,
+        profile_last_credential_remove,
+        safebrowsing_last_log,
+    ):
         if account_tracker_service_update:
             self.account_tracker_service_update = int(account_tracker_service_update)
         else:
@@ -88,40 +93,79 @@ class Profile(BaseJSONClass):
             self.safebrowsing_last_log = int(safebrowsing_last_log)
         else:
             self.safebrowsing_last_log = safebrowsing_last_log
-        
 
         self.init()
 
     def init(self):
         self.is_date_changed = False
-        self.id = random.randint(0,99)
+        self.id = random.randint(0, 99)
         self.attr_list = []
         if self.profile_create_time:
-            self.attr_list.append(BaseAttribute(PROFILECREATED, DT_WEBKIT, self.profile_create_time))
+            self.attr_list.append(
+                BaseAttribute(PROFILECREATED, DT_WEBKIT, self.profile_create_time)
+            )
         if self.profile_last_engagement:
-            self.attr_list.append(BaseAttribute(PROFILEENGAGEMENT, DT_WEBKIT, self.profile_last_engagement))
+            self.attr_list.append(
+                BaseAttribute(
+                    PROFILEENGAGEMENT, DT_WEBKIT, self.profile_last_engagement
+                )
+            )
         if self.profile_last_credential_remove:
-            self.attr_list.append(BaseAttribute(LASTCREDREMOVED, DT_SEC_DOT_MICRO, self.profile_last_credential_remove))
+            self.attr_list.append(
+                BaseAttribute(
+                    LASTCREDREMOVED,
+                    DT_SEC_DOT_MICRO,
+                    self.profile_last_credential_remove,
+                )
+            )
         if self.account_tracker_service_update:
-            self.attr_list.append(BaseAttribute(ACCTRKUPDATE, DT_WEBKIT, self.account_tracker_service_update))
+            self.attr_list.append(
+                BaseAttribute(
+                    ACCTRKUPDATE, DT_WEBKIT, self.account_tracker_service_update
+                )
+            )
         if self.notification_service_first_run:
-            self.attr_list.append(BaseAttribute(NOTIFSERVICEFIRSTRUN, DT_WEBKIT, self.notification_service_first_run))
+            self.attr_list.append(
+                BaseAttribute(
+                    NOTIFSERVICEFIRSTRUN, DT_WEBKIT, self.notification_service_first_run
+                )
+            )
         if self.default_browser_declined:
-            self.attr_list.append(BaseAttribute(DEFBROLASTDECLINED, DT_WEBKIT, self.default_browser_declined))
+            self.attr_list.append(
+                BaseAttribute(
+                    DEFBROLASTDECLINED, DT_WEBKIT, self.default_browser_declined
+                )
+            )
         if self.last_update:
-            self.attr_list.append(BaseAttribute(LASTUPDATE, DT_WEBKIT, self.last_update))
+            self.attr_list.append(
+                BaseAttribute(LASTUPDATE, DT_WEBKIT, self.last_update)
+            )
         if self.domain_diversity_last_reporting:
-            self.attr_list.append(BaseAttribute(LASTREPORT, DT_WEBKIT, self.domain_diversity_last_reporting))
+            self.attr_list.append(
+                BaseAttribute(
+                    LASTREPORT, DT_WEBKIT, self.domain_diversity_last_reporting
+                )
+            )
         if self.extension_sig_expire:
-            self.attr_list.append(BaseAttribute(EXTSIGEXPIRE, DT_SIMPLE_STRING, self.extension_sig_expire))
+            self.attr_list.append(
+                BaseAttribute(EXTSIGEXPIRE, DT_SIMPLE_STRING, self.extension_sig_expire)
+            )
         if self.extension_sig_timestamp:
-            self.attr_list.append(BaseAttribute(EXTSIGTIME, DT_WEBKIT, self.extension_sig_timestamp))
+            self.attr_list.append(
+                BaseAttribute(EXTSIGTIME, DT_WEBKIT, self.extension_sig_timestamp)
+            )
         if self.gaia_cookie_changed:
-            self.attr_list.append(BaseAttribute(GAIACOOKIECHANGED, DT_SEC_DOT_MICRO, self.gaia_cookie_changed))
+            self.attr_list.append(
+                BaseAttribute(
+                    GAIACOOKIECHANGED, DT_SEC_DOT_MICRO, self.gaia_cookie_changed
+                )
+            )
         if self.safebrowsing_last_log:
-            self.attr_list.append(BaseAttribute(LASTSAFEBROWSLOGTIME, DT_WEBKIT_SEC, self.safebrowsing_last_log))
-        
-
+            self.attr_list.append(
+                BaseAttribute(
+                    LASTSAFEBROWSLOGTIME, DT_WEBKIT_SEC, self.safebrowsing_last_log
+                )
+            )
 
     def update(self, delta):
         if not delta:
@@ -245,7 +289,9 @@ class ProfileHandler(BaseJSONHandler):
     json_all = dict
 
     def __init__(
-        self, profile_path: str, file_name: str = "Preferences",
+        self,
+        profile_path: str,
+        file_name: str = "Preferences",
     ):
         super().__init__(profile_path, file_name)
 
@@ -271,27 +317,26 @@ class ProfileHandler(BaseJSONHandler):
             ]
         except:
             notification_service_first_run = None
-        
-        
+
         try:
             default_browser_declined = self.json_all["browser"][
                 "default_browser_infobar_last_declined"
             ]
         except:
             default_browser_declined = None
-        
+
         try:
             last_update = self.json_all["data_reduction"]["last_update_date"]
         except:
             last_update = None
-        
+
         try:
             domain_diversity_last_reporting = self.json_all["domain_diversity"][
                 "last_reporting_timestamp"
             ]
         except:
             domain_diversity_last_reporting = None
-        
+
         try:
             extension_sig_expire = self.json_all["extensions"]["install_signature"][
                 "expire_date"
@@ -310,93 +355,111 @@ class ProfileHandler(BaseJSONHandler):
             gaia_cookie_changed = self.json_all["gaia_cookie"]["changed_time"]
         except:
             gaia_cookie_changed = None
-        
+
         try:
             profile_create_time = self.json_all["profile"]["creation_time"]
         except:
             profile_create_time = None
-        
+
         try:
             profile_last_engagement = self.json_all["profile"]["last_engagement_time"]
         except:
             profile_last_engagement = None
-        
+
         try:
             profile_last_credential_remove = self.json_all["profile"][
                 "last_time_obsolete_http_credentials_removed"
             ]
         except:
             profile_last_credential_remove = None
-        
+
         try:
-            safebrowsing_last_log = self.json_all["safebrowsing"]["metrics_last_log_time"]
+            safebrowsing_last_log = self.json_all["safebrowsing"][
+                "metrics_last_log_time"
+            ]
         except:
             safebrowsing_last_log = None
 
-        profile = Profile(account_tracker_service_update, notification_service_first_run,
-                            default_browser_declined, last_update, domain_diversity_last_reporting,
-                            extension_sig_expire, extension_sig_timestamp, gaia_cookie_changed, 
-                            profile_create_time, profile_last_engagement, profile_last_credential_remove,
-                            safebrowsing_last_log)
+        profile = Profile(
+            account_tracker_service_update,
+            notification_service_first_run,
+            default_browser_declined,
+            last_update,
+            domain_diversity_last_reporting,
+            extension_sig_expire,
+            extension_sig_timestamp,
+            gaia_cookie_changed,
+            profile_create_time,
+            profile_last_engagement,
+            profile_last_credential_remove,
+            safebrowsing_last_log,
+        )
         self.caretakers.append(Caretaker(profile))
         self.profile.append(profile)
-            
 
         return self.profile
 
     def commit(self):
-        
+
         if self.profile[0].account_tracker_service_update:
-            self.json_all[
-                    "account_tracker_service_last_update"
-                ] = self.profile[0].account_tracker_service_update
-        
+            self.json_all["account_tracker_service_last_update"] = self.profile[
+                0
+            ].account_tracker_service_update
+
         if self.profile[0].notification_service_first_run:
             self.json_all[
-                    "announcement_notification_service_first_run_time"
-                ] = self.profile[0].notification_service_first_run
-        
+                "announcement_notification_service_first_run_time"
+            ] = self.profile[0].notification_service_first_run
+
         if self.profile[0].default_browser_declined:
             self.json_all["browser"][
-                    "default_browser_infobar_last_declined"
-                ] = self.profile[0].default_browser_declined
-        
+                "default_browser_infobar_last_declined"
+            ] = self.profile[0].default_browser_declined
+
         if self.profile[0].last_update:
-            self.json_all["data_reduction"][
-                "last_update_date"] = self.profile[0].last_update
+            self.json_all["data_reduction"]["last_update_date"] = self.profile[
+                0
+            ].last_update
 
         if self.profile[0].domain_diversity_last_reporting:
             self.json_all["domain_diversity"][
-                    "last_reporting_timestamp"
-                ] = self.profile[0].domain_diversity_last_reporting
+                "last_reporting_timestamp"
+            ] = self.profile[0].domain_diversity_last_reporting
 
         if self.profile[0].extension_sig_expire:
             self.json_all["extensions"]["install_signature"][
-                    "expire_date"
-                ] = self.profile[0].extension_sig_expire
+                "expire_date"
+            ] = self.profile[0].extension_sig_expire
 
         if self.profile[0].extension_sig_timestamp:
             self.json_all["extensions"]["install_signature"][
-                    "timestamp"
-                ] = self.profile[0].extension_sig_timestamp
+                "timestamp"
+            ] = self.profile[0].extension_sig_timestamp
 
         if self.profile[0].gaia_cookie_changed:
-            self.json_all["gaia_cookie"]["changed_time"] = self.profile[0].gaia_cookie_changed
+            self.json_all["gaia_cookie"]["changed_time"] = self.profile[
+                0
+            ].gaia_cookie_changed
 
         if self.profile[0].profile_create_time:
-            self.json_all["profile"]["creation_time"] = self.profile[0].profile_create_time
+            self.json_all["profile"]["creation_time"] = self.profile[
+                0
+            ].profile_create_time
 
         if self.profile[0].profile_last_engagement:
-            self.json_all["profile"]["last_engagement_time"] = self.profile[0].profile_last_engagement
+            self.json_all["profile"]["last_engagement_time"] = self.profile[
+                0
+            ].profile_last_engagement
 
         if self.profile[0].profile_last_credential_remove:
             self.json_all["profile"][
-                    "last_time_obsolete_http_credentials_removed"
-                ] = self.profile[0].profile_last_credential_remove
+                "last_time_obsolete_http_credentials_removed"
+            ] = self.profile[0].profile_last_credential_remove
 
         if self.profile[0].safebrowsing_last_log:
-            self.json_all["safebrowsing"][
-                "metrics_last_log_time"] = self.profile[0].safebrowsing_last_log
+            self.json_all["safebrowsing"]["metrics_last_log_time"] = self.profile[
+                0
+            ].safebrowsing_last_log
 
         self.write_file()
 

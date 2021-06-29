@@ -39,25 +39,20 @@ import random
 from Model.EdgeModel.Cache.cacheAddress import CacheAddress, CacheAddressError
 from Model.EdgeModel.Cache.cacheData import CacheData
 
-from Model.EdgeModel.Cache.base import (
-    BaseCacheClass,
-    BaseAttribute,
-    DT_WEBKIT,
-    OTHER
-)
+from Model.EdgeModel.Cache.base import BaseCacheClass, BaseAttribute, DT_WEBKIT, OTHER
 
 from Model.util import log_message
 
 CREATEDAT = "Erstellt am"
 URL = "Url"
 
+
 class CacheEntry(BaseCacheClass):
     """
     See /net/disk_cache/disk_format.h for details.
     """
-    STATE = ["Normal",
-             "Evicted (data were deleted)",
-             "Doomed (shit happened)"]
+
+    STATE = ["Normal", "Evicted (data were deleted)", "Doomed (shit happened)"]
 
     def __init__(self, address):
         """
@@ -65,34 +60,32 @@ class CacheEntry(BaseCacheClass):
         """
         self.addr = address
         self.httpHeader = None
-        block = open(address.path + address.fileSelector, 'rb')
+        block = open(address.path + address.fileSelector, "rb")
 
         # Going to the right entry
-        block.seek(8192 + address.blockNumber*address.entrySize)
+        block.seek(8192 + address.blockNumber * address.entrySize)
 
         # Parsing basic fields
-        self.hash = struct.unpack('I', block.read(4))[0]
-        self.next = struct.unpack('I', block.read(4))[0]
-        self.rankingNode = struct.unpack('I', block.read(4))[0]
-        self.usageCounter = struct.unpack('I', block.read(4))[0]
-        self.reuseCounter = struct.unpack('I', block.read(4))[0]
-        self.state = struct.unpack('I', block.read(4))[0]
-        self.creationTime = struct.unpack('Q', block.read(8))[0]
-        self.keyLength = struct.unpack('I', block.read(4))[0]
-        self.keyAddress = struct.unpack('I', block.read(4))[0]
-
+        self.hash = struct.unpack("I", block.read(4))[0]
+        self.next = struct.unpack("I", block.read(4))[0]
+        self.rankingNode = struct.unpack("I", block.read(4))[0]
+        self.usageCounter = struct.unpack("I", block.read(4))[0]
+        self.reuseCounter = struct.unpack("I", block.read(4))[0]
+        self.state = struct.unpack("I", block.read(4))[0]
+        self.creationTime = struct.unpack("Q", block.read(8))[0]
+        self.keyLength = struct.unpack("I", block.read(4))[0]
+        self.keyAddress = struct.unpack("I", block.read(4))[0]
 
         dataSize = []
         for _ in range(4):
-            dataSize.append(struct.unpack('I', block.read(4))[0])
+            dataSize.append(struct.unpack("I", block.read(4))[0])
 
         self.data = []
         for index in range(4):
-            addr = struct.unpack('I', block.read(4))[0]
+            addr = struct.unpack("I", block.read(4))[0]
             try:
                 addr = CacheAddress(addr, address.path)
-                self.data.append(CacheData(addr, dataSize[index],
-                                                     True))
+                self.data.append(CacheData(addr, dataSize[index], True))
             except CacheAddressError:
                 pass
 
@@ -102,17 +95,19 @@ class CacheEntry(BaseCacheClass):
                 self.httpHeader = data
                 break
 
-        self.flags = struct.unpack('I', block.read(4))[0]
+        self.flags = struct.unpack("I", block.read(4))[0]
 
         # Skipping pad
-        block.seek(5*4, 1)
+        block.seek(5 * 4, 1)
 
         # Reading local key
         if self.keyAddress == 0:
-            self.key = struct.unpack(str(self.keyLength)+'s', block.read(self.keyLength))[0]
-            #self.key = ""
-            #for _ in range(self.keyLength):
-                #self.key += str(struct.unpack('c', block.read(1))[0])
+            self.key = struct.unpack(
+                str(self.keyLength) + "s", block.read(self.keyLength)
+            )[0]
+            # self.key = ""
+            # for _ in range(self.keyLength):
+            # self.key += str(struct.unpack('c', block.read(1))[0])
         # Key stored elsewhere
         else:
             addr = CacheAddress(self.keyAddress, address.path)
@@ -129,7 +124,6 @@ class CacheEntry(BaseCacheClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.key))
         self.attr_list.append(BaseAttribute(CREATEDAT, DT_WEBKIT, self.creationTime))
- 
 
     def update(self, delta):
         if not delta:
@@ -146,7 +140,6 @@ class CacheEntry(BaseCacheClass):
                     continue
                 self.is_date_changed = True
 
-    
     def keyToStr(self):
         """
         Since the key can be a string or a CacheData object, this function is an
@@ -156,24 +149,28 @@ class CacheEntry(BaseCacheClass):
             return self.key
         else:
             return self.key.data()
-    
+
     def __str__(self):
-        string = "Hash: 0x%08x" % self.hash + '\n'
+        string = "Hash: 0x%08x" % self.hash + "\n"
         if self.next != 0:
-            string += "Next: 0x%08x" % self.next + '\n'
-        string += "Usage Counter: %d" % self.usageCounter + '\n'\
-                  "Reuse Counter: %d" % self.reuseCounter + '\n'\
-                  "Creation Time: %s" % self.creationTime + '\n'
+            string += "Next: 0x%08x" % self.next + "\n"
+        string += (
+            "Usage Counter: %d" % self.usageCounter + "\n"
+            "Reuse Counter: %d" % self.reuseCounter + "\n"
+            "Creation Time: %s" % self.creationTime + "\n"
+        )
         if self.keyAddress != 0:
-            string += "Key Address: 0x%08x" % self.keyAddress + '\n'
-        string += "Key: %s" % self.key + '\n'
+            string += "Key Address: 0x%08x" % self.keyAddress + "\n"
+        string += "Key: %s" % self.key + "\n"
         if self.flags != 0:
-            string += "Flags: 0x%08x" % self.flags + '\n'
+            string += "Flags: 0x%08x" % self.flags + "\n"
         string += "State: %s" % CacheEntry.STATE[self.state]
         for data in self.data:
-            string += "\nData (%d bytes) at 0x%08x : %s" % (data.size,
-                                                            data.address.addr,
-                                                            data)
+            string += "\nData (%d bytes) at 0x%08x : %s" % (
+                data.size,
+                data.address.addr,
+                data,
+            )
         if self.httpHeader:
             string += str(self.httpHeader.headers)
             if "date" in self.httpHeader.headers:

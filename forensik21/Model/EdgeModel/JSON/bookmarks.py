@@ -13,15 +13,13 @@ from Model.EdgeModel.JSON.base import (
     DT_SIMPLE_STRING,
     DT_WEBKIT,
     DT_WEBKIT_SEC,
-    DT_SEC_DOT_MICRO
+    DT_SEC_DOT_MICRO,
 )
 
 NAME = "Name"
 TYP = "Typ"
 DATEADDED = "Hinzugefügt am"
 DATEMODIFIED = "Bearbeitet am"
-
-
 
 
 class Bookmark(BaseJSONClass):
@@ -32,8 +30,6 @@ class Bookmark(BaseJSONClass):
         self.date_added = date_added
         self.date_modified = date_modified
 
-        
-
         self.init()
 
     def init(self):
@@ -43,12 +39,11 @@ class Bookmark(BaseJSONClass):
         self.attr_list.append(BaseAttribute(TYP, OTHER, self.typ))
         self.attr_list.append(BaseAttribute(DATEADDED, DT_WEBKIT, self.date_added))
         if self.typ == "folder":
-            self.attr_list.append(BaseAttribute(DATEMODIFIED, DT_WEBKIT, self.date_modified))
+            self.attr_list.append(
+                BaseAttribute(DATEMODIFIED, DT_WEBKIT, self.date_modified)
+            )
         else:
             self.attr_list.append(BaseAttribute("None", OTHER, self.date_modified))
-
-        
-
 
     def update(self, delta):
         if not delta:
@@ -61,7 +56,9 @@ class Bookmark(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.date_added = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Lesezeichen für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Lesezeichen für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == DATEMODIFIED:
@@ -70,7 +67,9 @@ class Bookmark(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.date_modified = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Lesezeichen für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Lesezeichen für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -78,9 +77,7 @@ class Bookmark(BaseJSONClass):
 class BookmarkHandler(BaseJSONHandler):
     name = "Bookmark"
 
-    def __init__(
-        self, profile_path: str, file_name: str = "Bookmarks"
-    ):
+    def __init__(self, profile_path: str, file_name: str = "Bookmarks"):
         self.bookmarks = {}
         super().__init__(profile_path, file_name)
 
@@ -88,7 +85,6 @@ class BookmarkHandler(BaseJSONHandler):
         if self.bookmarks:
             return self.bookmarks
 
-        
         self.open_file()
         self.json_all = json.loads(self.read_file())
         self.close()
@@ -115,9 +111,8 @@ class BookmarkHandler(BaseJSONHandler):
                 self.bookmarks[id] = bookmark
                 self.caretakers.append(Caretaker(bookmark))
 
-        
         return [self.bookmarks[key] for key in self.bookmarks]
-    
+
     def get_bookmarks_recursiv(self, root):
         for elem in root:
             if elem["type"] == "folder":
@@ -140,51 +135,57 @@ class BookmarkHandler(BaseJSONHandler):
                 self.bookmarks[id] = bookmark
                 self.caretakers.append(Caretaker(bookmark))
 
-    def set_bookmarks_recursiv(self,root):
+    def set_bookmarks_recursiv(self, root):
         for elem in root:
             if elem["type"] == "folder":
                 elem["date_added"] = self.bookmarks[int(elem["id"])].date_added
                 elem["date_modified"] = self.bookmarks[int(elem["id"])].date_modified
                 if elem["children"]:
                     children = self.set_bookmarks_recursiv(elem["children"])
-                    elem["children"] = children        
+                    elem["children"] = children
             else:
-                 elem["date_added"] = self.bookmarks[int(elem["id"])].date_added
+                elem["date_added"] = self.bookmarks[int(elem["id"])].date_added
         return root
 
     def checksum_bookmarks(self, bookmarks):
-        roots = ['bookmark_bar', 'other', 'synced']
+        roots = ["bookmark_bar", "other", "synced"]
         md5 = hashlib.md5()
 
         def checksum_node(node):
-            md5.update(node['id'].encode())
-            md5.update(node['name'].encode('utf-16le'))
-            if node['type'] == 'url':
-                md5.update(b'url')
-                md5.update(node['url'].encode())
+            md5.update(node["id"].encode())
+            md5.update(node["name"].encode("utf-16le"))
+            if node["type"] == "url":
+                md5.update(b"url")
+                md5.update(node["url"].encode())
             else:
-                md5.update(b'folder')
-                if 'children' in node:
-                    for c in node['children']:
+                md5.update(b"folder")
+                if "children" in node:
+                    for c in node["children"]:
                         checksum_node(c)
 
         for root in roots:
-            checksum_node(bookmarks['roots'][root])
+            checksum_node(bookmarks["roots"][root])
         return md5.hexdigest()
 
     def commit(self):
-        
+
         root = self.json_all["roots"]
         for elem in root:
             if root[elem]["type"] == "folder":
-                root[elem]["date_added"] = str(self.bookmarks[int(root[elem]["id"])].date_added)
-                root[elem]["date_modified"] = str(self.bookmarks[int(root[elem]["id"])].date_modified)
+                root[elem]["date_added"] = str(
+                    self.bookmarks[int(root[elem]["id"])].date_added
+                )
+                root[elem]["date_modified"] = str(
+                    self.bookmarks[int(root[elem]["id"])].date_modified
+                )
                 if root[elem]["children"]:
                     children = self.set_bookmarks_recursiv(root[elem]["children"])
                     root[elem]["children"] = children
             else:
-                root[elem]["date_added"] = self.bookmarks[int(root[elem]["id"])].date_added
-        
+                root[elem]["date_added"] = self.bookmarks[
+                    int(root[elem]["id"])
+                ].date_added
+
         self.json_all["roots"] = root
 
         checksum = self.checksum_bookmarks(self.json_all)

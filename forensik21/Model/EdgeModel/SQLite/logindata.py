@@ -11,6 +11,7 @@ CREATEDAT = "Erstellt am"
 LASTUSED = "Zuletzt genutzt"
 USERNAME = "Nutzername"
 
+
 class Login(BaseSession, BaseSQLiteClass):
     __tablename__ = "logins"
 
@@ -67,7 +68,6 @@ class CompromisedCredetial(BaseSession, BaseSQLiteClass):
         self.attr_list.append(BaseAttribute(URL, OTHER, self.login.origin_url))
         self.attr_list.append(BaseAttribute(CREATEDAT, DT_WEBKIT, self.date_created))
 
-
     def update(self, delta):
         if not delta:
             log_message("Kein Delta erhalten in CompromisedCredentials", "error")
@@ -79,7 +79,10 @@ class CompromisedCredetial(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.date_created = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in  CompromisedCredentials für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in  CompromisedCredentials für " + attr.name,
+                        "error",
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -101,14 +104,13 @@ class LoginDataHandler(BaseSQliteHandler):
 class LoginHandler(LoginDataHandler):
     name = "Logins"
 
-
     def get_all_id_ordered(self):
         logins = self.session.query(Login).order_by(Login.id).all()
         return logins
 
+
 class CompromisedCredentialHandler(LoginDataHandler):
     name = "CompromisedCredentials"
-
 
     def get_all_id_ordered(self):
         logins = self.session.query(CompromisedCredetial).all()

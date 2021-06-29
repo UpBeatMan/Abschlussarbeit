@@ -1,17 +1,24 @@
 from importlib import import_module
 from Model.util import log_message
 
+
 class DataSourcesSQLite:
     def __init__(self, profile_path: str, cache_path: str):
         self.sources = {}
         source_names = []
 
         # Create list of module names and handlers, that we need
-        source_names.append(["Model.FirefoxModel.SQLite.content_prefs", "ContentPrefHandler"])
+        source_names.append(
+            ["Model.FirefoxModel.SQLite.content_prefs", "ContentPrefHandler"]
+        )
         source_names.append(["Model.FirefoxModel.SQLite.cookie", "CookieHandler"])
         source_names.append(["Model.FirefoxModel.SQLite.favicons", "FaviconHandler"])
-        source_names.append(["Model.FirefoxModel.SQLite.formhistory", "FormHistoryHandler"])
-        source_names.append(["Model.FirefoxModel.SQLite.permissions", "PermissionHandler"])
+        source_names.append(
+            ["Model.FirefoxModel.SQLite.formhistory", "FormHistoryHandler"]
+        )
+        source_names.append(
+            ["Model.FirefoxModel.SQLite.permissions", "PermissionHandler"]
+        )
         source_names.append(["Model.FirefoxModel.SQLite.places", "HistoryVisitHandler"])
         source_names.append(["Model.FirefoxModel.SQLite.places", "BookmarkHandler"])
         source_names.append(["Model.FirefoxModel.SQLite.places", "DownloadHandler"])
@@ -27,7 +34,13 @@ class DataSourcesSQLite:
                 Class_ = getattr(module, class_name)
                 instance = Class_(profile_path=profile_path, cache_path=cache_path)
             except Exception as e:
-                message = "Fehler in SQlite, Klasse " + str(class_name) + ": " + str(e) + ". Überspringe"
+                message = (
+                    "Fehler in SQlite, Klasse "
+                    + str(class_name)
+                    + ": "
+                    + str(e)
+                    + ". Überspringe"
+                )
                 log_message(message, "info")
                 continue
             self.sources[class_name] = instance
@@ -72,8 +85,7 @@ class DataSourcesSQLite:
                 try:
                     self.sources[source].rollback()
                 except:
-                    log_message("Fehler beim Rollback von: "  + str(source), "error")
-
+                    log_message("Fehler beim Rollback von: " + str(source), "error")
 
     def commit(self, name):
         """Save changes for only one source or all"""
@@ -90,7 +102,7 @@ class DataSourcesSQLite:
                 try:
                     self.sources[source].commit()
                 except:
-                    log_message("Fehler beim Speichern von: "  + str(source), "error")
+                    log_message("Fehler beim Speichern von: " + str(source), "error")
 
     def close(self):
         """Close all connections"""

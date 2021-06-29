@@ -9,8 +9,8 @@ from Model.util import log_message
 from Model.FirefoxModel.SQLite.places import VISITED
 from Model.FirefoxModel.SQLite.base import OTHER
 
-class FirefoxModel:
 
+class FirefoxModel:
     def __init__(self, profile_path: str = None, cache_path: str = None):
         if profile_path is None:
             return
@@ -29,19 +29,26 @@ class FirefoxModel:
         for key in self.data_dict:
             self.save_state[key] = True
 
-
     def get_unsaved_handlers(self):
-        return [self.save_state[handler] for handler in self.save_state if self.save_state[handler] == False ]
+        return [
+            self.save_state[handler]
+            for handler in self.save_state
+            if self.save_state[handler] == False
+        ]
 
     def get_saved_handler(self):
-        return [self.save_state[handler] for handler in self.save_state if self.save_state[handler] == True ]
-        
+        return [
+            self.save_state[handler]
+            for handler in self.save_state
+            if self.save_state[handler] == True
+        ]
+
     def get_data(self):
         data_dict = {}
         for source in self.sources:
             data_dict.update(self.sources[source].get_data())
         return data_dict
-    
+
     def reload_data_attributes(self):
         for source in self.data_dict:
             for item in self.data_dict[source]:
@@ -49,7 +56,7 @@ class FirefoxModel:
                     item.reload_attributes()
                 except:
                     pass
-    
+
     def get_history(self):
         histroy_tree = {}
         for entry in self.data_dict["HistoryVisitHandler"]:
@@ -57,7 +64,9 @@ class FirefoxModel:
                 histroy_tree[entry] = []
             else:
                 for tree_entry in histroy_tree:
-                    if entry.from_visit == tree_entry.id or entry.from_visit in [sube.id for sube in histroy_tree[tree_entry]]:
+                    if entry.from_visit == tree_entry.id or entry.from_visit in [
+                        sube.id for sube in histroy_tree[tree_entry]
+                    ]:
                         histroy_tree[tree_entry].append(entry)
         return histroy_tree
 
@@ -70,20 +79,18 @@ class FirefoxModel:
                     history_last_time = attr.value
         except:
             history_last_time = datetime.now()
-        
+
         return history_last_time
 
-
-    
     def get_additional_info(self, data_type, identifier):
         if data_type == "history":
             data_dict = {
-                "Cookies" : [],
-                "Favicons" : [],
-                "Permissions" : [],
-                "ContentPrefs" : [],
-                "Downloads" : [],
-                "Logins" : []
+                "Cookies": [],
+                "Favicons": [],
+                "Permissions": [],
+                "ContentPrefs": [],
+                "Downloads": [],
+                "Logins": [],
             }
 
             try:
@@ -99,7 +106,7 @@ class FirefoxModel:
                         data_dict["Favicons"].append(favico)
             except:
                 pass
-            
+
             try:
                 for perm in self.data_dict["PermissionHandler"]:
                     if identifier in perm.origin:
@@ -113,7 +120,7 @@ class FirefoxModel:
                         data_dict["ContentPrefs"].append(pref)
             except:
                 pass
-            
+
             try:
                 for login in self.data_dict["LoginsHandler"]:
                     if identifier in login.hostname:
@@ -124,20 +131,20 @@ class FirefoxModel:
             try:
                 for site in self.data_dict["HistoryVisitHandler"]:
                     for downl in self.data_dict["DownloadHandler"]:
-                        if identifier in site.place.url and downl.place.id == site.place.id:
+                        if (
+                            identifier in site.place.url
+                            and downl.place.id == site.place.id
+                        ):
                             data_dict["Downloads"].append(downl)
             except:
                 pass
-        
+
         elif data_type == "session":
             window = None
             for windows in self.data_dict["WindowHandler"]:
                 if windows.id == identifier:
                     window = windows
-            data_dict = {
-                "Tabs" : window.tabs,
-                "Session" : [window.session]
-            }
+            data_dict = {"Tabs": window.tabs, "Session": [window.session]}
 
         return data_dict
 
@@ -149,13 +156,13 @@ class FirefoxModel:
 
     def get_bookmarks(self):
         return self.data_dict["BookmarkHandler"]
-    
+
     def get_extensions(self):
         return self.data_dict["ExtensionsHandler"]
-    
+
     def get_session(self):
         return self.data_dict["WindowHandler"]
-    
+
     def get_profile(self):
         return self.data_dict["TimesHandler"]
 
@@ -213,7 +220,7 @@ class FirefoxModel:
                     for attr in item.attr_list:
                         if attr.type != OTHER:
                             delta = attr.value.timestamp() - date.timestamp()
-                            break  
+                            break
                     item.update(delta)
                     self.save_state[selected[0]] = False
                     try:

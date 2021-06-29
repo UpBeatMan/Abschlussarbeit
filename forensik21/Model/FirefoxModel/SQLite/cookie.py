@@ -27,10 +27,14 @@ class Cookie(BaseSession, BaseSQLiteClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(HOST, OTHER, self.host))
         self.attr_list.append(BaseAttribute(PATH, OTHER, self.path))
-        self.attr_list.append(BaseAttribute(CREATEDAT, DT_MICRO, self.creation_timestamp))
+        self.attr_list.append(
+            BaseAttribute(CREATEDAT, DT_MICRO, self.creation_timestamp)
+        )
         self.attr_list.append(BaseAttribute(EXPIRYAT, DT_SEC, self.expiry_timestamp))
-        self.attr_list.append(BaseAttribute(LASTACCESSAT, DT_MICRO, self.last_accessed_timestamp))
-        
+        self.attr_list.append(
+            BaseAttribute(LASTACCESSAT, DT_MICRO, self.last_accessed_timestamp)
+        )
+
     def update(self, delta):
         if not delta:
             log_message("Kein Delta erhalten in Cookies", "error")
@@ -42,7 +46,9 @@ class Cookie(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.expiry_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Cookies für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Cookies für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTACCESSAT:
@@ -51,7 +57,9 @@ class Cookie(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_accessed_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Cookies für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Cookies für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == CREATEDAT:
@@ -60,10 +68,11 @@ class Cookie(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.creation_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Cookies für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Cookies für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
-
 
 
 class CookieHandler(BaseSQliteHandler):

@@ -37,7 +37,8 @@ import struct
 
 from Model.ChromeModel.Cache.cacheAddress import CacheAddress
 
-class CacheData():
+
+class CacheData:
     """
     Retrieve data at the given address
     Can save it to a separate file for export
@@ -62,14 +63,12 @@ class CacheData():
         self.expires_start = None
         self.modified_start = None
 
-        if isHTTPHeader and\
-           self.address.blockType != CacheAddress.SEPARATE_FILE:
+        if isHTTPHeader and self.address.blockType != CacheAddress.SEPARATE_FILE:
             # Getting raw data
             string = ""
-            block = open(self.address.path + self.address.fileSelector, 'rb')
-            block.seek(8192 + self.address.blockNumber*self.address.entrySize)
-            string = str(struct.unpack(str(self.size)+'s', block.read(self.size))[0])
-            
+            block = open(self.address.path + self.address.fileSelector, "rb")
+            block.seek(8192 + self.address.blockNumber * self.address.entrySize)
+            string = str(struct.unpack(str(self.size) + "s", block.read(self.size))[0])
 
             block.close()
 
@@ -78,50 +77,47 @@ class CacheData():
             if start == None:
                 return
             else:
-                string = string[start.start():]
-
+                string = string[start.start() :]
 
             # Finding the end (some null characters : verified by experience)
             string = string.split("\\x00\\x00")[0]
 
-            start_date = re.search('date', string)
+            start_date = re.search("date", string)
             if start_date:
                 self.date_start = start.start() + start_date.start()
 
-            start_expires = re.search('expires', string)
+            start_expires = re.search("expires", string)
             if start_expires:
                 self.expires_start = start.start() + start_expires.start()
 
-            start_modified = re.search('last-modified', string)
+            start_modified = re.search("last-modified", string)
             if start_modified:
                 self.modified_start = start.start() + start_modified.start()
-            
+
             # Creating the dictionary of headers
-            for line in string.split('\\x00'):
-                stripped = line.split(':')
-                self.headers[stripped[0].lower()] = \
-                    ':'.join(stripped[1:]).strip()
+            for line in string.split("\\x00"):
+                stripped = line.split(":")
+                self.headers[stripped[0].lower()] = ":".join(stripped[1:]).strip()
             self.type = CacheData.HTTP_HEADER
 
     def save(self, filename=None):
         """Save the data to the specified filename"""
         if self.address.blockType == CacheAddress.SEPARATE_FILE:
-            shutil.copy(self.address.path + self.address.fileSelector,
-                        filename)
+            shutil.copy(self.address.path + self.address.fileSelector, filename)
         else:
-            output = open(filename, 'wb')
-            block = open(self.address.path + self.address.fileSelector, 'rb')
-            block.seek(8192 + self.address.blockNumber*self.address.entrySize)
+            output = open(filename, "wb")
+            block = open(self.address.path + self.address.fileSelector, "rb")
+            block.seek(8192 + self.address.blockNumber * self.address.entrySize)
             output.write(block.read(self.size))
             block.close()
             output.close()
 
     def data(self):
         """Returns a string representing the data"""
-        block = open(self.address.path + self.address.fileSelector, 'rb')
-        block.seek(8192 + self.address.blockNumber*self.address.entrySize)
+        block = open(self.address.path + self.address.fileSelector, "rb")
+        block.seek(8192 + self.address.blockNumber * self.address.entrySize)
         data = ""
-        data = str(struct.unpack(str(self.size)+'s', block.read(self.size))[0])
+        data = str(struct.unpack(str(self.size) + "s", block.read(self.size))[0])
         block.close()
         return data
 
@@ -130,8 +126,8 @@ class CacheData():
         Display the type of cacheData
         """
         if self.type == CacheData.HTTP_HEADER:
-            if 'content-type' in self.headers:
-                return "HTTP Header %s" % self.headers['content-type']
+            if "content-type" in self.headers:
+                return "HTTP Header %s" % self.headers["content-type"]
             else:
                 return "HTTP Header"
         else:

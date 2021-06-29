@@ -11,7 +11,7 @@ from Model.ChromeModel.SQLite.base import (
     DT_MICRO,
     DT_MILLI_ZEROED_MICRO,
     DT_WEBKIT,
-    DT_STRING
+    DT_STRING,
 )
 
 ID = "ID"
@@ -56,7 +56,6 @@ class Visits(BaseSession, BaseSQLiteClass):
         self.attr_list.append(
             BaseAttribute(LASTVISITED, DT_WEBKIT, self.place.last_visited_timestamp)
         )
-        
 
     def reload_attributes(self):
         self.attr_list = []
@@ -66,7 +65,6 @@ class Visits(BaseSession, BaseSQLiteClass):
         self.attr_list.append(
             BaseAttribute(LASTVISITED, DT_WEBKIT, self.place.last_visited_timestamp)
         )
-        
 
     def update(self, delta):
         if not delta:
@@ -76,17 +74,22 @@ class Visits(BaseSession, BaseSQLiteClass):
         last_visited_safe = self.place.last_visited_timestamp
         for attr in self.attr_list:
             if attr.name == LASTVISITED:
-                is_bigger, addi_delta = attr.check_new_bigger(self.attr_list[2].value, delta)
+                is_bigger, addi_delta = attr.check_new_bigger(
+                    self.attr_list[2].value, delta
+                )
                 if visited_safe == last_visited_safe or is_bigger:
                     try:
                         if is_bigger:
-                            attr.change_date(addi_delta-delta)
+                            attr.change_date(addi_delta - delta)
                         else:
                             attr.change_date(delta)
                         attr.date_to_timestamp()
                         self.place.last_visited_timestamp = attr.timestamp
                     except:
-                        log_message("Fehler bei Update in Visits/History für " + attr.name, "error")
+                        log_message(
+                            "Fehler bei Update in Visits/History für " + attr.name,
+                            "error",
+                        )
                         continue
                     self.is_date_changed = True
             elif attr.name == VISITED:
@@ -95,7 +98,9 @@ class Visits(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.visit_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Visits/History für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Visits/History für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -105,9 +110,9 @@ class Download(BaseSession, BaseSQLiteClass):
 
     id = Column("id", Integer, primary_key=True)
     target_path = Column("target_path", String)
-    start_time = Column("start_time", Integer) #Webkit
-    end_time = Column("end_time", Integer) #Webit
-    last_modified = Column("last_modified", String) #Tue, 26 Jan 2021 13:11:34 GMT
+    start_time = Column("start_time", Integer)  # Webkit
+    end_time = Column("end_time", Integer)  # Webkit
+    last_modified = Column("last_modified", String)  # Tue, 26 Jan 2021 13:11:34 GMT
     referrer = Column("referrer", String)
 
     @orm.reconstructor
@@ -119,7 +124,9 @@ class Download(BaseSession, BaseSQLiteClass):
         self.attr_list.append(BaseAttribute(STARTTIME, DT_WEBKIT, self.start_time))
         self.attr_list.append(BaseAttribute(ENDTIME, DT_WEBKIT, self.end_time))
         if self.last_modified:
-            self.attr_list.append(BaseAttribute(LASTMODIFIED, DT_STRING, self.last_modified))
+            self.attr_list.append(
+                BaseAttribute(LASTMODIFIED, DT_STRING, self.last_modified)
+            )
         else:
             self.attr_list.append(BaseAttribute(LASTMODIFIED, OTHER, "None"))
 
@@ -129,7 +136,7 @@ class Download(BaseSession, BaseSQLiteClass):
             return
 
         change_file_time(self.target_path, delta)
-        
+
         for attr in self.attr_list:
             if attr.name == STARTTIME:
                 try:
@@ -137,7 +144,9 @@ class Download(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.start_time = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Downloads für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Downloads für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == ENDTIME:
@@ -146,7 +155,9 @@ class Download(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.end_time = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Downloads für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Downloads für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTMODIFIED:
@@ -155,7 +166,9 @@ class Download(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_modified = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Downloads für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Downloads für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -178,7 +191,6 @@ class VisitsHandler(HistoryHandler):
     def get_all_id_ordered(self):
         history = self.session.query(Visits).order_by(Visits.id).all()
         return history
-        
 
 
 class DownloadHandler(HistoryHandler):

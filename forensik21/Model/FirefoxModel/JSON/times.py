@@ -26,8 +26,12 @@ class Times(BaseJSONClass):
         self.is_date_changed = False
         self.id = random.randint(0, 9999999999999)
         self.attr_list = []
-        self.attr_list.append(BaseAttribute(CREATEDDATE, DT_SEC_ZEROED_MILLI, self.created))
-        self.attr_list.append(BaseAttribute(FIRSTUSE, DT_SEC_ZEROED_MILLI, self.first_use))
+        self.attr_list.append(
+            BaseAttribute(CREATEDDATE, DT_SEC_ZEROED_MILLI, self.created)
+        )
+        self.attr_list.append(
+            BaseAttribute(FIRSTUSE, DT_SEC_ZEROED_MILLI, self.first_use)
+        )
 
     def update(self, delta):
         if not delta:
@@ -63,7 +67,10 @@ class TimesHandler(BaseJSONHandler):
     json_all = dict
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name: str = "times.json",
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name: str = "times.json",
     ):
         super().__init__(profile_path, file_name)
 
@@ -87,7 +94,7 @@ class TimesHandler(BaseJSONHandler):
         return self.times
 
     def commit(self):
-        
+
         self.json_all["created"] = self.times[0].created
         self.json_all["firstUse"] = self.times[0].first_use
 

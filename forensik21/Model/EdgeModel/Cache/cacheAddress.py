@@ -31,27 +31,33 @@ Chrome Cache Address
 See /net/disk_cache/addr.h for design details
 """
 
+
 class CacheAddressError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
 
-class CacheAddress():
+
+class CacheAddress:
     """
     Object representing a Chrome Cache Address
     """
+
     SEPARATE_FILE = 0
     RANKING_BLOCK = 1
     BLOCK_256 = 2
     BLOCK_1024 = 3
     BLOCK_4096 = 4
 
-    typeArray = [("Separate file", 0),
-                 ("Ranking block file", 36),
-                 ("256 bytes block file", 256),
-                 ("1k bytes block file", 1024),
-                 ("4k bytes block file", 4096)]
+    typeArray = [
+        ("Separate file", 0),
+        ("Ranking block file", 36),
+        ("256 bytes block file", 256),
+        ("1k bytes block file", 1024),
+        ("4k bytes block file", 4096),
+    ]
 
     def __init__(self, uint_32, path):
         """
@@ -60,7 +66,7 @@ class CacheAddress():
         if uint_32 == 0:
             raise CacheAddressError("Null Address")
 
-        #XXX Is self.binary useful ??
+        # XXX Is self.binary useful ??
         self.addr = uint_32
         self.path = path
 
@@ -88,8 +94,8 @@ class CacheAddress():
     def __str__(self):
         string = hex(self.addr) + " ("
         if self.blockType >= CacheAddress.BLOCK_256:
-            string += str(self.contiguousBlock) +\
-                      " contiguous blocks in "
-        string += CacheAddress.typeArray[self.blockType][0] +\
-                  " : " + self.fileSelector + ")"
+            string += str(self.contiguousBlock) + " contiguous blocks in "
+        string += (
+            CacheAddress.typeArray[self.blockType][0] + " : " + self.fileSelector + ")"
+        )
         return string

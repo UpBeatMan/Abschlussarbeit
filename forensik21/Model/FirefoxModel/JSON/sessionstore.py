@@ -34,7 +34,9 @@ class Window(BaseJSONClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.title))
         self.attr_list.append(BaseAttribute(WINDOWTYPE, OTHER, self.window_type))
-        self.attr_list.append(BaseAttribute(CLOSEDAT, DT_SEC_ZEROED_MILLI, self.closed_at))
+        self.attr_list.append(
+            BaseAttribute(CLOSEDAT, DT_SEC_ZEROED_MILLI, self.closed_at)
+        )
 
     def update(self, delta):
         if not delta:
@@ -61,12 +63,14 @@ class Tab(BaseJSONClass):
         self.title = title
         self.last_accessed = last_accessed
         self.init()
-    
+
     def init(self):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.title))
-        self.attr_list.append(BaseAttribute(LASTACCESSED, DT_SEC_ZEROED_MILLI, self.last_accessed))
+        self.attr_list.append(
+            BaseAttribute(LASTACCESSED, DT_SEC_ZEROED_MILLI, self.last_accessed)
+        )
 
     def update(self, delta):
         if not delta:
@@ -83,6 +87,7 @@ class Tab(BaseJSONClass):
                     continue
                 self.is_date_changed = True
 
+
 class Session(BaseJSONClass):
     def __init__(self, last_update, start_time):
         self.last_update = last_update
@@ -93,9 +98,13 @@ class Session(BaseJSONClass):
         self.id = random.randint(0, 9999999999999)
         self.is_date_changed = False
         self.attr_list = []
-        self.attr_list.append(BaseAttribute(LASTUPDATED, DT_SEC_ZEROED_MILLI, self.last_update))
-        self.attr_list.append(BaseAttribute(STARTTIME, DT_SEC_ZEROED_MILLI, self.start_time))
-    
+        self.attr_list.append(
+            BaseAttribute(LASTUPDATED, DT_SEC_ZEROED_MILLI, self.last_update)
+        )
+        self.attr_list.append(
+            BaseAttribute(STARTTIME, DT_SEC_ZEROED_MILLI, self.start_time)
+        )
+
     def update(self, delta):
         if self.is_date_changed:
             return
@@ -109,7 +118,9 @@ class Session(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.last_update = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Session für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Session für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == STARTTIME:
@@ -118,9 +129,12 @@ class Session(BaseJSONClass):
                     attr.date_to_timestamp()
                     self.start_time = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Session für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Session für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
+
 
 class WindowHandler(BaseJSONHandler):
     name = "Windows"
@@ -131,7 +145,10 @@ class WindowHandler(BaseJSONHandler):
     json_all = dict
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name: str = "sessionstore.jsonlz4",
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name: str = "sessionstore.jsonlz4",
     ):
         super().__init__(profile_path, file_name, compressed=True)
 
@@ -144,7 +161,10 @@ class WindowHandler(BaseJSONHandler):
         self.json_all = json.loads(self.read_file())
         self.close()
 
-        session = Session(self.json_all["session"]["lastUpdate"], self.json_all["session"]["startTime"])
+        session = Session(
+            self.json_all["session"]["lastUpdate"],
+            self.json_all["session"]["startTime"],
+        )
         json_windows = self.json_all["windows"]
         for id, json_window in enumerate(json_windows):
             title = json_window["title"]

@@ -6,20 +6,33 @@ import platform
 
 if platform.system() == "Windows":
     from win32file import CreateFile, SetFileTime, GetFileTime, CloseHandle
-    from win32file import GENERIC_WRITE, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, FILE_SHARE_WRITE
+    from win32file import (
+        GENERIC_WRITE,
+        OPEN_EXISTING,
+        FILE_FLAG_BACKUP_SEMANTICS,
+        FILE_SHARE_WRITE,
+    )
+
 
 def log_message(message, lvl):
     pub.sendMessage("logging", message=message, lvl=lvl)
 
+
 def change_file_time(path, delta):
     if not os.path.exists(path):
-        log_message("Pfad: " + path + " existiert nicht!", "info")
+        log_message("Pfad: " + path + " existiert nicht!", "info")2
         return
     if platform.system() == "Windows":
         # modify filetimes on Windows
-        fh = CreateFile(path, GENERIC_WRITE, 
-                        FILE_SHARE_WRITE, None, 
-                        OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0)
+        fh = CreateFile(
+            path,
+            GENERIC_WRITE,
+            FILE_SHARE_WRITE,
+            None,
+            OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS,
+            0,
+        )
         cTime, aTime, mTime = GetFileTime(fh)
         cTime = datetime.fromtimestamp(cTime.timestamp() - delta)
         aTime = datetime.fromtimestamp(aTime.timestamp() - delta)
@@ -36,7 +49,7 @@ def change_file_time(path, delta):
 
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS

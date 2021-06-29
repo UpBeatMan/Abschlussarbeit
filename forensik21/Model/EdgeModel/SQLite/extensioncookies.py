@@ -31,10 +31,13 @@ class ExtensionCookie(BaseSessionTwo, BaseSQLiteClass):
         self.attr_list.append(BaseAttribute(HOST, OTHER, self.host))
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.name))
         self.attr_list.append(BaseAttribute(PATH, OTHER, self.path))
-        self.attr_list.append(BaseAttribute(CREATEDAT, DT_WEBKIT, self.creation_timestamp))
+        self.attr_list.append(
+            BaseAttribute(CREATEDAT, DT_WEBKIT, self.creation_timestamp)
+        )
         self.attr_list.append(BaseAttribute(EXPIRYAT, DT_WEBKIT, self.expiry_timestamp))
-        self.attr_list.append(BaseAttribute(LASTACCESSAT, DT_WEBKIT, self.last_accessed_timestamp))
-        
+        self.attr_list.append(
+            BaseAttribute(LASTACCESSAT, DT_WEBKIT, self.last_accessed_timestamp)
+        )
 
     def update(self, delta):
         if not delta:
@@ -47,7 +50,9 @@ class ExtensionCookie(BaseSessionTwo, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.expiry_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in ExtensionCookie für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in ExtensionCookie für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTACCESSAT:
@@ -56,7 +61,9 @@ class ExtensionCookie(BaseSessionTwo, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_accessed_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in ExtensionCookie für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in ExtensionCookie für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == CREATEDAT:
@@ -65,10 +72,11 @@ class ExtensionCookie(BaseSessionTwo, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.creation_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in ExtensionCookie für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in ExtensionCookie für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
-
 
 
 class ExtensionCookieHandler(BaseSQliteHandler):

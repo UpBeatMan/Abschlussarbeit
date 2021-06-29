@@ -25,7 +25,6 @@ class Origin(BaseSession, BaseSQLiteClass):
         self.attr_list.append(BaseAttribute(URL, OTHER, self.origin))
         self.attr_list.append(BaseAttribute(LASTUPDATED, DT_WEBKIT, self.last_updated))
 
-
     def update(self, delta):
         if not delta:
             log_message("Kein Delta erhalten in Mediahistory/Origin", "error")
@@ -37,10 +36,12 @@ class Origin(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_updated = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Origin/MediaHistory für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Origin/MediaHistory für " + attr.name,
+                        "error",
+                    )
                     continue
                 self.is_date_changed = True
-
 
 
 class Playback(BaseSession, BaseSQLiteClass):
@@ -51,14 +52,12 @@ class Playback(BaseSession, BaseSQLiteClass):
     url = Column("url", String)
     last_updated = Column("last_updated_time_s", Integer)
 
-
     @orm.reconstructor
     def init(self):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.url))
         self.attr_list.append(BaseAttribute(LASTUPDATED, DT_WEBKIT, self.last_updated))
-
 
     def update(self, delta):
         if not delta:
@@ -71,7 +70,10 @@ class Playback(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_updated = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Playback/MediaHistory für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Playback/MediaHistory für " + attr.name,
+                        "error",
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -84,14 +86,12 @@ class PlaybackSession(BaseSession, BaseSQLiteClass):
     url = Column("url", String)
     last_updated = Column("last_updated_time_s", Integer)
 
-
     @orm.reconstructor
     def init(self):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.url))
         self.attr_list.append(BaseAttribute(LASTUPDATED, DT_WEBKIT, self.last_updated))
-
 
     def update(self, delta):
         if not delta:
@@ -104,7 +104,11 @@ class PlaybackSession(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_updated = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in PlaybackSession/MediaHistory für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in PlaybackSession/MediaHistory für "
+                        + attr.name,
+                        "error",
+                    )
                     continue
                 self.is_date_changed = True
 

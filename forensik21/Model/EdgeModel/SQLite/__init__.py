@@ -1,6 +1,7 @@
 from importlib import import_module
 from Model.util import log_message
 
+
 class DataSourcesSQLite:
     def __init__(self, profile_path: str):
         self.sources = {}
@@ -11,12 +12,16 @@ class DataSourcesSQLite:
         source_names.append(["Model.EdgeModel.SQLite.favicons", "FaviconHandler"])
         source_names.append(["Model.EdgeModel.SQLite.history", "VisitsHandler"])
         source_names.append(["Model.EdgeModel.SQLite.history", "DownloadHandler"])
-        source_names.append(["Model.EdgeModel.SQLite.extensioncookies", "ExtensionCookieHandler"])
+        source_names.append(
+            ["Model.EdgeModel.SQLite.extensioncookies", "ExtensionCookieHandler"]
+        )
         source_names.append(["Model.EdgeModel.SQLite.mediahistory", "OriginHandler"])
         source_names.append(["Model.EdgeModel.SQLite.webdata", "AutofillHandler"])
         source_names.append(["Model.EdgeModel.SQLite.webdata", "KeywordHandler"])
         source_names.append(["Model.EdgeModel.SQLite.logindata", "LoginHandler"])
-        source_names.append(["Model.EdgeModel.SQLite.logindata", "CompromisedCredentialHandler"])
+        source_names.append(
+            ["Model.EdgeModel.SQLite.logindata", "CompromisedCredentialHandler"]
+        )
 
         for source_name in source_names:
             module_name = source_name[0]
@@ -29,7 +34,10 @@ class DataSourcesSQLite:
                 Class_ = getattr(module, class_name)
                 instance = Class_(profile_path=profile_path)
             except Exception as e:
-                message = "Fehler in Datenquelle SQlite, Klasse %s: %s. Überspringe" % (class_name, e)
+                message = "Fehler in Datenquelle SQlite, Klasse %s: %s. Überspringe" % (
+                    class_name,
+                    e,
+                )
                 log_message(message, "info")
                 continue
             self.sources[class_name] = instance
@@ -44,9 +52,9 @@ class DataSourcesSQLite:
                 log_message("Fehler in " + source + ": " + str(e), "info")
 
         return data
-    
+
     def get_history(self):
-        """ Collect just the history data """
+        """Collect just the history data"""
         data = self.sources["HistoryVisitHandler"].get_history_tree()
         return data
 
@@ -79,8 +87,7 @@ class DataSourcesSQLite:
                 try:
                     self.sources[source].rollback()
                 except:
-                    log_message("Fehler beim Rollback von: "  + str(source), "error")
-
+                    log_message("Fehler beim Rollback von: " + str(source), "error")
 
     def commit(self, name):
         """Save changes for only one source or all"""
@@ -97,7 +104,7 @@ class DataSourcesSQLite:
                 try:
                     self.sources[source].commit()
                 except:
-                    log_message("Fehler beim Speichern von: "  + str(source), "error")
+                    log_message("Fehler beim Speichern von: " + str(source), "error")
 
     def close(self):
         """Close all connections"""

@@ -1,6 +1,7 @@
 from importlib import import_module
 from Model.util import log_message
 
+
 class DataSourcesCache:
     def __init__(self, profile_path: str):
         self.sources = {}
@@ -19,7 +20,8 @@ class DataSourcesCache:
             except Exception as e:
                 log_message(
                     "Fehler in Datenquelle Cache, Modul %s, Klasse %s: %s. Überspringe"
-                    % (module_name, class_name, e), "info"
+                    % (module_name, class_name, e),
+                    "info",
                 )
                 continue
             self.sources[class_name] = instance
@@ -61,8 +63,7 @@ class DataSourcesCache:
                 try:
                     self.sources[source].rollback()
                 except:
-                    log_message("Fehler beim Rollback von: "  + str(source), "error")
-
+                    log_message("Fehler beim Rollback von: " + str(source), "error")
 
     def commit(self, name):
         """Save changes for only one source or all"""
@@ -79,7 +80,7 @@ class DataSourcesCache:
                 try:
                     self.sources[source].commit()
                 except:
-                    log_message("Fehler beim Speichern von: "  + str(source), "error")
+                    log_message("Fehler beim Speichern von: " + str(source), "error")
 
     def close(self):
         """Close all connections"""

@@ -49,9 +49,13 @@ class BaseAttribute:
         if type_ == DT_SEC:
             self.timestamp = int(value)
             try:
-                self.value = datetime.fromtimestamp(0) + timedelta(seconds=self.timestamp)
+                self.value = datetime.fromtimestamp(0) + timedelta(
+                    seconds=self.timestamp
+                )
             except:
-                self.value = datetime.fromtimestamp(0) + timedelta(seconds=self.timestamp/1000)
+                self.value = datetime.fromtimestamp(0) + timedelta(
+                    seconds=self.timestamp / 1000
+                )
         elif type_ in (DT_MICRO, DT_MILLI_ZEROED_MICRO):
             self.timestamp = int(value)
             self.value = microseconds_to_datetime(self.timestamp)
@@ -81,7 +85,9 @@ class BaseAttribute:
             return
 
         microseconds = self.value.microsecond
-        self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+        self.timestamp = int(
+            datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+        )
 
         if self.type == DT_MICRO:
             self.timestamp = (self.timestamp * MICRO_FACTOR) + microseconds
@@ -102,7 +108,7 @@ class BaseAttribute:
             return
 
         if self.timestamp == 0:
-            return    
+            return
 
         self.value = datetime.fromtimestamp(self.value.timestamp() - delta)
 
@@ -128,8 +134,7 @@ class BaseAttribute:
         if value and value > self.value:
             return True, self.value.timestamp() - value.timestamp()
         else:
-             return False, None
-
+            return False, None
 
 
 class BaseSQLiteClass:

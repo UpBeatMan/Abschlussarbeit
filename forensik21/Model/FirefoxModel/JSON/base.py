@@ -68,7 +68,9 @@ class BaseAttribute:
             return
 
         microseconds = self.value.microsecond
-        self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+        self.timestamp = int(
+            datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+        )
 
         if self.type == DT_MICRO:
             self.timestamp = (self.timestamp * MICRO_FACTOR) + microseconds
@@ -89,7 +91,7 @@ class BaseAttribute:
         """Override value with datetime"""
         if self.type == OTHER:
             return
-        
+
         if self.timestamp == 0:
             return
 
@@ -167,7 +169,7 @@ class BaseJSONHandler:
             mode = mode + "b"
             self.file_handle = open(self.path, mode)
         else:
-            self.file_handle = open(self.path, mode, encoding='utf-8')
+            self.file_handle = open(self.path, mode, encoding="utf-8")
 
     def read_file(self):
         if self.compressed:
@@ -180,7 +182,9 @@ class BaseJSONHandler:
     def write_file(self):
         json_dump = json.dumps(self.json_all, separators=(",", ":"))
         if self.compressed:
-            json_dump = b"mozLz40\0" + block.compress(bytes(json_dump, encoding="utf-8"))
+            json_dump = b"mozLz40\0" + block.compress(
+                bytes(json_dump, encoding="utf-8")
+            )
         self.open_file(write=True)
 
         self.file_handle.write(json_dump)

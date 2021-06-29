@@ -37,6 +37,7 @@ def microseconds_to_datetime(microseconds):
     datetime_obj = EPOCH + timedelta(microseconds=microseconds)
     return datetime_obj
 
+
 def webit_to_datetime(microsecond):
     """
     Creates datetime form a webkit timestamp.
@@ -45,8 +46,9 @@ def webit_to_datetime(microsecond):
     try:
         date_time = WEBKITEPOCH + timedelta(microseconds=microsecond)
     except:
-        date_time = WEBKITEPOCH + timedelta(microseconds=microsecond/10)
+        date_time = WEBKITEPOCH + timedelta(microseconds=microsecond / 10)
     return date_time
+
 
 class BaseAttribute:
     """
@@ -63,9 +65,13 @@ class BaseAttribute:
         if type_ == DT_SEC:
             self.timestamp = int(value)
             try:
-                self.value = datetime.fromtimestamp(0) + timedelta(seconds=self.timestamp)
+                self.value = datetime.fromtimestamp(0) + timedelta(
+                    seconds=self.timestamp
+                )
             except:
-                self.value = datetime.fromtimestamp(0) + timedelta(seconds=self.timestamp/1000)
+                self.value = datetime.fromtimestamp(0) + timedelta(
+                    seconds=self.timestamp / 1000
+                )
         elif type_ in (DT_MICRO, DT_MILLI_ZEROED_MICRO):
             self.timestamp = int(value)
             self.value = microseconds_to_datetime(self.timestamp)
@@ -102,28 +108,38 @@ class BaseAttribute:
 
         if self.type == DT_MICRO:
             microseconds = self.value.microsecond
-            self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+            self.timestamp = int(
+                datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+            )
             self.timestamp = (self.timestamp * MICRO_FACTOR) + microseconds
         elif self.type == DT_MILLI_ZEROED_MICRO:
             # Zeroing out the last three numbers
             microseconds = self.value.microsecond
-            self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+            self.timestamp = int(
+                datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+            )
             microseconds = int(microseconds / MILLI_FACTOR) * MILLI_FACTOR
             self.timestamp = (self.timestamp * MICRO_FACTOR) + microseconds
         elif self.type == DT_MILLI:
             microseconds = self.value.microsecond
-            self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+            self.timestamp = int(
+                datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+            )
             milliseconds = int(microseconds / MILLI_FACTOR)
             self.timestamp = (self.timestamp * MILLI_FACTOR) + milliseconds
         elif self.type == DT_SEC_DOT_MILLI:
             microseconds = self.value.microsecond
-            self.timestamp = int(datetime.timestamp(self.value.replace(tzinfo=timezone.utc)))
+            self.timestamp = int(
+                datetime.timestamp(self.value.replace(tzinfo=timezone.utc))
+            )
             milliseconds = int(microseconds / MILLI_FACTOR)
             self.timestamp = float(str(self.timestamp) + "." + str(milliseconds))
         elif self.type == DT_WEBKIT:
             diff = self.value - WEBKITEPOCH
             seconds_in_day = 60 * 60 * 24
-            self.timestamp = (diff.days * seconds_in_day + diff.seconds) * 1000000  + diff.microseconds
+            self.timestamp = (
+                diff.days * seconds_in_day + diff.seconds
+            ) * 1000000 + diff.microseconds
         elif self.type == DT_STRING:
             self.timestamp = datetime.strftime(self.value, "%a, %d %b %Y %H:%M:%S %Z")
 
@@ -131,7 +147,7 @@ class BaseAttribute:
         """Override value with datetime"""
         if self.type == OTHER:
             return
-        
+
         if self.timestamp == 0:
             return
 
@@ -159,7 +175,7 @@ class BaseAttribute:
         if value and value > self.value:
             return True, self.value.timestamp() - value.timestamp()
         else:
-             return False, None
+            return False, None
 
 
 class BaseSQLiteClass:
@@ -200,5 +216,3 @@ class BaseSQliteHandler:
 
     def close(self):
         self.session.close()
-
-    

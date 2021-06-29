@@ -11,7 +11,7 @@ from Model.ChromeModel.SQLite.base import (
     DT_MICRO,
     DT_MILLI_ZEROED_MICRO,
     DT_WEBKIT,
-    DT_STRING
+    DT_STRING,
 )
 
 ID = "id"
@@ -19,13 +19,14 @@ LASTREQUESTED = "Zuletzt angefordert"
 LASTUPDATED = "Zuletzt geupdated"
 URL = "Url"
 
+
 class Favicon(BaseSession, BaseSQLiteClass):
     __tablename__ = "favicon_bitmaps"
 
     id = Column("id", Integer, primary_key=True)
     icon_id = Column("icon_id", Integer, ForeignKey("favicons.id"))
-    last_updated = Column("last_updated", Integer) #Webkit
-    last_requested = Column("last_requested", Integer) #Webkit
+    last_updated = Column("last_updated", Integer)  # Webkit
+    last_requested = Column("last_requested", Integer)  # Webkit
     urls = relationship("FaviconUrls")
 
     @orm.reconstructor
@@ -34,7 +35,9 @@ class Favicon(BaseSession, BaseSQLiteClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.urls.url))
         self.attr_list.append(BaseAttribute(LASTUPDATED, DT_WEBKIT, self.last_updated))
-        self.attr_list.append(BaseAttribute(LASTREQUESTED, DT_WEBKIT, self.last_requested))
+        self.attr_list.append(
+            BaseAttribute(LASTREQUESTED, DT_WEBKIT, self.last_requested)
+        )
 
     def update(self, delta):
         if not delta:
@@ -46,7 +49,9 @@ class Favicon(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_updated = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Favicon für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Favicon für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             if attr.name == LASTREQUESTED:
@@ -55,7 +60,9 @@ class Favicon(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_requested = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Favicon für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Favicon für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 

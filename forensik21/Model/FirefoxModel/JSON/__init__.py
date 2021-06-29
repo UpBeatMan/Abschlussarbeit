@@ -27,7 +27,13 @@ class DataSourcesJSON:
                 Class_ = getattr(module, class_name)
                 instance = Class_(profile_path=profile_path, cache_path=cache_path)
             except Exception as e:
-                message = "Fehler in SQlite, Klasse " + str(class_name) + ": " + str(e) + ". Überspringe"
+                message = (
+                    "Fehler in SQlite, Klasse "
+                    + str(class_name)
+                    + ": "
+                    + str(e)
+                    + ". Überspringe"
+                )
                 log_message(message, "info")
                 continue
             self.sources[class_name] = instance
@@ -69,8 +75,7 @@ class DataSourcesJSON:
                 try:
                     self.sources[source].rollback()
                 except:
-                    log_message("Fehler beim Rollback von: "  + str(source), "error")
-
+                    log_message("Fehler beim Rollback von: " + str(source), "error")
 
     def commit(self, name):
         """Save changes for only one source or all"""
@@ -87,10 +92,9 @@ class DataSourcesJSON:
                 try:
                     self.sources[source].commit()
                 except:
-                    log_message("Fehler beim Speichern von: "  + str(source), "error")
+                    log_message("Fehler beim Speichern von: " + str(source), "error")
 
     def close(self):
         """Close all connections"""
         for source in self.sources:
             self.sources[source].close()
-

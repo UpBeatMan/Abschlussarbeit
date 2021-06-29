@@ -31,9 +31,13 @@ class Cookie(BaseSession, BaseSQLiteClass):
         self.attr_list.append(BaseAttribute(HOST, OTHER, self.host))
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.name))
         self.attr_list.append(BaseAttribute(PATH, OTHER, self.path))
-        self.attr_list.append(BaseAttribute(CREATEDAT, DT_WEBKIT, self.creation_timestamp))
+        self.attr_list.append(
+            BaseAttribute(CREATEDAT, DT_WEBKIT, self.creation_timestamp)
+        )
         self.attr_list.append(BaseAttribute(EXPIRYAT, DT_WEBKIT, self.expiry_timestamp))
-        self.attr_list.append(BaseAttribute(LASTACCESSAT, DT_WEBKIT, self.last_accessed_timestamp))    
+        self.attr_list.append(
+            BaseAttribute(LASTACCESSAT, DT_WEBKIT, self.last_accessed_timestamp)
+        )
 
     def update(self, delta):
         if not delta:

@@ -34,7 +34,9 @@ class IndexHandler(BaseCacheHandler):
     index_entries = []
 
     def __init__(
-        self, rootpath: str, filepath: str = "cache2/index",
+        self,
+        rootpath: str,
+        filepath: str = "cache2/index",
     ):
         super().__init__(rootpath, filepath)
 

@@ -17,8 +17,14 @@ LASTPASSCHANGED = "Passwort geändert am"
 
 
 class Login(BaseJSONClass):
-    def __init__(self, id: str, hostname: str, created_timestamp: str,
-                lastused_timestamp: str, lastpasschange_timestamp: str):
+    def __init__(
+        self,
+        id: str,
+        hostname: str,
+        created_timestamp: str,
+        lastused_timestamp: str,
+        lastpasschange_timestamp: str,
+    ):
         self.id = id
         self.hostname = hostname
         self.created_timestamp = int(created_timestamp)
@@ -30,9 +36,17 @@ class Login(BaseJSONClass):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.hostname))
-        self.attr_list.append(BaseAttribute(CREATEDDATE, DT_SEC_ZEROED_MILLI, self.created_timestamp))
-        self.attr_list.append(BaseAttribute(LASTUSE, DT_SEC_ZEROED_MILLI, self.lastused_timestamp))
-        self.attr_list.append(BaseAttribute(LASTPASSCHANGED, DT_SEC_ZEROED_MILLI, self.lastpasschange_timestamp))
+        self.attr_list.append(
+            BaseAttribute(CREATEDDATE, DT_SEC_ZEROED_MILLI, self.created_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(LASTUSE, DT_SEC_ZEROED_MILLI, self.lastused_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(
+                LASTPASSCHANGED, DT_SEC_ZEROED_MILLI, self.lastpasschange_timestamp
+            )
+        )
 
     def update(self, delta):
         if not delta:
@@ -77,7 +91,10 @@ class LoginsHandler(BaseJSONHandler):
     json_all = dict
 
     def __init__(
-        self, profile_path: str, cache_path: str, file_name: str = "logins.json",
+        self,
+        profile_path: str,
+        cache_path: str,
+        file_name: str = "logins.json",
     ):
         super().__init__(profile_path, file_name)
 
@@ -107,8 +124,10 @@ class LoginsHandler(BaseJSONHandler):
         for login in self.logins:
             json_logins[login.id]["timeCreated"] = login.created_timestamp
             json_logins[login.id]["timeLastUsed"] = login.lastused_timestamp
-            json_logins[login.id]["timePasswordChanged"] = login.lastpasschange_timestamp
-        
+            json_logins[login.id][
+                "timePasswordChanged"
+            ] = login.lastpasschange_timestamp
+
         self.json_all["logins"] = json_logins
 
         self.write_file()

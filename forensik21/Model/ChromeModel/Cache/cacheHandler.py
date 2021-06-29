@@ -43,15 +43,14 @@ from Model.ChromeModel.Cache.cacheBlock import CacheBlock
 from Model.ChromeModel.Cache.cacheData import CacheData
 from Model.ChromeModel.Cache.cacheEntry import CacheEntry
 
-from Model.ChromeModel.Cache.base import (
-    BaseCacheHandler,
-    Caretaker
-)
+from Model.ChromeModel.Cache.base import BaseCacheHandler, Caretaker
 
 
 class CacheEntryHandler(BaseCacheHandler):
-
-    def __init__(self, profile_path: str,):
+    def __init__(
+        self,
+        profile_path: str,
+    ):
         self.cache_path = profile_path + "/Cache"
         self.file_name = "index"
         super().__init__(self.cache_path, self.file_name)
@@ -64,7 +63,7 @@ class CacheEntryHandler(BaseCacheHandler):
         return a list of the corresponding entries.
         """
         # Verifying that the path end with / (What happen on windows?)
-        path = os.path.abspath(self.cache_path) + '/'
+        path = os.path.abspath(self.cache_path) + "/"
 
         cacheBlock = CacheBlock(path + "index")
 
@@ -72,14 +71,14 @@ class CacheEntryHandler(BaseCacheHandler):
         if cacheBlock.type != CacheBlock.INDEX:
             raise Exception("Invalid Index File")
 
-        index = open(path + "index", 'rb')
+        index = open(path + "index", "rb")
 
         # Skipping Header
-        index.seek(92*4)
+        index.seek(92 * 4)
 
         # If no url is specified, parse the whole cache
         for key in range(cacheBlock.tableSize):
-            raw = struct.unpack('I', index.read(4))[0]
+            raw = struct.unpack("I", index.read(4))[0]
             if raw != 0:
                 entry = CacheEntry(CacheAddress(raw, path=path))
                 # Checking if there is a next item in the bucket because
@@ -96,12 +95,12 @@ class CacheEntryHandler(BaseCacheHandler):
         if not self.cache_entries:
             self.init()
         return self.cache_entries
-        
+
     def commit(self):
         for entry in self.cache_entries:
             if entry.is_date_changed:
                 block = open(entry.addr.path + entry.addr.fileSelector, "r+b")
-                block.seek(8192 + entry.addr.blockNumber*entry.addr.entrySize + 24)
+                block.seek(8192 + entry.addr.blockNumber * entry.addr.entrySize + 24)
                 block.write(struct.pack("Q", entry.creationTime))
                 block.close()
 
@@ -121,24 +120,20 @@ class CacheEntryHandler(BaseCacheHandler):
                 #http_block.write(struct.pack("s", string))
                 date = str(struct.unpack("200s", http_block.read(200))[0])
                 print(date)
-            
+
             if http.expires_start:
                 expires_start = 8192 + http.address.blockNumber*http.address.entrySize + 16 + http.expires_start
                 http_block.seek(expires_start)
                 #http_block.write(struct.pack("s", timestamp))
                 date = str(struct.unpack("200s", http_block.read(200))[0])
                 print(date)
-            
+
             if http.modified_start:
                 modified_start = 8192 + http.address.blockNumber*http.address.entrySize + 24 + http.modified_start
                 http_block.seek(modified_start)
                 #http_block.write(struct.pack("s", timestamp))
                 date = str(struct.unpack("200s", http_block.read(200))[0])
-            
 
             http_block.close()
         """
         super().commit()
-
-
-	

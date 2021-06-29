@@ -46,7 +46,9 @@ class Favicon(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.expiry_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Favicons für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Favicons für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
