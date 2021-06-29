@@ -18,26 +18,26 @@ Beschreibung der verschiedenen Element des Programms:
         is auch unter 'Bearbeiten' zu finden.
         Um zwischen den verschiednen Daten einens Browser-Profils zu wechseln koennen unter 'Ansicht' verschiedene
         Ansichten ausgewaehlt werden.
-        Unter 'Hilfe' befindet sich zum einen dieses Nutzerhandbuch und zum anderen eine Link zum GitHub-Repository 
+        Unter 'Hilfe' befindet sich zum einen dieses Nutzerhandbuch und zum anderen eine Link zum GitHub-Repository
         dieses Programms.
 
     Toolbar:
         Unterhalb der Menueleiste befindet sich die Toolbar. Hier werden verscheidene Menueoptionen zur Schnellauswahl
         angeboten. Verfuegbar sind aktuell (von links nach rechts): Beenden, Speichern, Rueckgaengig machen und Profil-
         Liste akutalisieren.
-    
+
     Profilauswahl:
         In der linken Seitenleiste befindet sich im oberen Teil die Profilauswahl. Hier werden alle verfuegbaren
         Browser und deren Profile angezeigt. Ueber einen Mausklick kann ein Profil ausgewaehlt werden und mit dem
         'Laden'-Knopf unterhalb der Profil-Liste die Profil-Daten geladen werden.
-    
+
     Statuskonsole:
         Unterhalb der Profilauswahl in der Statuskonsole werden Meldungen an den Nutzer angezeigt. Sowohl
         Fehlermeldungen als auch postive Statusberichte erscheinen hier.
 
     Haupt-Datenanzeige:
         Mittig rechts von der Seitenleiste befindet sich die Hauptanzeige fuer die Profil-Daten. Im oberen Teil
-        wird angezeigt, welche Ansicht aktuell ausgewaehlt ist. Unterhalb befindet sich eine Tabelle in der die 
+        wird angezeigt, welche Ansicht aktuell ausgewaehlt ist. Unterhalb befindet sich eine Tabelle in der die
         Daten des Profils aufgelister werden. Hier koennen einzelne oder mehrere Eintraege ausgewaehlt und bearbeitet
         werden. Ein Klick rechten Mausklick laesst zudem ein Menue erscheinen, welches tabellenspezifische Optionen
         anbietet. Ist das Laden von zusaetzlichen Informationen fuer die ausgewaehlte Ansicht verfuegbar, koennen diese mittels
@@ -45,7 +45,6 @@ Beschreibung der verschiedenen Element des Programms:
 
     Anzeige fuer zusaetzliche Informationen:
         Diese befindet sich unterhalb der Haupt-Datenanzeige. Wurde in der Hauptanzeige ein Eintrag doppelt geklickt und
-        zusaetzliche Informationen sind fuer die akutelle Ansicht verfuegbar werden diese hier dargestellt. Ueber die 
+        zusaetzliche Informationen sind fuer die akutelle Ansicht verfuegbar werden diese hier dargestellt. Ueber die
         verscheidenen Tabs kann zwischen verschiedenen zusaetzliche Informationen gewechselt werden. Auch hier koennen
         Eintrage ausgewaehlt und ueber das Popup-Menue (rechter Mausklick) bearbeitet werden.
-    

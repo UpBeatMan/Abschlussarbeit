@@ -28,9 +28,9 @@ for at the least one browser type chromium or firefox - TBD
 
 ### On going
 
-* Fixing smaller bugs which will be discovered
-  * TODO: Edge Downloads won't show
-* Updating browser profile database changes in the browser views (browser updates)
+- Fixing smaller bugs which will be discovered
+  - TODO: Edge Downloads won't show
+- Updating browser profile database changes in the browser views (browser updates)
 
 ### In future
 
@@ -40,24 +40,24 @@ for at the least one browser type chromium or firefox - TBD
 
 ## Requirements
 
-* Python 3
-* Modules
-  * SQLAlchemy
-  * tksheet
-  * tkcalendar
-  * lz4
-  * tcl
-  * python-dateutil
-  * pywin32
-  * pypubsub
-  * Pillow
+- Python 3
+- Modules
+  - SQLAlchemy
+  - tksheet
+  - tkcalendar
+  - lz4
+  - tcl
+  - python-dateutil
+  - pywin32
+  - pypubsub
+  - Pillow
 
 ## Installation Guide
 
 Use poetry to install and manage the requirements.
 Poetry will also automatically create a virtualenv for you.
 
-__MANUAL will continue in GERMAN LANGUAGE__
+**MANUAL will continue in GERMAN LANGUAGE**
 TODO: to be changed to English
 
 ### Installation
