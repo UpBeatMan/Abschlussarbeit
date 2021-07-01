@@ -2,13 +2,13 @@ import tkinter as tk
 
 from Model.util import resource_path
 
-class GuideDialog(tk.Toplevel):
 
+class GuideDialog(tk.Toplevel):
     def __init__(self, parent, controller):
         tk.Toplevel.__init__(self, parent)
         self.title("Nutzerhandbuch")
-        self.resizable(0,0)
-        
+        self.resizable(0, 0)
+
         self.controller = controller
 
         self.text_frame = tk.Frame(self, width=130)
@@ -21,19 +21,19 @@ class GuideDialog(tk.Toplevel):
         button_frame = tk.Frame(self)
         button_frame.pack(side=tk.BOTTOM, pady=6)
 
-        self.ok_button = tk.Button(button_frame, text="OK", width=15, command=self.on_ok)
-        
-        self.ok_button.pack()
+        self.ok_button = tk.Button(
+            button_frame, text="OK", width=15, command=self.on_ok
+        )
 
+        self.ok_button.pack()
 
     def on_ok(self, event=None):
         self.destroy()
-        
 
     def show(self):
         self.wm_deiconify()
         self.wait_window()
-        
+
     def file_to_text(self):
         text = u""
         self.text.config(state=tk.NORMAL)

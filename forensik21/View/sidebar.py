@@ -6,9 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-
 class SideBar(tk.Frame):
-
     def __init__(self, parent):
         tk.Frame.__init__(self, width=50, height=150, bg="blue")
         self.parent = parent
@@ -23,17 +21,18 @@ class SideBar(tk.Frame):
         self.tree = ttk.Treeview(self, selectmode="browse", height=25)
 
         # Load Profile Button
-        subbutton = tk.Button(self, text="Laden", relief=tk.FLAT, width=30, command=self.load_profile)
+        subbutton = tk.Button(
+            self, text="Laden", relief=tk.FLAT, width=30, command=self.load_profile
+        )
 
         # Console
         self.console = tk.Text(self, width=30)
         self.console.config(state=tk.DISABLED)
-        
+
         # Pack Items
         self.tree.pack(fill="both", expand=True)
         subbutton.pack(fill="both")
         self.console.pack(side=tk.BOTTOM, fill="x")
-
 
     def load_profile(self):
         selected = self.tree.focus()
@@ -59,7 +58,7 @@ class SideBar(tk.Frame):
         profiles = self.parent.controller.load_profiles()
         if profiles:
             for browser in profiles:
-                parent = self.tree.insert('', "end",  text=browser)
+                parent = self.tree.insert("", "end", text=browser)
                 for profile in profiles[browser]:
                     self.tree.insert(parent, "end", text=profile)
         else:
