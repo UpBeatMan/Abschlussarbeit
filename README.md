@@ -70,7 +70,9 @@ If you use the Anaconda environment like me build your environment with
 
 `py -m pip install -r requirements.txt`
 
+
 **MANUAL will continue in GERMAN LANGUAGE**
+
 TODO: Required Parts of the old manual have to be changed to English
 
 ### Installation
