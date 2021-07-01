@@ -9,7 +9,7 @@ and free your mind! (:
 - [x] Milestones Transfer
 - [x] Arbeitsgeschwindigkeit erhöhen
 
-To use ResulVisualization with the Jupyter Notebook let Visual Studio Code install `ipykernel`.
+To use ResultVisualization.ipynb with the Jupyter Notebook let Visual Studio Code install `ipykernel`.
 
 ```
 Windows PowerShell
