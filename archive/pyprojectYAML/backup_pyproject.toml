@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "DFSC"
+version = "0.1.0"
+description = "Digital Forensics Scenario Creator"
+authors = ["Jan Weil <albcycle@gmx.net>"]
+
+[tool.poetry.dependencies]
+# last changed on 30.06.2021
+# newest python version
+#python = "^3.9"
+
+# first row newest conda or same as pip version 
+# second row newest pip versions
+# LZ4 Bindings for Python
+#lz4 = "^3.1.3"
+# Extensions to the standard Python datetime module
+#python-dateutil = "^2.8.1"
+# Python Imaging Library (Fork)
+#Pillow = "^8.2.0"
+# Python for Windows Extensions
+#pywin32 = "^228"
+#pywin32 = "^301"
+# Database Abstraction Library
+#SQLAlchemy = "^1.4.19"
+#SQLAlchemy = "^1.4.20"
+
+# Tkinter table / sheet widget
+#tksheet = "^5.0.27"
+# Calendar and Dateentry widgets for Tkinter
+#tkcalendar = "^1.6.1"
+# a Coding Language for GUIs
+#Tcl = "^0.2"
+# Python Publish-Subscribe Package
+#PyPubSub = "^4.0.3"
+ 
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+black = "^21.6b0"
+
+[tool.poetry2conda]
+name = "dfsc-env"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
