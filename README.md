@@ -1,4 +1,5 @@
-# Digital Forensics Scenario Creator - DFSC 
+# Digital Forensics Scenario Creator - DFSC
+
 formerName: fiprotima
 Browser Profile Timestamp Manipulator forked from hirthirt - https://github.com/hirthirt/fiprotima
 
@@ -10,6 +11,7 @@ thanks to the work of hirthirt
 Version 0.1.0
 
 ## Projekt Management outsourced to ZenHub
+
 Please install the ZenHub Browser Addon to see the ZenHub Boards - Agile - in GitHub as a tab between PRs and Discussions.
 https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd
 
@@ -45,6 +47,7 @@ for at the least one browser type chromium or firefox - TBD
 3. GUI usability improvements
 
 ## Requirements
+
 - Conda Packages:
   - Python 3.9
   - SQLAlchemy 1.4.19
@@ -61,15 +64,14 @@ for at the least one browser type chromium or firefox - TBD
 
 ## Installation Guide
 
-I highly recommend you to use the Anaconda Framework and conda environments. 
-If you use the Anaconda environment like me build your environment with 
+I highly recommend you to use the Anaconda Framework and conda environments.
+If you use the Anaconda environment like me build your environment with
 
 `conda env create -f .\environment.yaml`
 
-, if you decide to stay with pip build it with 
+, if you decide to stay with pip build it with
 
 `py -m pip install -r requirements.txt`
-
 
 **MANUAL will continue in GERMAN LANGUAGE**
 

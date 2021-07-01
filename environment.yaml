@@ -18,8 +18,8 @@ dependencies:
   - pytest>=6.2.4,<7.0.0
   - pip>=21.1.2,<22.0.0
   - pip:
-    - tksheet>=5.0.27,<6.0.0
-    - tkcalendar>=1.6.1,<2.0.0
-    - Tcl>=0.2,<0.3
-    - PyPubSub>=4.0.3,<5.0.0
-    - black>=21.6b0,<22.0
+      - tksheet>=5.0.27,<6.0.0
+      - tkcalendar>=1.6.1,<2.0.0
+      - Tcl>=0.2,<0.3
+      - PyPubSub>=4.0.3,<5.0.0
+      - black>=21.6b0,<22.0
