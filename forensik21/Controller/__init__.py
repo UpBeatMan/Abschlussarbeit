@@ -17,7 +17,6 @@ from Model import Model
 
 
 class Controller:
-
     def __init__(self):
         self.config = Config()
         self.config.set_current_username(getpass.getuser())
@@ -30,33 +29,41 @@ class Controller:
         self.logger.setLevel(logging.INFO)
         self.logger.addHandler(self.console)
 
-        self.model = Model() 
+        self.model = Model()
 
-        pub.subscribe(self.log_listener, 'logging')
+        pub.subscribe(self.log_listener, "logging")
 
         self.view.sidebar.insert_profiles_to_treeview()
 
     def main(self):
         self.view.main()
 
-    
     def load_profiles(self):
-        profiledict = self.model.search_profiles(current_username=self.config.current_username, current_os=self.config.current_os)
+        profiledict = self.model.search_profiles(
+            current_username=self.config.current_username,
+            current_os=self.config.current_os,
+        )
         return profiledict
 
     def load_profile(self, browser, name):
         data = None
         if self.get_unsaved_handlers():
-            answer = AskDialog(self.view, self, "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?").show()
+            answer = AskDialog(
+                self.view,
+                self,
+                "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?",
+            ).show()
             if not answer:
                 data = "keep"
                 return data
         if self.model.has_profil_loaded():
-            answer = AskDialog(self.view, self, "Möchten Sie das Profil wirklich wechseln?").show()
+            answer = AskDialog(
+                self.view, self, "Möchten Sie das Profil wirklich wechseln?"
+            ).show()
             if not answer:
                 data = "keep"
                 return data
-        data = self.model.load_profile(browser,name, self.config)
+        data = self.model.load_profile(browser, name, self.config)
         if browser in ["Edge", "Chrome"]:
             self.view.menu.chrome_edge_views()
         else:
@@ -70,7 +77,7 @@ class Controller:
     def get_saved_handlers(self):
         saved_handlers = self.model.get_saved_handler()
         return saved_handlers
-    
+
     def get_history(self):
         data = self.model.get_history()
         return data
@@ -199,7 +206,6 @@ class Controller:
                 self.view.content.fill_dataview(data, False)
                 self.view.content.dataview_mode = data_view
                 self.view.content.change_view_label("Medien")
-        
 
     def load_additional_info(self, a):
         if self.view.content.dataview_mode == "History":
@@ -210,7 +216,7 @@ class Controller:
                 sitename = split[1]
             else:
                 sitename = split[0]
-            
+
             data = self.model.get_additional_info("history", sitename)
             self.view.content.fill_info_section(data)
         elif self.view.content.dataview_mode == "Session":
@@ -222,13 +228,12 @@ class Controller:
             data = self.model.get_additional_info("media", item["values"][-1])
             self.view.content.fill_info_section(data)
 
-    
     def edit_all_data(self):
         # Ask for timedelta with dialog, then change all data based on this timedelta
         delta = TimedeltaDialog(self.view, self).show()
         if delta:
             now = datetime.datetime.now()
-            delta = now  - delta
+            delta = now - delta
             try:
                 delta = now.timestamp() - delta.timestamp()
             except:
@@ -241,7 +246,7 @@ class Controller:
         self.reload_data()
 
     def edit_selected_data(self, mode, all=False, infoview=False):
-        # Ask for timedelta with dialog, then change all data based on this timedelta 
+        # Ask for timedelta with dialog, then change all data based on this timedelta
         if mode == "date":
             date = DateDialog(self.view, self).show()
             if not date:
@@ -251,7 +256,7 @@ class Controller:
             delta = TimedeltaDialog(self.view, self).show()
             if delta:
                 now = datetime.datetime.now()
-                delta = now  - delta
+                delta = now - delta
                 try:
                     delta = now.timestamp() - delta.timestamp()
                 except:
@@ -275,14 +280,20 @@ class Controller:
                             if child in already_selected_list:
                                 continue
                             c_item = self.view.content.dataview.item(child)
-                            children_list.append([c_item["values"][-2], c_item["values"][-1]])
+                            children_list.append(
+                                [c_item["values"][-2], c_item["values"][-1]]
+                            )
                             already_selected_list.append(child)
-                    selected_list.append([item["values"][-2], item["values"][-1], children_list])
+                    selected_list.append(
+                        [item["values"][-2], item["values"][-1], children_list]
+                    )
                     already_selected_list.append(selected)
             else:
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
-                for selected in self.view.content.info_views[selected_tab][0].selection():
+                for selected in self.view.content.info_views[selected_tab][
+                    0
+                ].selection():
                     item = self.view.content.info_views[selected_tab][0].item(selected)
                     selected_list.append([item["values"][-2], item["values"][-1]])
         else:
@@ -292,20 +303,24 @@ class Controller:
                     if children:
                         for child in children:
                             item = self.view.content.dataview.item(child)
-                            selected_list.append([item["values"][-2], item["values"][-1]])
+                            selected_list.append(
+                                [item["values"][-2], item["values"][-1]]
+                            )
                     item = self.view.content.dataview.item(element)
                     selected_list.append([item["values"][-2], item["values"][-1]])
             else:
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
-                for element in self.view.content.info_views[selected_tab][0].get_children():
+                for element in self.view.content.info_views[selected_tab][
+                    0
+                ].get_children():
                     item = self.view.content.info_views[selected_tab][0].item(element)
                     selected_list.append([item["values"][-2], item["values"][-1]])
 
         if not selected_list:
             self.logger.info("Keine Elemente ausgewählt!")
             return
-            
+
         if mode == "date":
             try:
                 self.model.edit_selected_data_date(date, selected_list)
@@ -327,7 +342,7 @@ class Controller:
     def commit_all_data(self):
         self.model.commit()
         self.reload_data()
-    
+
     # Only commit the selected table
     def commit_selected_data(self, infoview=False):
         if not infoview:
@@ -346,7 +361,7 @@ class Controller:
         self.model.rollback()
         self.model.rollback_filesystem_time(self.config)
         self.reload_data()
-    
+
     # Only rollback the selected table
     def rollback_selected_data(self, infoview=False):
         if not infoview:
@@ -360,9 +375,13 @@ class Controller:
             self.model.rollback(data_handler_name)
             self.load_additional_info(None)
         pass
-    
+
     def change_filesystem_time(self):
-        check = AskDialog(self.view, self, "Möchten Sie die Dateisystemzeit wirklich anpassen?\n Dies sollte erst dann gemacht werden wenn alle anderen Änderungen vollzogen und gespeichert wurden!").show()
+        check = AskDialog(
+            self.view,
+            self,
+            "Möchten Sie die Dateisystemzeit wirklich anpassen?\n Dies sollte erst dann gemacht werden wenn alle anderen Änderungen vollzogen und gespeichert wurden!",
+        ).show()
         if not check:
             return
         if not self.model.has_profil_loaded():
@@ -372,8 +391,8 @@ class Controller:
             pass
         except:
             self.logger.error("Fehler beim ändern der Dateisystem Zeit!")
-    
-    def rollback_filesystem_time(self):      
+
+    def rollback_filesystem_time(self):
         try:
             self.model.rollback_filesystem_time(self.config)
         except:
