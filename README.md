@@ -45,27 +45,30 @@ for at the least one browser type chromium or firefox - TBD
 3. GUI usability improvements
 
 ## Requirements
-
-- Python 3
-- Modules
-  - SQLAlchemy
-  - tksheet
-  - tkcalendar
-  - lz4
-  - tcl
-  - python-dateutil
-  - pywin32
-  - pypubsub
-  - Pillow
+- Conda Packages:
+  - Python 3.9
+  - SQLAlchemy 1.4.19
+  - lz4 3.1.3
+  - Pillow 8.2.0
+  - python-dateutil 2.8.1
+  - pywin32 228
+- Pip Packages:
+  - tksheet 5.0.27
+  - tkcalendar 1.6.1
+  - tcl 0.2
+  - PyPubSub 4.0.3
+  - black 21.6b0
 
 ## Installation Guide
 
 I highly recommend you to use the Anaconda Framework and conda environments. 
-If you use the Anaconda environment like me build your environment with `conda env create -f .\environment.yaml`
-, if you decide to stay with pip build it with `py -m pip install -r requirements.txt`
+If you use the Anaconda environment like me build your environment with 
+`conda env create -f .\environment.yaml`
+, if you decide to stay with pip build it with 
+`py -m pip install -r requirements.txt`
 
 **MANUAL will continue in GERMAN LANGUAGE**
-TODO: to be changed to English
+TODO: Required Parts of the old manual have to be changed to English
 
 ### Installation
 
