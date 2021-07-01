@@ -63,8 +63,11 @@ for at the least one browser type chromium or firefox - TBD
 
 I highly recommend you to use the Anaconda Framework and conda environments. 
 If you use the Anaconda environment like me build your environment with 
+
 `conda env create -f .\environment.yaml`
+
 , if you decide to stay with pip build it with 
+
 `py -m pip install -r requirements.txt`
 
 **MANUAL will continue in GERMAN LANGUAGE**
