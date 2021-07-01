@@ -1,7 +1,6 @@
 # Digital Forensics Scenario Creator - DFSC 
-(formerName: fiprotima)
-
-Browser Profile Timestamp Manipulator forked from hirthirt
+formerName: fiprotima
+Browser Profile Timestamp Manipulator forked from hirthirt - https://github.com/hirthirt/fiprotima
 
 A tool for viewing and manipulating browser profiles on one place.
 Currently sorting profile entries domain-based and according to their timestamps.
@@ -9,6 +8,12 @@ Manipulation-wise there is already a feature to manipulate timestamps on large s
 thanks to the work of hirthirt
 
 Version 0.1.0
+
+## Projekt Management outsourced to ZenHub
+Please install the ZenHub Browser Addon to see the ZenHub Boards - Agile - in GitHub as a tab between PRs and Discussions.
+https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd
+
+Also feel free to start a new discussion. I always appreciate constructive criticism and sharing our thoughts.
 
 ## Currently in development
 
@@ -55,8 +60,9 @@ for at the least one browser type chromium or firefox - TBD
 
 ## Installation Guide
 
-Use poetry to install and manage the requirements.
-Poetry will also automatically create a virtualenv for you.
+I highly recommend you to use the Anaconda Framework and conda environments. 
+If you use the Anaconda environment like me build your environment with `conda env create -f .\environment.yaml`
+, if you decide to stay with pip build it with `py -m pip install -r requirements.txt`
 
 **MANUAL will continue in GERMAN LANGUAGE**
 TODO: to be changed to English
