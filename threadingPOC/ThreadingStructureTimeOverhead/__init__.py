@@ -2,7 +2,7 @@ from statistics import mean
 from timeit import Timer
 from threading import Thread
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
 
 # thread count
 TH_LOW: int = 2
@@ -38,7 +38,9 @@ def main():
             # with threading module
             t = Timer(lambda: start_threads(th_cat))
             time = t.timeit(number=1)
-            print(f"ThreadOverhead: Zeitmessung mit {th_cat} Threads in ns - Durchlauf {loop + 1}: {time}")
+            print(
+                f"ThreadOverhead: Zeitmessung mit {th_cat} Threads in ns - Durchlauf {loop + 1}: {time}"
+            )
             result_list.append(time)
         return results_thread_startonly
 
@@ -59,4 +61,5 @@ def main():
 
 
 # run the program
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

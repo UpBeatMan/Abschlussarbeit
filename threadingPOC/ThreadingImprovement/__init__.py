@@ -3,7 +3,7 @@ from timeit import Timer
 from database import database
 from threading import Thread
 
-__version__ = '0.2.0'
+__version__ = "0.2.0"
 
 # thread count
 TH_LOW: int = 2
@@ -20,7 +20,7 @@ START_ID: int = 1190
 
 
 def main():
-    dbms = database.MyDatabase(database.SQLITE, dbname='mydb.sqlite')
+    dbms = database.MyDatabase(database.SQLITE, dbname="mydb.sqlite")
     dbms.count_query()
 
     # def each_thread(rows, th_cat):
@@ -49,10 +49,16 @@ def main():
             t = Thread(target=read_range, args=(last_entry, next_border))
             t.start()
             last_entry = next_border + 1
-        print(last_entry-1)
+        print(last_entry - 1)
 
     def read_range(start, end):
-        build = "SELECT * FROM {TBL_HST} WHERE id BETWEEN " + str(start) + " AND " + str(end) + ";"
+        build = (
+            "SELECT * FROM {TBL_HST} WHERE id BETWEEN "
+            + str(start)
+            + " AND "
+            + str(end)
+            + ";"
+        )
         # print(build)
         query = build.format(TBL_HST=HISTORY)
         dbms.print_all_data(query=query)
@@ -62,7 +68,9 @@ def main():
             # with threading module
             t = Timer(lambda: calc_borders(START_ID, ROW_COUNT, th_cat))
             time = t.timeit(number=1)
-            print(f"Zeitmessung mit {th_cat} Threads in ns - Durchlauf {loop + 1}: {time}")
+            print(
+                f"Zeitmessung mit {th_cat} Threads in ns - Durchlauf {loop + 1}: {time}"
+            )
             result_list.append(time)
         return result_list
 
@@ -86,9 +94,10 @@ def main():
     results_threaded = []
 
     # print("Zeitmessung mit Threading und Aufteilen der Lesezugriffe.")
-    threaded_testcase(i,  results_threaded, TH_LOW)
+    threaded_testcase(i, results_threaded, TH_LOW)
     show_results(i, results_threaded)
 
 
 # run the program
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

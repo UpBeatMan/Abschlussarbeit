@@ -2,7 +2,7 @@ from statistics import mean
 from timeit import Timer
 from database import database
 
-__version__ = '0.2.0'
+__version__ = "0.2.0"
 
 # table names
 HISTORY: str = "moz_formhistory"
@@ -13,7 +13,7 @@ START_ID: int = 1190
 
 
 def main():
-    dbms = database.MyDatabase(database.SQLITE, dbname='mydb.sqlite')
+    dbms = database.MyDatabase(database.SQLITE, dbname="mydb.sqlite")
     dbms.count_query()
 
     def end_range(rows, entry):
@@ -23,7 +23,13 @@ def main():
 
     # Functions
     def read_range(start, end):
-        build = "SELECT * FROM {TBL_HST} WHERE id BETWEEN " + str(start) + " AND " + str(end) + ";"
+        build = (
+            "SELECT * FROM {TBL_HST} WHERE id BETWEEN "
+            + str(start)
+            + " AND "
+            + str(end)
+            + ";"
+        )
         # print(build)
         query = build.format(TBL_HST=HISTORY)
         dbms.print_all_data(query=query)
@@ -58,4 +64,5 @@ def main():
 
 
 # run the program
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
