@@ -11,7 +11,7 @@ from Model.FirefoxModel.JSON.base import (
 )
 
 NAME = "Hostname"
-INSTALLDDATE = "Installiert am"
+INSTALLDATE = "Installiert am" # FIXME
 UPDATEDATE = "Geupdatet am"
 SIGNEDDATE = "Signiert am"
 VALIDNOTAFTER = "Nicht valide nach"
@@ -55,7 +55,7 @@ class Extension(BaseJSONClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(NAME, OTHER, self.name))
         self.attr_list.append(
-            BaseAttribute(INSTALLDDATE, DT_SEC_ZEROED_MILLI, self.install_timestamp)
+            BaseAttribute(INSTALLDATE, DT_SEC_ZEROED_MILLI, self.install_timestamp) # FIXME
         )
         if self.update_timestamp:
             self.attr_list.append(
@@ -91,7 +91,7 @@ class Extension(BaseJSONClass):
             log_message("Kein Delta erhalten in Extensions", "error")
             return
         for attr in self.attr_list:
-            if attr.name == INSTALLDDATE:
+            if attr.name == INSTALLDATE: # FIXME
                 try:
                     attr.change_date(delta)
                     attr.date_to_timestamp()
@@ -153,7 +153,7 @@ class ExtensionsHandler(BaseJSONHandler):
 
     attr_names = [
         NAME,
-        INSTALLDDATE, # FIXME: TYPO "INSTALLDATE" _
+        INSTALLDATE,  # FIXME TYPO "INSTALLDATE" _
         UPDATEDATE,
         SIGNEDDATE,
         VALIDNOTAFTER,

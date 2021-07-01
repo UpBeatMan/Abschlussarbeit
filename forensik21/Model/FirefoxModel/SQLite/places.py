@@ -24,6 +24,7 @@ VISITED = "Besucht am"
 ADDEDAT = "Hinzugefügt am"
 LASTMODIFIED = "Geändert am"
 
+
 class Place(BaseSession, BaseSQLiteClass):
     __tablename__ = "moz_places"
 
@@ -52,7 +53,7 @@ class HistoryVisit(BaseSession, BaseSQLiteClass):
         self.attr_list.append(
             BaseAttribute(LASTVISITED, DT_MICRO, self.place.last_visited_timestamp)
         )
-    
+
     def reload_attributes(self):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(URL, OTHER, self.place.url))
@@ -70,18 +71,23 @@ class HistoryVisit(BaseSession, BaseSQLiteClass):
         last_visited_safe = self.place.last_visited_timestamp
         for attr in self.attr_list:
             if attr.name == LASTVISITED:
-                is_bigger, addi_delta = attr.check_new_bigger(self.attr_list[2].value, delta)
-                if visited_safe == last_visited_safe or is_bigger :
+                is_bigger, addi_delta = attr.check_new_bigger(
+                    self.attr_list[2].value, delta
+                )
+                if visited_safe == last_visited_safe or is_bigger:
                     try:
                         if is_bigger:
                             print(is_bigger, addi_delta)
-                            attr.change_date(addi_delta-delta)
+                            attr.change_date(addi_delta - delta)
                         else:
                             attr.change_date(delta)
                         attr.date_to_timestamp()
                         self.place.last_visited_timestamp = attr.timestamp
                     except:
-                        log_message("Fehler bei Update in HistoryVisit für " + attr.name, "error")
+                        log_message(
+                            "Fehler bei Update in HistoryVisit für " + attr.name,
+                            "error",
+                        )
                         continue
                     self.is_date_changed = True
             elif attr.name == VISITED:
@@ -90,10 +96,11 @@ class HistoryVisit(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.visit_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in HistoryVisit für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in HistoryVisit für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
-
 
 
 class Bookmark(BaseSession, BaseSQLiteClass):
@@ -113,7 +120,9 @@ class Bookmark(BaseSession, BaseSQLiteClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(TITLE, OTHER, self.title))
         self.attr_list.append(BaseAttribute(URL, OTHER, self.place.url))
-        self.attr_list.append(BaseAttribute(ADDEDAT, DT_MILLI_ZEROED_MICRO, self.added_timestamp))
+        self.attr_list.append(
+            BaseAttribute(ADDEDAT, DT_MILLI_ZEROED_MICRO, self.added_timestamp)
+        )
         if self.place.last_visited_timestamp is not None:
             self.attr_list.append(
                 BaseAttribute(LASTVISITED, DT_MICRO, self.place.last_visited_timestamp)
@@ -121,7 +130,9 @@ class Bookmark(BaseSession, BaseSQLiteClass):
         else:
             self.attr_list.append(BaseAttribute(LASTVISITEDNONE, OTHER, "None"))
         self.attr_list.append(
-            BaseAttribute(LASTMODIFIED, DT_MILLI_ZEROED_MICRO, self.last_modified_timestamp)
+            BaseAttribute(
+                LASTMODIFIED, DT_MILLI_ZEROED_MICRO, self.last_modified_timestamp
+            )
         )
 
     def update(self, delta):
@@ -135,7 +146,9 @@ class Bookmark(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.place.last_visited_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Bookmarks für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Bookmarks für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == ADDEDAT:
@@ -144,7 +157,9 @@ class Bookmark(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.added_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Bookmarks für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Bookmarks für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTMODIFIED:
@@ -153,7 +168,9 @@ class Bookmark(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_modified_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Bookmarks für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Bookmarks für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -164,7 +181,9 @@ class Download(BaseSession, BaseSQLiteClass):
     id = Column("id", Integer, primary_key=True)
     place_id = Column("place_id", Integer, ForeignKey("moz_places.id"))
     place = relationship("Place")
-    anno_attribute_id = Column("anno_attribute_id", Integer, ForeignKey("moz_anno_attributes.id"))
+    anno_attribute_id = Column(
+        "anno_attribute_id", Integer, ForeignKey("moz_anno_attributes.id")
+    )
     attribute = relationship("DownloadType")
     content = Column("content", String)
     added_timestamp = Column("dateAdded", Integer)  # Micro-zero
@@ -176,14 +195,20 @@ class Download(BaseSession, BaseSQLiteClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(TITLE, OTHER, self.attribute.name))
         self.attr_list.append(BaseAttribute("Inhalt", OTHER, self.content))
-        self.attr_list.append(BaseAttribute(ADDEDAT, DT_MILLI_ZEROED_MICRO, self.added_timestamp))
-        self.attr_list.append(BaseAttribute(LASTMODIFIED, DT_MILLI_ZEROED_MICRO, self.last_modified_timestamp))
+        self.attr_list.append(
+            BaseAttribute(ADDEDAT, DT_MILLI_ZEROED_MICRO, self.added_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(
+                LASTMODIFIED, DT_MILLI_ZEROED_MICRO, self.last_modified_timestamp
+            )
+        )
 
     def update(self, delta):
         if not delta:
             log_message("Kein Delta erhalten in Download", "error")
             return
-        if self.content.startswith('file'):
+        if self.content.startswith("file"):
             file_path = self.content.split("///")[1]
             if platform.system() != "Windows":
                 file_path = "/" + file_path
@@ -197,7 +222,7 @@ class Download(BaseSession, BaseSQLiteClass):
             for attr in self.attr_list:
                 if attr.name == "Inhalt":
                     attr.value = self.content
-           
+
         for attr in self.attr_list:
             if attr.name == ADDEDAT:
                 try:
@@ -205,7 +230,9 @@ class Download(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.added_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Download für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Download für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTMODIFIED:
@@ -214,7 +241,9 @@ class Download(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.last_modified_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Download für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Download für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
@@ -245,7 +274,7 @@ class HistoryVisitHandler(PlacesHandler):
     def get_all_id_ordered(self):
         history = self.session.query(HistoryVisit).order_by(HistoryVisit.id).all()
         return history
-        
+
 
 class BookmarkHandler(PlacesHandler):
     name = "Lesezeichen"
@@ -253,14 +282,18 @@ class BookmarkHandler(PlacesHandler):
     attr_names = [ID, TITLE, URL, LASTVISITED, ADDEDAT, LASTMODIFIED]
 
     def get_all_id_ordered(self):
-        query = self.session.query(Bookmark).filter(Bookmark.type == 1).order_by(Bookmark.id)
+        query = (
+            self.session.query(Bookmark)
+            .filter(Bookmark.type == 1)
+            .order_by(Bookmark.id)
+        )
         return query.all()
 
 
 class DownloadHandler(PlacesHandler):
     name = "Downloads"
 
-    attr_names = [TITLE, "Inhalt",ADDEDAT, LASTMODIFIED]
+    attr_names = [TITLE, "Inhalt", ADDEDAT, LASTMODIFIED]
 
     def get_all_id_ordered(self):
         query = self.session.query(Download).order_by(Download.id)

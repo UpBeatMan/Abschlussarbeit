@@ -24,8 +24,12 @@ class Permission(BaseSession, BaseSQLiteClass):
         self.attr_list = []
         self.attr_list.append(BaseAttribute(ORIGIN, OTHER, self.origin))
         self.attr_list.append(BaseAttribute(TYPE, OTHER, self.type))
-        self.attr_list.append(BaseAttribute(EXPIRYAT, DT_MILLI_OR_ZERO, self.expiry_timestamp))
-        self.attr_list.append(BaseAttribute(LASTMODIFIED, DT_MILLI, self.modify_timestamp))
+        self.attr_list.append(
+            BaseAttribute(EXPIRYAT, DT_MILLI_OR_ZERO, self.expiry_timestamp)
+        )
+        self.attr_list.append(
+            BaseAttribute(LASTMODIFIED, DT_MILLI, self.modify_timestamp)
+        )
 
     def update(self, delta):
         if not delta:
@@ -42,7 +46,9 @@ class Permission(BaseSession, BaseSQLiteClass):
                         attr.date_to_timestamp()
                         self.expiry_timestamp = attr.timestamp
                     except:
-                        log_message("Fehler bei Update in Permissions für " + attr.name, "error")
+                        log_message(
+                            "Fehler bei Update in Permissions für " + attr.name, "error"
+                        )
                         continue
                     self.is_date_changed = True
             elif attr.name == LASTMODIFIED:
@@ -51,7 +57,9 @@ class Permission(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.modify_timestamp = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in Permissions für " + attr.name, "error")
+                    log_message(
+                        "Fehler bei Update in Permissions für " + attr.name, "error"
+                    )
                     continue
                 self.is_date_changed = True
 
