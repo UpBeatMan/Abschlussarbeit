@@ -83,3 +83,86 @@ Verifying transaction: done
 Executing transaction: done
 (dfsc-env) PS C:\Users\<username>\Abschlussarbeit>
 ```
+
+```
+(dfsc-env) PS C:\Users\<username>\Abschlussarbeit> conda install matplotlib
+Collecting package metadata (current_repodata.json): done
+Solving environment: done
+
+
+==> WARNING: A newer version of conda exists. <==
+  current version: 4.10.1
+  latest version: 4.10.3
+
+Please update conda by running
+
+    $ conda update -n base -c defaults conda
+
+
+
+## Package Plan ##
+
+  environment location: C:\Users\<username>\.conda\envs\dfsc-env
+
+  added / updated specs:
+    - matplotlib
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    cycler-0.10.0              |   py39haa95532_0          16 KB
+    kiwisolver-1.3.1           |   py39hd77b12b_0          52 KB
+    matplotlib-3.3.4           |   py39haa95532_0          27 KB
+    matplotlib-base-3.3.4      |   py39h49ac443_0         5.1 MB
+    mkl-service-2.3.0          |   py39h2bbff1b_1          49 KB
+    mkl_fft-1.3.0              |   py39h277e83a_2         137 KB
+    mkl_random-1.2.1           |   py39hf11a4ad_2         223 KB
+    numpy-1.20.2               |   py39ha4e8547_0          23 KB
+    numpy-base-1.20.2          |   py39hc2deb75_0         4.2 MB
+    pyqt-5.9.2                 |   py39hd77b12b_6         3.3 MB
+    sip-4.19.13                |   py39hd77b12b_0         262 KB
+    ------------------------------------------------------------
+                                           Total:        13.4 MB
+
+The following NEW packages will be INSTALLED:
+
+  blas               pkgs/main/win-64::blas-1.0-mkl
+  cycler             pkgs/main/win-64::cycler-0.10.0-py39haa95532_0
+  icu                pkgs/main/win-64::icu-58.2-ha925a31_3
+  intel-openmp       pkgs/main/win-64::intel-openmp-2021.2.0-haa95532_616
+  kiwisolver         pkgs/main/win-64::kiwisolver-1.3.1-py39hd77b12b_0
+  matplotlib         pkgs/main/win-64::matplotlib-3.3.4-py39haa95532_0
+  matplotlib-base    pkgs/main/win-64::matplotlib-base-3.3.4-py39h49ac443_0
+  mkl                pkgs/main/win-64::mkl-2021.2.0-haa95532_296
+  mkl-service        pkgs/main/win-64::mkl-service-2.3.0-py39h2bbff1b_1
+  mkl_fft            pkgs/main/win-64::mkl_fft-1.3.0-py39h277e83a_2
+  mkl_random         pkgs/main/win-64::mkl_random-1.2.1-py39hf11a4ad_2
+  numpy              pkgs/main/win-64::numpy-1.20.2-py39ha4e8547_0
+  numpy-base         pkgs/main/win-64::numpy-base-1.20.2-py39hc2deb75_0
+  pyqt               pkgs/main/win-64::pyqt-5.9.2-py39hd77b12b_6
+  qt                 pkgs/main/win-64::qt-5.9.7-vc14h73c81de_0
+  sip                pkgs/main/win-64::sip-4.19.13-py39hd77b12b_0
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages
+sip-4.19.13          | 262 KB    | ################################################################################################################################## | 100%
+cycler-0.10.0        | 16 KB     | ################################################################################################################################## | 100%
+matplotlib-3.3.4     | 27 KB     | ################################################################################################################################## | 100%
+pyqt-5.9.2           | 3.3 MB    | ################################################################################################################################## | 100%
+numpy-base-1.20.2    | 4.2 MB    | ################################################################################################################################## | 100%
+mkl_fft-1.3.0        | 137 KB    | ################################################################################################################################## | 100%
+kiwisolver-1.3.1     | 52 KB     | ################################################################################################################################## | 100%
+mkl_random-1.2.1     | 223 KB    | ################################################################################################################################## | 100%
+numpy-1.20.2         | 23 KB     | ################################################################################################################################## | 100%
+matplotlib-base-3.3. | 5.1 MB    | ################################################################################################################################## | 100%
+mkl-service-2.3.0    | 49 KB     | ################################################################################################################################## | 100%
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: done
+(dfsc-env) PS C:\Users\<username>\Abschlussarbeit>
+```
