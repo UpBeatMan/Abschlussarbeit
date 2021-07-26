@@ -107,7 +107,6 @@ new_profile_dir = PROFILES_DIR + "\\" + new_profiles[0]
 print(new_profile_dir)
 
 #* Firefox Selenium Driver Start
-# fp.set_preference("browser.helperApps.neverAsk.saveToDisk","application/octet-stream")
 
 # Start Browser
 option = Options()
