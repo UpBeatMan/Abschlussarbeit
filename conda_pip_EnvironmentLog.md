@@ -285,3 +285,42 @@ Verifying transaction: done
 Executing transaction: done
 (base) PS C:\Users\<username>>
 ```
+
+# for DownloadTest.py (only works in linux distros)
+```
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit> pip install pyvirtualdisplay
+Collecting pyvirtualdisplay
+  Downloading PyVirtualDisplay-2.2-py3-none-any.whl (15 kB)
+Collecting EasyProcess
+  Downloading EasyProcess-0.3-py2.py3-none-any.whl (7.9 kB)
+Installing collected packages: EasyProcess, pyvirtualdisplay
+Successfully installed EasyProcess-0.3 pyvirtualdisplay-2.2
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit>
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit> pip uninstall EasyProcess
+Found existing installation: EasyProcess 0.3
+Uninstalling EasyProcess-0.3:
+  Would remove:
+    c:\users\yochanan\.conda\envs\dfsc-env\lib\site-packages\easyprocess-0.3.dist-info\*
+    c:\users\yochanan\.conda\envs\dfsc-env\lib\site-packages\easyprocess\*
+Proceed (y/n)? y
+  Successfully uninstalled EasyProcess-0.3
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit>
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit> pip install xvfbwrapper
+Collecting xvfbwrapper
+  Downloading xvfbwrapper-0.2.9.tar.gz (5.6 kB)
+Building wheels for collected packages: xvfbwrapper
+  Building wheel for xvfbwrapper (setup.py) ... done
+  Created wheel for xvfbwrapper: filename=xvfbwrapper-0.2.9-py3-none-any.whl size=5010 sha256=f510324f46330ad96da28cc7132fd19eb30d9fdda23bb3d94693e2391740647d
+  Stored in directory: c:\users\yochanan\appdata\local\pip\cache\wheels\aa\09\0e\c0fa4c721cfb0a003121597a24181add912b7488054d2311ad
+Successfully built xvfbwrapper
+Installing collected packages: xvfbwrapper
+Successfully installed xvfbwrapper-0.2.9
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit>
+(dfsc-env) PS C:\Users\Yochanan\Abschlussarbeit> pip uninstall xvfbwrapper\Users\Yochanan\Abschlussarbeit>
+Found existing installation: xvfbwrapper 0.2.9
+Uninstalling xvfbwrapper-0.2.9:
+    c:\users\yochanan\.conda\envs\dfsc-env\lib\site-packages\xvfbwrapper-0.2.9.dist-info\*
+    c:\users\yochanan\.conda\envs\dfsc-env\lib\site-packages\xvfbwrapper.py
+Proceed (y/n)? y
+  Successfully uninstalled xvfbwrapper-0.2.9
+```
