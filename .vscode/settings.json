@@ -1,7 +1,15 @@
 {
   "files.exclude": {
     "**/.git": true,
-    "**/.DS_Store": true
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "geckodriver.log": true
   },
   "explorerExclude.backup": null,
   "python.formatting.provider": "black",

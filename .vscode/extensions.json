@@ -66,6 +66,9 @@
     "christian-kohler.path-intellisense",
     "grapecity.gc-excelviewer",
     "davidanson.vscode-markdownlint",
-    "jakearl.search-editor-apply-changes"
+    "jakearl.search-editor-apply-changes",
+    "tabnine.tabnine-vscode",
+    "alexcvzz.vscode-sqlite",
+    "mtxr.sqltools-driver-sqlite"
   ]
 }
