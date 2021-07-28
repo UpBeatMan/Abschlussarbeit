@@ -1,6 +1,8 @@
+# Sets the current
+# config paths,
+# user variables,
+# and system variables
 class Config:
-    """Saves the current config paths"""
-
     def __init__(
         self,
         profile_path=None,
@@ -18,6 +20,10 @@ class Config:
         self.current_browser = current_browser
         self.startup_history_last_time = startup_history_last_time
         self.file_system_rollback_delta = file_system_rollback_delta
+
+    # * setter methods - Config
+    # profile, cache, username, os, browser, last history startup, file system rollback timedelta
+    # # #######################
 
     def set_profile_path(self, path: str):
         self.profile_path = path
