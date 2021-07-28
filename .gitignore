@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# own gitignore entries
+ChromeMultithreadingPoC/DiscontinuedFirefox
+ChromeMultithreadingPoC/ResultVisualization
