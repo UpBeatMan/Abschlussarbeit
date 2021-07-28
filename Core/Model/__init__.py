@@ -322,7 +322,7 @@ class Model:
             )
             return None
 
-        if current_os == "Windows":
+        if current_os == "Windows":  # Microsoft Windows
             firepath = (
                 "C:/Users/" + current_username + "/AppData/Roaming/Mozilla/Firefox/"
             )
@@ -339,13 +339,13 @@ class Model:
                 + current_username
                 + "/AppData/Local/Google/Chrome/User Data/"
             )
-        elif current_os == "Linux":
+        elif current_os == "Linux":  # Linux Distro
             firepath = "/home/" + current_username + "/.mozilla/firefox/"
             firecachepath = "/home/" + current_username + "/.cache/mozilla/firefox/"
             chromepath = "/home/" + current_username + "/.config/google-chrome/"
             edgepath = ""
             pass
-        elif current_os == "Darwin":
+        elif current_os == "Darwin":  # Apple Mac OS
             firepath = (
                 "Users/" + current_username + "/Library/Application Support/Firefox/"
             )
