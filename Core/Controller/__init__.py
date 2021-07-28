@@ -1,44 +1,60 @@
-import getpass
-import platform
-import datetime
-import logging
-import lz4
+import getpass  # password prompt without echoing
+import platform  # providing system information
+import datetime  # module for date and time object
+import logging  # logging module for debugging
+import lz4  # lz4 compression library bindings
 
-from pubsub import pub
-from dateutil.relativedelta import *
-from urllib.parse import urlparse
-from Config import Config
-from Controller.console import Console
-from View import View
-from View.Dialogs.delta_dialog import TimedeltaDialog
-from View.Dialogs.date_dialog import DateDialog
-from View.Dialogs.ask_dialog import AskDialog
-from Model import Model
+from pubsub import pub  # event based programming module - publish-subscribe API
+from dateutil.relativedelta import *  # add time relative to a datetime timestamp
+from urllib.parse import urlparse  # url manipulation module
+from Config import Config  # use projects own Config paths and variable
+from Controller.console import Console  # use projects Controller console component
+from View import View  # use projects View components
+from View.Dialogs.delta_dialog import (
+    TimedeltaDialog,
+)  # use projects timedelta dialog tk component
+from View.Dialogs.date_dialog import DateDialog  # use projects date dialog tk component
+from View.Dialogs.ask_dialog import (
+    AskDialog,
+)  # use projects warning dialog tk component
+from Model import Model  # use projects Model components
 
 
 class Controller:
     def __init__(self):
+        # instantiate Config object
+        # find and set username and os in Config
         self.config = Config()
         self.config.set_current_username(getpass.getuser())
         self.config.set_current_os(platform.system())
 
+        # instantiate View object
         self.view = View(self)
 
+        # instantiate Console object with logging handler - sidebar
         self.console = Console(self.view.sidebar.console)
-        self.logger = logging.getLogger()
-        self.logger.setLevel(logging.INFO)
-        self.logger.addHandler(self.console)
+        self.logger = logging.getLogger()  # create logger
+        self.logger.setLevel(logging.INFO)  # INFO log level for events
+        # ! TODO: Separate DEBUG, WARNING, ERROR, CRITICAL Logs in new a new tk component
+        self.logger.addHandler(self.console)  # add handler object console
 
+        # instantiate Model object
         self.model = Model()
 
+        # subscribe to either INFO or ERROR logger
         pub.subscribe(self.log_listener, "logging")
 
         self.view.sidebar.insert_profiles_to_treeview()
 
     def main(self):
+        # indirect instantiate Controller object
         self.view.main()
 
+    # * profile handling
+    # # ################
+
     def load_profiles(self):
+        # search for browser profiles across all browser types - Firefox, Edge and Chrome
         profiledict = self.model.search_profiles(
             current_username=self.config.current_username,
             current_os=self.config.current_os,
@@ -46,8 +62,10 @@ class Controller:
         return profiledict
 
     def load_profile(self, browser, name):
+        # load one browser profile
         data = None
         if self.get_unsaved_handlers():
+            # check if changes are saved
             answer = AskDialog(
                 self.view,
                 self,
@@ -56,20 +74,23 @@ class Controller:
             if not answer:
                 data = "keep"
                 return data
-        if self.model.has_profil_loaded():
+        if self.model.has_profil_loaded():  # FIXME: profil to profile
+            # check if loaded profile should be replaced
             answer = AskDialog(
                 self.view, self, "Möchten Sie das Profil wirklich wechseln?"
             ).show()
             if not answer:
                 data = "keep"
                 return data
-        data = self.model.load_profile(browser, name, self.config)
-        if browser in ["Edge", "Chrome"]:
+        data = self.model.load_profile(browser, name, self.config)  # load profile
+        if browser in ["Edge", "Chrome"]:  # choose view
             self.view.menu.chrome_edge_views()
         else:
             self.view.menu.firefox_views()
         return data
 
+    # * getter methods for data from the "Model" component
+    # # ##################################################
     def get_unsaved_handlers(self):
         unsaved_handlers = self.model.get_unsaved_handlers()
         return unsaved_handlers
@@ -81,6 +102,9 @@ class Controller:
     def get_history(self):
         data = self.model.get_history()
         return data
+
+    # * "View" data
+    # # ###########
 
     def reload_data(self):
         self.change_data_view(self.view.content.dataview_mode)
@@ -340,11 +364,12 @@ class Controller:
             self.load_additional_info(None)
 
     def commit_all_data(self):
+        # commit all data
         self.model.commit()
         self.reload_data()
 
-    # Only commit the selected table
     def commit_selected_data(self, infoview=False):
+        # only commit the selected table
         if not infoview:
             data_handler_name = self.view.content.selected_treeview_handler
             self.model.commit(data_handler_name)
@@ -358,12 +383,13 @@ class Controller:
         pass
 
     def rollback_all_data(self):
+        # rollback all data
         self.model.rollback()
         self.model.rollback_filesystem_time(self.config)
         self.reload_data()
 
-    # Only rollback the selected table
     def rollback_selected_data(self, infoview=False):
+        # only rollback the selected table
         if not infoview:
             data_handler_name = self.view.content.selected_treeview_handler
             self.model.rollback(data_handler_name)
@@ -377,6 +403,7 @@ class Controller:
         pass
 
     def change_filesystem_time(self):
+        #
         check = AskDialog(
             self.view,
             self,
@@ -388,7 +415,7 @@ class Controller:
             self.logger.info("Kein Profil geladen!")
         self.model.change_filesystem_time(self.config)
         try:
-            pass
+            pass  #! Why? Shouldn't be here - self.model.change_filesystem_time ...
         except:
             self.logger.error("Fehler beim ändern der Dateisystem Zeit!")
 
