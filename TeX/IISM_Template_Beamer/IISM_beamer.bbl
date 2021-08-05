@@ -1,0 +1,38 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Gimpel%
+, Jennings%
+, Kersten%
+, Ockenfels%
+\BCBL {}\ \BBA {} Weinhardt%
+}{%
+Gimpel%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2008}}%
+}]{%
+Gimpel2008}
+\APACinsertmetastar {%
+Gimpel2008}%
+\begin{APACrefauthors}%
+Gimpel, H.%
+, Jennings, N\BPBI R.%
+, Kersten, G\BPBI E.%
+, Ockenfels, A.%
+\BCBL {}\ \BBA {} Weinhardt, C.%
+\end{APACrefauthors}%
+\ (\BEDS).
+\unskip\
+\newblock
+\APACrefYearMonthDay{2008}{}{}.
+\newblock
+\APACrefbtitle {{Negotiation, Auctions, and Market Engineering}.}
+  {{Negotiation, Auctions, and Market Engineering}.}
+\newblock
+\APACaddressPublisher{Berlin}{Springer}.
+\newblock
+\begin{APACrefURL} \url{http://www.springerlink.com/content/l7380r/}
+  \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
