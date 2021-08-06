@@ -1,13 +1,18 @@
-FiProTiMa Nutzerhandbuch
+#! TODO: an Programmaenderungen anpassen.
 
-FiProTiMa ist ein Programm zur Manipulation von Zeitinformationen in Browser-Profilen.
+Digital Forensics Scenario Creator (DFSC) Nutzerhandbuch - ehemals FiProTiMa:
+
+DFSC ist ein Programm zur Manipulation von Zeitinformationen in Browser-Profilen und ... #TODO: hinzufügen!
 
 Aktuell werden folgende Browser unterstuetzt:
+
+    - offiziell nur Google Chrome in der neuen Version
+
     - Mozilla Firefox
     - Google Chrome
     - Microsoft Edge
 
-Beschreibung der verschiedenen Element des Programms:
+Beschreibung der verschiedenen Elemente des Programms:
 
     Menueleiste:
         Die Menueleiste, welche sich am oberen Rand des Programms befindet bietet verscheidene Optionen an.
