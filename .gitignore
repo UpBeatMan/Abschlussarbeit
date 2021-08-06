@@ -129,5 +129,4 @@ dmypy.json
 .pyre/
 
 # own gitignore entries
-ChromeMultithreadingPoC/DiscontinuedFirefox
-ChromeMultithreadingPoC/ResultVisualization
+address_book.db
