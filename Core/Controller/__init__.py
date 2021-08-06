@@ -51,8 +51,6 @@ class Controller:
         self.view.main()
 
     # * profile handling
-    # # ################
-
     def load_profiles(self):
         # search for browser profiles across all browser types - Firefox, Edge and Chrome
         profiledict = self.model.search_profiles(
@@ -74,7 +72,7 @@ class Controller:
             if not answer:
                 data = "keep"
                 return data
-        if self.model.has_profil_loaded():  # FIXME: profil to profile
+        if self.model.has_profil_loaded():  #! TODO: change profil to profile
             # check if loaded profile should be replaced
             answer = AskDialog(
                 self.view, self, "Möchten Sie das Profil wirklich wechseln?"
@@ -90,7 +88,6 @@ class Controller:
         return data
 
     # * getter methods for data from the "Model" component
-    # # ##################################################
     def get_unsaved_handlers(self):
         unsaved_handlers = self.model.get_unsaved_handlers()
         return unsaved_handlers
@@ -104,11 +101,10 @@ class Controller:
         return data
 
     # * "View" data
-    # # ###########
-
     def reload_data(self):
         self.change_data_view(self.view.content.dataview_mode)
 
+    # * change data
     def change_data_view(self, data_view):
         if data_view == "FormHistory":
             data = self.model.get_specific_data("FormHistoryHandler")
@@ -231,6 +227,7 @@ class Controller:
                 self.view.content.dataview_mode = data_view
                 self.view.content.change_view_label("Medien")
 
+    # * load data
     def load_additional_info(self, a):
         if self.view.content.dataview_mode == "History":
             item = self.view.content.dataview.item(self.view.content.dataview.focus())
@@ -252,6 +249,7 @@ class Controller:
             data = self.model.get_additional_info("media", item["values"][-1])
             self.view.content.fill_info_section(data)
 
+    # * edit time information
     def edit_all_data(self):
         # Ask for timedelta with dialog, then change all data based on this timedelta
         delta = TimedeltaDialog(self.view, self).show()
@@ -363,6 +361,7 @@ class Controller:
         else:
             self.load_additional_info(None)
 
+    # * commit data
     def commit_all_data(self):
         # commit all data
         self.model.commit()
@@ -382,6 +381,7 @@ class Controller:
             self.load_additional_info(None)
         pass
 
+    # * rollback data
     def rollback_all_data(self):
         # rollback all data
         self.model.rollback()
@@ -402,6 +402,7 @@ class Controller:
             self.load_additional_info(None)
         pass
 
+    # * edit filesystem time
     def change_filesystem_time(self):
         #
         check = AskDialog(
@@ -425,7 +426,7 @@ class Controller:
         except:
             self.logger.error("Fehler beim Rollback der Dateisystem Zeit!")
 
-    # The listener for the logging event of pubsub
+    # * The listener for the logging event of pubsub
     def log_listener(self, message, lvl):
         if lvl == "info":
             self.logger.info(message)
