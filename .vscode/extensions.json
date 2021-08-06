@@ -69,6 +69,7 @@
     "jakearl.search-editor-apply-changes",
     "tabnine.tabnine-vscode",
     "alexcvzz.vscode-sqlite",
-    "mtxr.sqltools-driver-sqlite"
+    "mtxr.sqltools-driver-sqlite",
+    "vscode-icons-team.vscode-icons"
   ]
 }
