@@ -8,11 +8,13 @@ from Model.ChromeModel.SQLite.base import OTHER
 
 from Model.util import log_message
 
+""" TODO: Überprüfe auf fehlende Fehlermeldungen!"""
 
 class ChromeModel:
     def __init__(self, profile_path: str = None):
         if profile_path is None:
-            return
+            #raise ValueError("profile")
+            return  # * TODO: add error alert
 
         self.sources = {}
 
