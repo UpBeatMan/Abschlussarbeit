@@ -1,10 +1,11 @@
-import os
-import sys
-from datetime import datetime
-from pubsub import pub
-import platform
+import os  # miscellaneous operating system interfaces
+import sys  # system-specific parameters and functions
+from datetime import datetime  # datetime object containing date and time
+from pubsub import pub  #  publish module
+import platform  # access to underlying platform's identifying data
 
 if platform.system() == "Windows":
+    # * importing an interface for the win32 File APIs
     from win32file import CreateFile, SetFileTime, GetFileTime, CloseHandle
     from win32file import (
         GENERIC_WRITE,
@@ -20,10 +21,10 @@ def log_message(message, lvl):
 
 def change_file_time(path, delta):
     if not os.path.exists(path):
-        log_message("Pfad: " + path + " existiert nicht!", "info")2
+        log_message("Pfad: " + path + " existiert nicht!", "info")
         return
     if platform.system() == "Windows":
-        # modify filetimes on Windows
+        # * modify filetimes on Windows
         fh = CreateFile(
             path,
             GENERIC_WRITE,
@@ -45,13 +46,15 @@ def change_file_time(path, delta):
         m_time = os.path.getmtime(path)
         a_time = a_time - delta
         m_time = m_time - delta
+        #! TODO: add creation time workaround
+        # https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
         os.utime(path, (a_time, m_time))
 
 
 def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
+    # * Get absolute path to resource, works for dev and for PyInstaller
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        # PyInstaller creates a temp folder and stores the absolute path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
