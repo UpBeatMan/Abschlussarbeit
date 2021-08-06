@@ -1,7 +1,8 @@
-import tkinter as tk
-from tkinter import ttk
 import os
 import getpass
+
+import tkinter as tk
+from tkinter import ttk
 
 current_username = getpass.getuser()
 print(current_username)
