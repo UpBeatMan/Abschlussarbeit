@@ -1,24 +1,26 @@
-import tkinter as tk
-import webbrowser
+import tkinter as tk    # ToolKit module
+import webbrowser       # webrowser module
 
-from View.Dialogs.guide_dialog import GuideDialog
-from View.Dialogs.ask_dialog import AskDialog
+from View.Dialogs.guide_dialog import GuideDialog   # 
+from View.Dialogs.ask_dialog import AskDialog   # confirmation popup window
 
 
 class MainMenu(tk.Menu):
     def __init__(self, parent):
         tk.Menu.__init__(self)
-        self.parent = parent
+        self.parent = parent    # parent tk widget
+        # menu items
         self.filemenu = None
         self.editmenu = None
         self.viewmenu = None
+        # body
         self.body()
 
     def body(self):
         self.filemenu = tk.Menu(self, tearoff=0)
         self.filemenu.add_command(
             label="Alle Änderungen speichern",
-            command=self.parent.controller.commit_all_data,
+            command=self.parent.controller.commit_all_data, # * trigger commit for all changes
         )
         self.filemenu.add_command(label="Beenden", command=self.quit)
         self.add_cascade(label="Datei", menu=self.filemenu)

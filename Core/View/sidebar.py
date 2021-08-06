@@ -20,10 +20,12 @@ class SideBar(tk.Frame):
         # Profile Treeview
         self.tree = ttk.Treeview(self, selectmode="browse", height=25)
 
+        #! TODO: Replace Subbutton with loading bar and move subbutton function to toolbar
         # Load Profile Button
         subbutton = tk.Button(
             self, text="Laden", relief=tk.FLAT, width=30, command=self.load_profile
         )
+        # loadingbar = self.progress
 
         # Console
         self.console = tk.Text(self, width=30)

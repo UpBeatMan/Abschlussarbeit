@@ -1,7 +1,7 @@
 import tkinter as tk
-from PIL import Image, ImageTk
-from View.Dialogs.ask_dialog import AskDialog
-from Model.util import resource_path
+from PIL import Image, ImageTk  #
+from View.Dialogs.ask_dialog import AskDialog # confirmation popup window
+from Model.util import resource_path # get absolute path to temp _MEIPASS location
 
 
 class Toolbar(tk.Frame):
@@ -13,14 +13,17 @@ class Toolbar(tk.Frame):
 
     def body(self):
 
-        img_first = Image.open(resource_path("View/icons/Exit_Icon.png"))
+        img_first = Image.open(resource_path("Core/View/icons/Exit_Icon.png"))
         exit_img = ImageTk.PhotoImage(img_first)
 
-        img_sec = Image.open(resource_path("View/icons/Rollback_Icon.png"))
+        img_sec = Image.open(resource_path("Core/View/icons/Rollback_Icon.png"))
         rollback_img = ImageTk.PhotoImage(img_sec)
 
-        img_third = Image.open(resource_path("View/icons/Safe_Icon.png"))
+        img_third = Image.open(resource_path("Core/View/icons/Safe_Icon.png"))
         safe_img = ImageTk.PhotoImage(img_third)
+
+        #! replace the load button to this location !
+
 
         exitButton = tk.Button(self, image=exit_img, relief=tk.FLAT, command=self.quit)
         exitButton.image = exit_img
