@@ -49,18 +49,21 @@ for at the least one browser type chromium or firefox - TBD
 ## Requirements
 
 - Conda Packages:
-  - Python 3.9
-  - SQLAlchemy 1.4.19
+  - Python 3.9.6
   - lz4 3.1.3
-  - Pillow 8.2.0
-  - python-dateutil 2.8.1
+  - python-dateutil 2.8.2
+  - Pillow 8.3.1
   - pywin32 228
+  - SQLAlchemy 1.4.22
+  - pytest 6.2.4
+  - pip 21.1.3
+  - selenium 3.141.0
 - Pip Packages:
   - tksheet 5.0.27
   - tkcalendar 1.6.1
   - tcl 0.2
   - PyPubSub 4.0.3
-  - black 21.6b0
+  - black 21.7b0
 
 ## Installation Guide
 
