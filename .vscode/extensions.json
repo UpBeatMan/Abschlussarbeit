@@ -4,7 +4,6 @@
     "jasonlhy.hungry-delete",
     "codezombiech.gitignore",
     "atishay-jain.all-autocomplete",
-    "akamud.vscode-theme-onedark",
     "jeff-hykin.better-cpp-syntax",
     "aaron-bond.better-comments",
     "bungcip.better-toml",
@@ -58,7 +57,6 @@
     "magicstack.magicpython",
     "yzhang.markdown-all-in-one",
     "yzane.markdown-pdf",
-    "pkief.material-icon-theme",
     "techer.open-in-browser",
     "ibm.output-colorizer",
     "ionutvmi.path-autocomplete",
@@ -70,6 +68,7 @@
     "tabnine.tabnine-vscode",
     "alexcvzz.vscode-sqlite",
     "mtxr.sqltools-driver-sqlite",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "aryanahire.sublime-monokai"
   ]
 }
