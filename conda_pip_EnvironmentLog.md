@@ -324,3 +324,6 @@ Uninstalling xvfbwrapper-0.2.9:
 Proceed (y/n)? y
   Successfully uninstalled xvfbwrapper-0.2.9
 ```
+
+# changed devices, deprecated
+# see environment.yaml
