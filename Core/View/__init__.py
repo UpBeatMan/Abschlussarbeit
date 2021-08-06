@@ -1,20 +1,22 @@
-import tkinter as tk
-from tkinter import ttk
+import tkinter as tk    # ToolKit module
+from tkinter import ttk # themed tk widgets
 
+# import gui "view" elements
 from View.menu import MainMenu
 from View.toolbar import Toolbar
 from View.sidebar import SideBar
 from View.content import Content
-from View.Dialogs.ask_dialog import AskDialog
-from Model.util import resource_path
+from View.Dialogs.ask_dialog import AskDialog   # confirmation popup window
+from Model.util import resource_path # get absolute path to temp _MEIPASS location
 
 
 class View(tk.Tk):
     def __init__(self, controller):
         super().__init__()
-        self.geometry("1500x900")
-        self.title("FiProTiMa")
-        icon = tk.PhotoImage(file=resource_path("View/icons/Logo.png"))
+        self.geometry("1280x720") # 1500x900
+        self.title("Digital Forensics Scenario Creator")
+        icon = tk.PhotoImage(file=resource_path("Core/View/icons/logon.png"))
+        # icon = tk.PhotoImage(file=resource_path("View/icons/logon.png"))
         self.iconphoto(False, icon)
 
         self.controller = controller
@@ -22,19 +24,23 @@ class View(tk.Tk):
         self.toolbar = None
         self.sidebar = None
         self.content = None
+        #self.loadingbar = None
 
         self.body()
 
     def main(self):
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.protocol("WM_DELETE_WINDOW", self.on_closing) # if you want to do some action before the application exits
         self.mainloop()
 
     def body(self):
+        # constructors
         self.content = Content(self)
         self.sidebar = SideBar(self)
         self.menu = MainMenu(self)
         self.toolbar = Toolbar(self)
+        #self.loadingbar = LoadingBar(self)
 
+        # define gui structure
         self.config(menu=self.menu)
         self.toolbar.grid(row=0, column=0, columnspan=2, sticky="nwes")
         self.sidebar.grid(row=1, column=0, sticky="nwes")
@@ -47,7 +53,7 @@ class View(tk.Tk):
             answer = AskDialog(
                 self,
                 self.controller,
-                "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?",
+                "Es wurden nicht alle Daten gespeichert!\n Wollen Sie trotzdem fortfahren?",
             ).show()
             if not answer:
                 return
