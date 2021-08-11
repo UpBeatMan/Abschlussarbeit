@@ -1,6 +1,8 @@
 from importlib import import_module
 from Model.util import log_message
 
+#from Controller import set_load_activity_flag
+
 
 class DataSourcesSQLite:
     def __init__(self, profile_path: str):
@@ -23,6 +25,7 @@ class DataSourcesSQLite:
             ["Model.ChromeModel.SQLite.logindata", "CompromisedCredentialHandler"]
         )
 
+        # load module and class names in source_name list
         for source_name in source_names:
             module_name = source_name[0]
             class_name = source_name[1]
@@ -43,11 +46,13 @@ class DataSourcesSQLite:
             self.sources[class_name] = instance
 
     def get_data(self):
-        """Collect data from hanlders"""
+        """Collect data from handlers"""
         data = {}
         for source in self.sources:
             try:
+                # set_load_activity_flag(True)
                 data[source] = self.sources[source].get_all_id_ordered()
+                # set_load_activity_flag(False)
             except Exception as e:
                 log_message("Fehler in " + source + ": " + str(e), "info")
 
