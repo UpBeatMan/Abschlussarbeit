@@ -18,7 +18,7 @@ class Model:
         self.browsermodel = None
         self.filesystem_changed = False
 
-    def has_profil_loaded(self):
+    def has_profile_loaded(self):
         if self.browsermodel:
             return True
         else:
