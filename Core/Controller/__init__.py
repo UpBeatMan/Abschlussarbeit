@@ -17,6 +17,14 @@ from View.Dialogs.date_dialog import DateDialog  # use projects date dialog tk c
 from View.Dialogs.ask_dialog import (
     AskDialog,
 )  # use projects warning dialog tk component
+
+# ! new additions
+from View.Dialogs.debug_dialog import (
+    DebugDialog,
+)  # use projects debug dialog tk component
+from View.toolbar import Toolbar
+# ! -------------
+
 from Model import Model  # use projects Model components
 
 
@@ -27,6 +35,9 @@ class Controller:
         self.config = Config()
         self.config.set_current_username(getpass.getuser())
         self.config.set_current_os(platform.system())
+
+        # FIXME: import relationship errors
+        # self.config.set_load_activity_flag(False)
 
         # instantiate View object
         self.view = View(self)
@@ -47,8 +58,16 @@ class Controller:
         self.view.sidebar.insert_profiles_to_treeview()
 
     def main(self):
-        # indirect instantiate Controller object
+        # indirect instantiate View object through root __init__.py
         self.view.main()
+
+    # # FIXME: Handle load_activity_flag - not working yet
+    # def set_load_activity_flag(self, switch: bool):
+    #     Config.set_load_activity_flag(switch)
+
+    # def get_load_activity_flag(self):
+    #     status = Config.get_load_activity_flag()
+    #     return status
 
     # * profile handling
     def load_profiles(self):
@@ -72,7 +91,8 @@ class Controller:
             if not answer:
                 data = "keep"
                 return data
-        if self.model.has_profil_loaded():  #! TODO: change profil to profile
+        # * changed has_profil_loaded to has_profile_loaded
+        if self.model.has_profile_loaded():
             # check if loaded profile should be replaced
             answer = AskDialog(
                 self.view, self, "Möchten Sie das Profil wirklich wechseln?"
@@ -96,6 +116,7 @@ class Controller:
         saved_handlers = self.model.get_saved_handler()
         return saved_handlers
 
+    # * obtain data from sqlite
     def get_history(self):
         data = self.model.get_history()
         return data
@@ -229,6 +250,10 @@ class Controller:
 
     # * load data
     def load_additional_info(self, a):
+        '''
+        tkinter gives no focus on default behaviour
+        focus() sets focus on content.dataview only
+        '''
         if self.view.content.dataview_mode == "History":
             item = self.view.content.dataview.item(self.view.content.dataview.focus())
             parsed_uri = urlparse(item["text"])
@@ -412,11 +437,12 @@ class Controller:
         ).show()
         if not check:
             return
-        if not self.model.has_profil_loaded():
+        if not self.model.has_profile_loaded():
             self.logger.info("Kein Profil geladen!")
         self.model.change_filesystem_time(self.config)
         try:
-            pass  #! Why? Shouldn't be here - self.model.change_filesystem_time ...
+            # * unknown error occurred
+            pass
         except:
             self.logger.error("Fehler beim ändern der Dateisystem Zeit!")
 
@@ -432,3 +458,36 @@ class Controller:
             self.logger.info(message)
         else:
             self.logger.error(message)
+
+
+    # * neu hinzugekommen
+
+    def open_debugwin(self):
+        check = DebugDialog(self.view, self).show()
+        if not check:
+            return
+        try:
+            # * unknown error occurred
+            pass
+        except:
+            self.logger.error("Fehler beim Öffnen des Debugfensters!")
+
+    def query_active(self):
+        check = Toolbar(self.view, self).start()
+        if not check:
+            return
+        try:
+            # * unknown error occurred
+            pass
+        except:
+            self.logger.error("Fehler beim Aktivieren des Akitivitätsstatus!")
+
+    def query_done(self):
+        check = Toolbar(self.view, self).stop()
+        if not check:
+            return
+        try:
+            # * unknown error occurred
+            pass
+        except:
+            self.logger.error("Fehler beim Deaktivieren des Akitivitätsstatus!")
