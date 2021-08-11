@@ -7,6 +7,7 @@ from Model.ChromeModel.SQLite.history import VISITED
 from Model.ChromeModel.SQLite.base import OTHER
 
 from Model.util import log_message
+import logging
 
 """ TODO: Überprüfe auf fehlende Fehlermeldungen!"""
 
@@ -14,7 +15,8 @@ class ChromeModel:
     def __init__(self, profile_path: str = None):
         if profile_path is None:
             #raise ValueError("profile")
-            return  # * TODO: add error alert
+            self.logger.error("Fehler - kein gültiger Profilpfad gefunden!")
+            return
 
         self.sources = {}
 
@@ -41,6 +43,7 @@ class ChromeModel:
             if self.save_state[handler] == True
         ]
 
+    # ! OVERRIDE - get_data() for update! - misleading
     def get_data(self):
         data_dict = {}
         for source in self.sources:
@@ -56,12 +59,15 @@ class ChromeModel:
                     pass
 
     def get_history(self):
-        histroy_tree = {}
+        histroy_tree = {}   # ! why histroy instead of history ?
         for entry in self.data_dict["VisitsHandler"]:
+            # * initial/direct visit of an url
             if entry.from_visit == 0:
                 histroy_tree[entry] = []
             else:
+                # * visit url over a link from a other url
                 for tree_entry in histroy_tree:
+                    # * for each tracked from_visit id append to tree
                     if entry.from_visit == tree_entry.id or entry.from_visit in [
                         sube.id for sube in histroy_tree[tree_entry]
                     ]:
