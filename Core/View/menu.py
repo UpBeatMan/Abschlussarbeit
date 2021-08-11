@@ -1,14 +1,17 @@
-import tkinter as tk    # ToolKit module
-import webbrowser       # webrowser module
+import tkinter as tk  # ToolKit module
+import webbrowser  # webrowser module
 
-from View.Dialogs.guide_dialog import GuideDialog   # 
-from View.Dialogs.ask_dialog import AskDialog   # confirmation popup window
+from View.Dialogs.guide_dialog import GuideDialog  # manual
+from View.Dialogs.ask_dialog import AskDialog  # confirmation popup window
+
+from View.Dialogs.debug_dialog import DebugDialog  # debug mode
+from View.toolbar import Toolbar  # activity indicator
 
 
 class MainMenu(tk.Menu):
     def __init__(self, parent):
         tk.Menu.__init__(self)
-        self.parent = parent    # parent tk widget
+        self.parent = parent  # parent tk widget
         # menu items
         self.filemenu = None
         self.editmenu = None
@@ -20,7 +23,7 @@ class MainMenu(tk.Menu):
         self.filemenu = tk.Menu(self, tearoff=0)
         self.filemenu.add_command(
             label="Alle Änderungen speichern",
-            command=self.parent.controller.commit_all_data, # * trigger commit for all changes
+            command=self.parent.controller.commit_all_data,  # * trigger commit for all changes
         )
         self.filemenu.add_command(label="Beenden", command=self.quit)
         self.add_cascade(label="Datei", menu=self.filemenu)
@@ -57,10 +60,24 @@ class MainMenu(tk.Menu):
         helpmenu.add_command(
             label="Über...",
             command=lambda: webbrowser.open_new(
-                "https://github.com/hirthirt/fiprotima"
-            ),
+                "https://github.com/UpBeatMan/Abschlussarbeit"
+            )
+            # "https://github.com/hirthirt/fiprotima"
         )
         self.add_cascade(label="Hilfe", menu=helpmenu)
+
+        debugmenu = tk.Menu(self, tearoff=0)
+        debugmenu.add_command(
+            label="Öffnen", command=self.parent.controller.open_debugwin
+        )
+        debugmenu.add_command(
+            label="Start Progressbar Test", command=self.parent.controller.query_active
+        )
+        debugmenu.add_command(
+            label="Stop Progressbar Test", command=self.parent.controller.query_done
+        )
+
+        self.add_cascade(label="Debugmodus", menu=debugmenu)
 
     def firefox_views(self):
         self.viewmenu.delete(0, "end")
