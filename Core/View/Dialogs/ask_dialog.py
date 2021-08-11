@@ -22,22 +22,23 @@ class AskDialog(tk.Toplevel):  # toplevel - popup confirmation window
             button_frame, text="OK", width=10, command=self.on_ok
         )
 
-        self.cancel_button = tk.Button(  # * changed cancle to cancel
+        self.cancel_button = tk.Button( # * changed cancle to cancel
             button_frame, text="Abbrechen", width=10, command=self.on_cancel
         )
 
         self.ok_button.pack(side=tk.LEFT, padx=5)
-        self.cancel_button.pack(side=tk.RIGHT, padx=5)  # * changed cancle to cancel
+        self.cancel_button.pack(side=tk.RIGHT, padx=5) # * changed cancle to cancel
 
     def on_ok(self, event=None):
         self.return_value = True
         self.destroy() # destroy windows when clicking ok
 
-    def on_cancel(self, event=None):  # * changed cancle to cancel
+    def on_cancel(self, event=None): # * changed cancle to cancel
         self.return_value = False
         self.destroy() # destroy windows when clicking ok
 
     def show(self):
+        # * show a hidden tk widget again
         self.wm_deiconify()  # displays the window, after using either the iconify or the withdraw methods
         self.wait_window()  # this method can be called after the event which needs to happen before the window event
         return self.return_value

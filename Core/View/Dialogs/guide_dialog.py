@@ -33,6 +33,7 @@ class GuideDialog(tk.Toplevel):  # toplevel - popup confirmation window
         self.destroy()  # destroy windows when clicking ok
 
     def show(self):
+        # * show a hidden tk widget again
         self.wm_deiconify()  # displays the window, after using either the iconify or the withdraw methods
         self.wait_window()  # this method can be called after the event which needs to happen before the window event
 
