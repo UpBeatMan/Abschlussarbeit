@@ -189,6 +189,7 @@ class VisitsHandler(HistoryHandler):
     attr_names = [ID, URL, TITLE, LASTVISITED, VISITED]
 
     def get_all_id_ordered(self):
+        # ! load history data
         history = self.session.query(Visits).order_by(Visits.id).all()
         return history
 
