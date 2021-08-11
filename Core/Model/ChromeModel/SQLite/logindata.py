@@ -53,7 +53,8 @@ class Login(BaseSession, BaseSQLiteClass):
                 self.is_date_changed = True
 
 
-class CompromisedCredetial(BaseSession, BaseSQLiteClass):
+# ! changed classname CompromisedCredetial to CompromisedCredential
+class CompromisedCredential(BaseSession, BaseSQLiteClass):
     __tablename__ = "insecure_credentials"
 
     login_id = Column("parent_id", Integer, ForeignKey("logins.id"))
@@ -113,5 +114,5 @@ class CompromisedCredentialHandler(LoginDataHandler):
     name = "CompromisedCredentials"
 
     def get_all_id_ordered(self):
-        logins = self.session.query(CompromisedCredetial).all()
+        logins = self.session.query(CompromisedCredential).all()
         return logins
