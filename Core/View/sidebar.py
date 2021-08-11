@@ -8,7 +8,7 @@ from tkinter import ttk
 
 class SideBar(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, width=50, height=150, bg="blue")
+        tk.Frame.__init__(self, width=50, height=150, bg="blue") # height=150
         self.parent = parent
         self.tree = None
         self.console = None
@@ -18,22 +18,30 @@ class SideBar(tk.Frame):
     def body(self):
 
         # Profile Treeview
-        self.tree = ttk.Treeview(self, selectmode="browse", height=25)
+        self.tree = ttk.Treeview(self, selectmode="browse", height=25) # height=25
 
         #! TODO: Replace Subbutton with loading bar and move subbutton function to toolbar
         # Load Profile Button
-        subbutton = tk.Button(
-            self, text="Laden", relief=tk.FLAT, width=30, command=self.load_profile
-        )
-        # loadingbar = self.progress
+        # subbutton = tk.Button(
+        #     self, text="Laden", relief=tk.FLAT, width=30, command=self.load_profile
+        # )
 
+        # self.progress = ttk.Progressbar(
+        #     self,
+        #     orient="horizontal",
+        #     length=200,
+        #     mode="determinate",
+        # )
+
+        # ! only event log
         # Console
         self.console = tk.Text(self, width=30)
         self.console.config(state=tk.DISABLED)
 
         # Pack Items
         self.tree.pack(fill="both", expand=True)
-        subbutton.pack(fill="both")
+        # subbutton.pack(fill="both")
+        # self.progress.pack(fill="both")
         self.console.pack(side=tk.BOTTOM, fill="x")
 
     def load_profile(self):
