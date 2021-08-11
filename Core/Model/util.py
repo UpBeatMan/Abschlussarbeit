@@ -46,7 +46,7 @@ def change_file_time(path, delta):
         m_time = os.path.getmtime(path)
         a_time = a_time - delta
         m_time = m_time - delta
-        #! TODO: add creation time workaround
+        # * add creation time workaround - see the manual change_ctime.sh bash script in Core/Model/ directory
         # https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
         os.utime(path, (a_time, m_time))
 
