@@ -40,8 +40,10 @@ class Config:
     def set_current_browser(self, current_browser: str):
         self.current_browser = current_browser
 
+    # sets the timestamp when a browserprofile has been successfully loaded
     def set_startup_history_last_time(self, startup_history_last_time):
         self.startup_history_last_time = startup_history_last_time
 
+    # sets the time period between startup_history_last_time and the rollback action
     def set_file_system_rollback_delta(self, file_system_rollback_delta):
         self.file_system_rollback_delta = file_system_rollback_delta
