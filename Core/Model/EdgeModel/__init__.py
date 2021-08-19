@@ -39,6 +39,7 @@ class EdgeModel:
             if self.save_state[handler] == True
         ]
 
+    # ! OVERRIDE - get_data() for update! - very misleading
     def get_data(self):
         data_dict = {}
         for source in self.sources:
