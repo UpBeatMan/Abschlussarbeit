@@ -23,7 +23,6 @@ from View.Dialogs.debug_dialog import (
     DebugDialog,
 )  # use projects debug dialog tk component
 from View.toolbar import Toolbar
-# ! -------------
 
 from Model import Model  # use projects Model components
 
@@ -250,10 +249,8 @@ class Controller:
 
     # * load data
     def load_additional_info(self, a):
-        '''
-        tkinter gives no focus on default behaviour
-        focus() sets focus on content.dataview only
-        '''
+        # tkinter gives no focus on default behaviour
+        # focus() sets focus on content.dataview only
         if self.view.content.dataview_mode == "History":
             item = self.view.content.dataview.item(self.view.content.dataview.focus())
             parsed_uri = urlparse(item["text"])
@@ -292,7 +289,9 @@ class Controller:
         self.model.edit_all_data(delta)
         self.reload_data()
 
-    def edit_selected_data(self, mode, all=False, infoview=False):
+    def edit_selected_data(
+        self, mode, all=False, infoview=False
+    ):  # * default path will be the - else branches - below line "selected_list = []"
         # Ask for timedelta with dialog, then change all data based on this timedelta
         if mode == "date":
             date = DateDialog(self.view, self).show()
@@ -313,16 +312,27 @@ class Controller:
                 self.logger.error("Kein Delta angegeben!")
                 return
         selected_list = []
-        if not all:
-            if not infoview:
+        if (
+            not all
+        ):  # * if all == False - 
+            # * if not (all=)FALSE, then do |
+            # * if not True, then don't
+            if (
+                not infoview
+            ):  # * if infoview == False 
                 already_selected_list = []
-                for selected in self.view.content.dataview.selection():
-                    if selected in already_selected_list:
+                for (
+                    selected
+                ) in self.view.content.dataview.selection():  # get selected parent data
+                    if (
+                        selected in already_selected_list
+                    ):  # check existing selected data in list
                         continue
                     item = self.view.content.dataview.item(selected)
+                    # children data - get data which is in dependency - e.x. websites which have been opened over a link inside another website
                     children = self.view.content.dataview.get_children(selected)
                     children_list = []
-                    if children:
+                    if children:  # get children data
                         for child in children:
                             if child in already_selected_list:
                                 continue
@@ -330,21 +340,23 @@ class Controller:
                             children_list.append(
                                 [c_item["values"][-2], c_item["values"][-1]]
                             )
-                            already_selected_list.append(child)
+                            already_selected_list.append(
+                                child
+                            )  # extend list of selected children
                     selected_list.append(
                         [item["values"][-2], item["values"][-1], children_list]
-                    )
+                    )  # extend list of selected parents
                     already_selected_list.append(selected)
-            else:
+            else:  # * if infoview switched to True
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
                 for selected in self.view.content.info_views[selected_tab][
                     0
-                ].selection():
+                ].selection():  # get data of selected tab
                     item = self.view.content.info_views[selected_tab][0].item(selected)
                     selected_list.append([item["values"][-2], item["values"][-1]])
-        else:
-            if not infoview:
+        else:  # * if all == True then go here - get the data without worrying about selected data
+            if not infoview:  # * if infoview == False
                 for element in self.view.content.dataview.get_children():
                     children = self.view.content.dataview.get_children(element)
                     if children:
@@ -355,7 +367,7 @@ class Controller:
                             )
                     item = self.view.content.dataview.item(element)
                     selected_list.append([item["values"][-2], item["values"][-1]])
-            else:
+            else:  # * if infoview == True
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
                 for element in self.view.content.info_views[selected_tab][
@@ -394,11 +406,11 @@ class Controller:
 
     def commit_selected_data(self, infoview=False):
         # only commit the selected table
-        if not infoview:
+        if not infoview:  # * if infoview == False
             data_handler_name = self.view.content.selected_treeview_handler
             self.model.commit(data_handler_name)
             self.reload_data()
-        else:
+        else:  # * if infoview == True
             selected_id = self.view.content.tab_control.select()
             selected_tab = self.view.content.tab_control.tab(selected_id, "text")
             data_handler_name = self.view.content.info_views[selected_tab][1]
@@ -452,13 +464,12 @@ class Controller:
         except:
             self.logger.error("Fehler beim Rollback der Dateisystem Zeit!")
 
-    # * The listener for the logging event of pubsub
+    # * The listener for the logging event (here standard python logging - without pypubsub)
     def log_listener(self, message, lvl):
         if lvl == "info":
             self.logger.info(message)
         else:
             self.logger.error(message)
-
 
     # * neu hinzugekommen
 
