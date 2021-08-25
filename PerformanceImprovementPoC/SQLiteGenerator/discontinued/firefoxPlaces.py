@@ -14,10 +14,9 @@ import csv
 #! Proof of Concept with Firefox discontinued - only partially working !
 __version__ = "0.1.0"
 
-#* Required: manual setup before script execution!
-#* Download the geckodriver for mozilla firefox testing in selenium
-#* Add the geckodriver folder in your webdriver path of choice
-#* or simply add it to your PATH environment variable
+#* Requires manual setup before script execution!
+#* Download the geckodriver for mozilla firefox testing in selenium.
+#* Add the geckodriver webdriver in known folder of your PATH user environment variable.
 
 USERNAME = input(" Profile path location - enter your windows-username here: ")
 
