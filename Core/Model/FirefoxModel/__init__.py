@@ -1,5 +1,5 @@
 from datetime import datetime
-from pubsub import pub
+from pubsub import pub #! no usage in this file
 
 from Model.FirefoxModel.JSON import DataSourcesJSON
 from Model.FirefoxModel.SQLite import DataSourcesSQLite
@@ -43,6 +43,7 @@ class FirefoxModel:
             if self.save_state[handler] == True
         ]
 
+    # ! OVERRIDE - get_data() for update! - very misleading
     def get_data(self):
         data_dict = {}
         for source in self.sources:
