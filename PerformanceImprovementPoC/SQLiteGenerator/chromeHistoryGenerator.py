@@ -16,6 +16,10 @@ import getpass
 #! Proof of Concept with Chrome as current testing file !
 __version__ = "0.1.2"
 
+#* Requires manual setup before script execution!
+#* Download the chromedriver for google chrome testing in selenium.
+#* Add the chromedriver webdriver in known folder of your PATH user environment variable.
+
 current_username = getpass.getuser()
 
 CHROME_DIR: str = (
