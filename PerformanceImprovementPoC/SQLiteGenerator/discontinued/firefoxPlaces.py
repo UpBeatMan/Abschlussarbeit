@@ -36,7 +36,6 @@ CSV = (
     + USERNAME
     + "\\Abschlussarbeit\\MultithreadingPoC\\SQLiteGenerator\\data.csv"
 )
-ALLOWED_FILETYPE = "application/octet-stream"
 
 
 print("List all existing current Firefox profiles:")
