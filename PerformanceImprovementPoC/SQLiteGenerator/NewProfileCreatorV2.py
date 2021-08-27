@@ -14,7 +14,7 @@ import shutil
 import getpass
 
 #! Proof of Concept with Chrome as current testing file !
-__version__ = "0.1.2"
+__version__ = "0.2.0" # * New-Profile-Creator - Version 2
 
 #* Requires manual setup before script execution!
 #* Download the chromedriver for google chrome testing in selenium.
@@ -22,15 +22,11 @@ __version__ = "0.1.2"
 
 current_username = getpass.getuser()
 
-CHROME_DIR: str = (
-    r"C:/Users/" + current_username + r"/AppData/Local/Google/Chrome/User Data"
-)
-DEFAULT_DIR: str = CHROME_DIR + r"/Default"
-CSV: str = (
-    r"C:/PythonProject/Abschlussarbeit/ChromeMultithreadingPoC/SQLiteGenerator/data.csv"
-)
-BACKUP_DIR: str = CHROME_DIR + r"/BACKUP-PROFILES_" + time.strftime("%Y%m%d-%H%M%S")
+CHROME_DIR: str = r"C:/Users/" + current_username + r"/AppData/Local/Google/Chrome/User Data"
 WEBDRIVER: str = r"C:/PythonProject/Abschlussarbeit/ChromeMultithreadingPoC/SQLiteGenerator/webdriver/chromedriver.exe"
+DEFAULT_DIR: str = CHROME_DIR + r"/Default"
+BACKUP_DIR: str = CHROME_DIR + r"/BACKUP-PROFILES_" + time.strftime("%Y%m%d-%H%M%S")
+CSV: str = r"C:/PythonProject/Abschlussarbeit/ChromeMultithreadingPoC/SQLiteGenerator/data.csv"
 
 # * backup profile directory
 os.mkdir(BACKUP_DIR)
@@ -79,9 +75,9 @@ while line_count < len(csv_data):
 
 print(f"Processed {line_count} lines and opened them successfully")
 
+# * chrome selenium driver exit
+driver.quit()
+
 # ! The chromedriver doesn't create any temporary profiles like the geckodriver for firefox.
 # ! It will apply all changes to the Default Directory by Default. The default path is following:
 # ! C:\Users\<current_username>\AppData\Local\Google\Chrome\User Data\Default
-
-# * chrome selenium driver exit
-driver.quit()
