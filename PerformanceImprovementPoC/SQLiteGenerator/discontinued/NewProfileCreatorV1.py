@@ -64,7 +64,6 @@ if os.path.exists(PROFILES_INS):
 else:
     print(f'The file "installs.ini" does not exist in "{PROFILES_INS}"')
 
-
 # * Delete ini files and profile storage directory
 if os.path.exists(PROFILES_DIR):
     shutil.rmtree(PROFILES_DIR)
@@ -150,7 +149,6 @@ print("CSV table data loaded")
 
 csv_length = len(csv_data)
 print(f"The CSV table has {csv_length} rows")
-
 
 # ! default state working: download in last line of csv table skipped
 deactivate_download = 1
