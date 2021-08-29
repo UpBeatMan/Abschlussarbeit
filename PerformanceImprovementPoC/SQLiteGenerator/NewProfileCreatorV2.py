@@ -23,10 +23,10 @@ __version__ = "0.2.0" # * New-Profile-Creator - Version 2
 current_username = getpass.getuser()
 
 CHROME_DIR: str = r"C:/Users/" + current_username + r"/AppData/Local/Google/Chrome/User Data"
-WEBDRIVER: str = r"C:/PythonProject/Abschlussarbeit/ChromeMultithreadingPoC/SQLiteGenerator/webdriver/chromedriver.exe"
+WEBDRIVER: str = r"C:/PythonProject/Abschlussarbeit/PerformanceImprovementPoC/SQLiteGenerator/webdriver/chromedriver.exe"
 DEFAULT_DIR: str = CHROME_DIR + r"/Default"
 BACKUP_DIR: str = CHROME_DIR + r"/BACKUP-PROFILES_" + time.strftime("%Y%m%d-%H%M%S")
-CSV: str = r"C:/PythonProject/Abschlussarbeit/ChromeMultithreadingPoC/SQLiteGenerator/data.csv"
+CSV: str = r"C:/PythonProject/Abschlussarbeit/PerformanceImprovementPoC/SQLiteGenerator/data.csv"
 
 # * Backup profile directory
 os.mkdir(BACKUP_DIR)
@@ -51,7 +51,7 @@ csv_file = open(CSV)
 csv_reader = csv.reader(csv_file)
 csv_data = list(csv_reader)
 print("csv table data loaded")
-print(f"The csv  table has {len(csv_data)-1} rows")
+print(f"The csv  table has {len(csv_data)} rows")
 
 # * Chrome selenium driver start
 options = webdriver.ChromeOptions()
