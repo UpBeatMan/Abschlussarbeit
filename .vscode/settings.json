@@ -13,8 +13,5 @@
   },
   "explorerExclude.backup": null,
   "python.formatting.provider": "black",
-  "restructuredtext.confPath": "",
-  "cSpell.ignoreWords": [
-    "lernen"
-  ]
+  "restructuredtext.confPath": ""
 }
