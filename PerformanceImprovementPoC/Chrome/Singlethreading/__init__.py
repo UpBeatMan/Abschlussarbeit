@@ -2,17 +2,18 @@
 #!-*- coding: utf-8 -*-
 # * for ChromeModel
 
-from statistics import mean
-from timeit import Timer
+import getpass
 import os
 import shutil
 import database
+from timeit import Timer
+from statistics import mean
 
+# version 2.1 test with chrome browser profile without treading
 __version__ = "0.2.1"
 
-
-# ! edit windows user name !
-USERNAME = "Yochanan"
+# get windows user name
+USERNAME = getpass.getuser()
 # * chrome history
 HISTORY = "History"
 
@@ -32,14 +33,13 @@ TEST_FILE = TEST_DIR + "\\History.sqlite"
 
 # table name which is going to be requested
 TABLE = "urls"
-# count_query() result - static test variable
-ROW_COUNT = 107
+# def count_query() result - static test variable
+ROW_COUNT = 4725 # 107
 # first id in table - static test variable
-START_ID: int = 1
+START_ID = 1
 
 
 def main():
-
     # ! Comment out for testing !
     # print(f"{FILE_HANDLER} _ target file")
     # if os.path.exists(TEST_DIR):
@@ -51,7 +51,6 @@ def main():
     # ! ----------------------- !
 
     dbms = database.MyDatabase(database.SQLITE, dbname="mydb.sqlite")
-    # dbms.count_query()
 
     def read_range(start, end):
         build = (
@@ -82,9 +81,13 @@ def main():
         # print(plain_val)
         print(f"Durchschnittswert über {iterations_i} Testläufe: {mean_value}\n")
 
-    # show table content - activate print(row) in database.py
-    # important - deactivate test functions below!
-    # dbms.print_all_data(database.TABLE)
+    # important - deactivate test functions below line 93!
+    # activate prints for count table and query content
+    # in function def print_all_data in database.py
+    #dbms.count_query()
+    # activate prints for query content and more query content
+    # in function def print_all_data in database.py
+    #dbms.print_all_data(database.TABLE)
 
     #*Zeitmessung ohne Threading und Aufteilen der Lesezugriffe
 
