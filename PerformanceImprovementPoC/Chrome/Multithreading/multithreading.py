@@ -40,7 +40,7 @@ TEST_FILE = TEST_DIR + "\\History.sqlite"
 # table name which is going to be requested
 TABLE = "urls"
 # def count_query() result - static test variable
-ROW_COUNT = 4725 # 107
+ROW_COUNT = 107 # 4725
 # first id in table - static test variable
 START_ID = 1
 
