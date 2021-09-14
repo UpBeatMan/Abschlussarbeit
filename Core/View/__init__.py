@@ -15,7 +15,7 @@ class View(tk.Tk):
         super().__init__()
         self.geometry("1600x900")  # 1500x900
         self.title("Digital Forensics Scenario Creator")
-        icon = tk.PhotoImage(file=resource_path("Core/View/icons/Logo_Icon.png"))
+        icon = tk.PhotoImage(file=resource_path("Core\View\icons\Logo_Icon.png"))
         self.iconphoto(False, icon)
 
         self.controller = controller
