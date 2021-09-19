@@ -41,7 +41,7 @@ class GuideDialog(tk.Toplevel):  # toplevel - popup confirmation window
         # * read text from guide.txt and insert it to the text widget
         text = u""
         self.text.config(state=tk.NORMAL)
-        guide = open(resource_path("View/text/guide.txt"), "r")
+        guide = open(resource_path("Core\\View\\text\\guide.txt"), "r")
         for line in guide.readlines():
             text += line
         self.text.insert(tk.INSERT, text)
