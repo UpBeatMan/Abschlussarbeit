@@ -14,6 +14,7 @@ from Model.util import (
 
 
 class Toolbar(tk.Frame):
+    """toolbar class"""
     def __init__(self, parent):
         tk.Frame.__init__(self, bd=1, relief=tk.RAISED)
         self.parent = parent
@@ -23,6 +24,7 @@ class Toolbar(tk.Frame):
     def body(self):
         """defines gui elements in the toolbar gui section and their function calls"""
 
+    	# * buttons - icon setup
         img_first = Image.open(resource_path("Core/View/icons/Exit_Icon.png"))
         exit_img = ImageTk.PhotoImage(img_first)
         exit_img = exit_img._PhotoImage__photo.subsample(15)
@@ -100,13 +102,11 @@ class Toolbar(tk.Frame):
     def monitor_activity(self, flag):
         """handles progessbar indication and log messages for the profile loading"""
         if flag == "True":
-            self.progressBar["value"] = 100
-            log_message("Ladevorgang begonnen!", lvl="info")
+            self.progressBar["value"] = 100 # Progressbar full green
         elif flag == "False":
-            self.progressBar["value"] = 0
-            log_message("Ladevorgang abgeschlossen!", lvl="info")
+            self.progressBar["value"] = 0 # Progressbar empty grey
         else:
-            log_message("Unbekannter Status des Ladevorgangs erkannt!", lvl="error")
+            log_message("Unbekannter Status des Ladevorgangs erkannt!", "error")
             pass
 
     def quit(self):
@@ -115,13 +115,13 @@ class Toolbar(tk.Frame):
             answer = AskDialog(
                 self.parent,
                 self.parent.controller,
-                "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?",
+                "Es wurden nicht alle Daten gespeichert!\nTrotzdem fortfahren?",
             ).show()
             if not answer:
                 return
         answer = AskDialog(
-            self.parent, self.parent.controller, "Möchten Sie wirklich beenden?"
+            self.parent, self.parent.controller, "Möchten Sie wirklich beenden?\nUngespeicherte Änderungen gehen verloren!"
         ).show()
         if not answer:
             return
-        self.parent.destroy()
+        self.parent.destroy() # exit tkinter application
