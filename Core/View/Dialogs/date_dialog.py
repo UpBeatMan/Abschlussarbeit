@@ -1,14 +1,21 @@
-import datetime
-import tkinter as tk
+import datetime # handle date and time values
+import tkinter as tk # ToolKit module
 
 from dateutil.relativedelta import *
 from tkcalendar import DateEntry
 
 
 class DateDialog(tk.Toplevel):
+    """DateDialog class opens a popup window"""
+
     def __init__(self, parent, controller):
+        """run __init__ section at class instantiation"""
+
+        # * create a reference to parent window
         tk.Toplevel.__init__(self, parent)
+        # * set window title
         self.title("Änderung via Datum")
+        # * lock window size
         self.resizable(0, 0)
 
         self.controller = controller
@@ -46,19 +53,22 @@ class DateDialog(tk.Toplevel):
         button_frame.pack(side=tk.BOTTOM, pady=6)
 
         self.ok_button = tk.Button(
-            button_frame, text="OK", width=10, command=self.on_ok
+            button_frame, text="Ok", width=10, command=self.on_ok
         )
-        self.cancle_button = tk.Button(
-            button_frame, text="Abbrechen", width=10, command=self.on_cancle
+        self.cancel_button = tk.Button( # changed from cancle_button to cancel_button !
+            button_frame, text="Abbrechen", width=10, command=self.on_cancel  # changed from on_cancle to on_cancel !
         )
 
         self.ok_button.pack(side=tk.LEFT, padx=5)
-        self.cancle_button.pack(side=tk.RIGHT, padx=5)
+        self.cancel_button.pack(side=tk.RIGHT, padx=5) # changed from cancle_button to cancel_button !
+        self.cancel_button.pack(side=tk.RIGHT, padx=5) 
 
     def set_new_date(self, e):
+        """stores selected date in calendar widget into self.date"""
         self.date = self.calendar.get_date()
 
     def on_ok(self, event=None):
+        """return date and time value on_ok click and close window"""
         self.return_value = datetime.datetime(
             year=self.date.year,
             month=self.date.month,
@@ -69,10 +79,13 @@ class DateDialog(tk.Toplevel):
         )
         self.destroy()
 
-    def on_cancle(self, event=None):
+    def on_cancel(self, event=None): # changed from on_cancle to on_cancel !
+        """closes window on_cancel click"""
         self.destroy()
 
     def show(self):
+        """shows a hidden tk widget again"""
+        # * displays the window, after using either the iconify or the withdraw methods
         self.wm_deiconify()
-        self.wait_window()
+        # * this method can be called after the event which needs to happen before the window event
         return self.return_value

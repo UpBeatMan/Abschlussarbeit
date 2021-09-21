@@ -1,4 +1,4 @@
-import datetime
+# ToolKit module
 import tkinter as tk
 
 from dateutil.relativedelta import *
@@ -6,9 +6,16 @@ from tkcalendar import DateEntry
 
 
 class TimedeltaDialog(tk.Toplevel):
+    """TimedeltaDialog class opens a popup window"""
+
     def __init__(self, parent, controller):
+        """run __init__ section at class instantiation"""
+
+        # * create a reference to parent window
         tk.Toplevel.__init__(self, parent)
+        # * set window title
         self.title("Änderung via Zeitverschiebung")
+        # * lock window size
         self.resizable(0, 0)
 
         self.controller = controller
@@ -51,17 +58,23 @@ class TimedeltaDialog(tk.Toplevel):
         button_frame.pack(side=tk.BOTTOM, pady=5)
 
         self.ok_button = tk.Button(
-            button_frame, text="OK", width=10, command=self.on_ok
+            button_frame, text="Ok", width=10, command=self.on_ok
         )
-        self.cancle_button = tk.Button(
-            button_frame, text="Abbrechen", width=10, command=self.on_cancle
+        self.cancel_button = tk.Button(  # changed from cancle_button to cancel_button !
+            button_frame,
+            text="Abbrechen",
+            width=10,
+            command=self.on_cancel,  # changed from on_cancle to on_cancel !
         )
 
         self.ok_button.pack(side=tk.LEFT, padx=5)
-        self.cancle_button.pack(side=tk.RIGHT, padx=5)
+        self.cancel_button.pack(
+            side=tk.RIGHT, padx=5
+        )  # changed from cancle_button to cancel_button !
 
     def on_ok(self, event=None):
-        if self.mode.get() == 0:
+        """returns relative date and time value in future or past on_ok click"""
+        if self.mode.get() == 0:  # relative date and time in future
             self.return_value = relativedelta(
                 years=int(self.labels["Jahre"].get()),
                 months=int(self.labels["Monate"].get()),
@@ -70,7 +83,7 @@ class TimedeltaDialog(tk.Toplevel):
                 minutes=int(self.labels["Minuten"].get()),
                 seconds=int(self.labels["Sekunden"].get()),
             )
-        else:
+        else:  # relative date and time in past
             self.return_value = relativedelta(
                 years=int(self.labels["Jahre"].get()) * (-1),
                 months=int(self.labels["Monate"].get()) * (-1),
@@ -82,10 +95,13 @@ class TimedeltaDialog(tk.Toplevel):
 
         self.destroy()
 
-    def on_cancle(self, event=None):
+    def on_cancel(self, event=None):  # changed from on_cancle to on_cancel !
+        """closes window on_cancel click"""
         self.destroy()
 
     def show(self):
+        """shows a hidden tk widget again"""
+        # * displays the window, after using either the iconify or the withdraw methods
         self.wm_deiconify()
-        self.wait_window()
+        # * this method can be called after the event which needs to happen before the window event
         return self.return_value
