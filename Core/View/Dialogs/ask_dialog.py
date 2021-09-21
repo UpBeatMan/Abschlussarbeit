@@ -7,9 +7,15 @@ class AskDialog(tk.Toplevel):
 
     # * toplevel - popup confirmation window
     # * a window with text for a question/request, an okay and cancel button
+
     def __init__(self, parent, controller, text):
+        """run __init__ section at class instantiation"""
+
+        # * create a reference to parent window
         tk.Toplevel.__init__(self, parent)
+        # * set window title
         self.title("Achtung")
+        # * lock window size
         self.resizable(0, 0)
 
         self.controller = controller
@@ -23,15 +29,17 @@ class AskDialog(tk.Toplevel):
 
         # * button configuration
         self.ok_button = tk.Button(
-            button_frame, text="OK", width=10, command=self.on_ok
+            button_frame, text="Ok", width=10, command=self.on_ok
         )
-        self.cancel_button = tk.Button(  # changed from cancle to cancel
+        self.cancel_button = tk.Button(  # changed from cancle to cancel !
             button_frame, text="Abbrechen", width=10, command=self.on_cancel
         )
 
         # * place(pack) buttons in gui area
         self.ok_button.pack(side=tk.LEFT, padx=5)
-        self.cancel_button.pack(side=tk.RIGHT, padx=5)  # changed from cancle to cancel
+        self.cancel_button.pack(
+            side=tk.RIGHT, padx=5
+        )  # changed from cancle to cancel !
 
     def on_ok(self, event=None):
         """on_ok indicates a positive user decision and closes window"""
@@ -45,6 +53,8 @@ class AskDialog(tk.Toplevel):
 
     def show(self):
         """shows a hidden tk widget again"""
-        self.wm_deiconify()  # displays the window, after using either the iconify or the withdraw methods
-        self.wait_window()  # this method can be called after the event which needs to happen before the window event
+        # * displays the window, after using either the iconify or the withdraw methods
+        self.wm_deiconify()
+        # * this method can be called after the event which needs to happen before the window event
+        self.wait_window()
         return self.return_value
