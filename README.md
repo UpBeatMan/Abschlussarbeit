@@ -20,6 +20,7 @@ Version 0.1.0
     - Development was based solely on the Google Chrome Browser base
   - Creation of a debug-mode (split it the ERROR debug log from the user-event INFO log)
   - Manual script "change_ctime.sh" in Model to solve c-time manipulation under UNIX systems
+    - https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
   - GUI usability improvements - closed with new toolbar interface
     - changed "profile load" button placement and redesigned toolbar
     - profile loading activity indicator visualized as loading bar
