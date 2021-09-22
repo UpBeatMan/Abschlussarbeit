@@ -25,9 +25,9 @@ class DataSourcesJSON:
                 instance = Class_(profile_path=profile_path)
             except Exception as e:
                 log_message(
-                    "Fehler in Datenquelle JSON, Modul %s, Klasse %s: %s. Überspringe"
+                    "Fehler in Datenquelle JSON, Modul %s, \n    Klasse %s: %s\n    Überspringe Datei"
                     % (module_name, class_name, e),
-                    "info",
+                    "error",
                 )
                 continue
             self.sources[class_name] = instance
@@ -38,7 +38,7 @@ class DataSourcesJSON:
             try:
                 data[source] = self.sources[source].get_all_id_ordered()
             except Exception as e:
-                log_message("Fehler in " + source + ": " + str(e), "info")
+                log_message("Fehler in " + source + ": " + str(e), "error")
         return data
 
     def get_data_header(self):
@@ -79,7 +79,7 @@ class DataSourcesJSON:
                 else:
                     pass
             except:
-                log_message("Fehler beim speichern von: " + str(name), "error")
+                log_message("Fehler beim Speichern von: " + str(name), "error")
         else:
             for source in self.sources:
                 try:

@@ -1,15 +1,13 @@
 from importlib import import_module
 from Model.util import log_message
 
-#from Controller import set_load_activity_flag
-
 
 class DataSourcesSQLite:
     def __init__(self, profile_path: str):
         self.sources = {}
         source_names = []
 
-        # Create list of module names and handlers, that we need
+        # Create list of module names and handlers, that are required to build  the view
         source_names.append(["Model.ChromeModel.SQLite.cookie", "CookieHandler"])
         source_names.append(["Model.ChromeModel.SQLite.favicons", "FaviconHandler"])
         source_names.append(["Model.ChromeModel.SQLite.history", "VisitsHandler"])
@@ -37,11 +35,11 @@ class DataSourcesSQLite:
                 Class_ = getattr(module, class_name)
                 instance = Class_(profile_path=profile_path)
             except Exception as e:
-                message = "Fehler in Datenquelle SQlite, Klasse %s: %s. Überspringe" % (
-                    class_name,
-                    e,
+                log_message(
+                    "Fehler in Datenquelle SQlite, Modul %s, \n    Klasse %s: %s\n    Überspringe Datei"
+                    % (module_name, class_name, e),
+                    "error",
                 )
-                log_message(message, "info")
                 continue
             self.sources[class_name] = instance
 
@@ -50,11 +48,9 @@ class DataSourcesSQLite:
         data = {}
         for source in self.sources:
             try:
-                # set_load_activity_flag(True)
                 data[source] = self.sources[source].get_all_id_ordered()
-                # set_load_activity_flag(False)
             except Exception as e:
-                log_message("Fehler in " + source + ": " + str(e), "info")
+                log_message("Fehler in " + source + ": " + str(e), "error")
 
         return data
 
@@ -103,7 +99,7 @@ class DataSourcesSQLite:
                 else:
                     pass
             except:
-                log_message("Fehler beim speichern von: " + str(name), "error")
+                log_message("Fehler beim Speichern von: " + str(name), "error")
         else:
             for source in self.sources:
                 try:
