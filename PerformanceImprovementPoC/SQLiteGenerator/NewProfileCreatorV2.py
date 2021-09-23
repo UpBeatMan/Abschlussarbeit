@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 #!-*- coding: utf-8 -*-
 """
-    The chromeHistoryGenerator script safes the complete the default chrome directory in a backup directory "BACKUP_PROFILE_<timestamp>" and then creates a new default profile. In this new profile it will open all links from the data.csv file. This includes a test download at the end. The downloaded file is named random-100M and will be saved in your download folder.
+    The chromeHistoryGenerator script safes the complete default chrome directory in a backup directory "BACKUP_PROFILE_<timestamp>" and then creates a new default profile. In this new profile it will open all links from the data.csv file. This includes a test download at the end. The downloaded file is named random-100M and will be saved in your download folder.
 """
 
 from selenium import webdriver
