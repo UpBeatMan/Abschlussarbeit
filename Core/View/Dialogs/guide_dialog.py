@@ -59,3 +59,4 @@ class GuideDialog(tk.Toplevel):
         # * displays the window, after using either the iconify or the withdraw methods
         self.wm_deiconify()
         # * this method can be called after the event which needs to happen before the window event
+        self.wait_window()
