@@ -1,5 +1,6 @@
 # import tkinter gui modules
 import tkinter as tk
+import os
 from tkinter import ttk
 from PIL import Image, ImageTk  # use images in tkinter module
 
@@ -15,6 +16,7 @@ from Model.util import (
 
 class Toolbar(tk.Frame):
     """toolbar class"""
+
     def __init__(self, parent):
         tk.Frame.__init__(self, bd=1, relief=tk.RAISED)
         self.parent = parent
@@ -24,24 +26,24 @@ class Toolbar(tk.Frame):
     def body(self):
         """defines gui elements in the toolbar gui section and their function calls"""
 
-    	# * buttons - icon setup
-        img_first = Image.open(resource_path("Core/View/icons/Exit_Icon.png"))
+        # * buttons - icon setup
+        img_first = Image.open(resource_path("Core\\View\\icons\\Exit_Icon.png"))
         exit_img = ImageTk.PhotoImage(img_first)
         exit_img = exit_img._PhotoImage__photo.subsample(15)
 
-        img_sec = Image.open(resource_path("Core/View/icons/Rollback_Icon.png"))
+        img_sec = Image.open(resource_path("Core\\View\\icons\\Rollback_Icon.png"))
         rollback_img = ImageTk.PhotoImage(img_sec)
         rollback_img = rollback_img._PhotoImage__photo.subsample(15)
 
-        img_third = Image.open(resource_path("Core/View/icons/Save_Icon.png"))
+        img_third = Image.open(resource_path("Core\\View\\icons\\Save_Icon.png"))
         save_img = ImageTk.PhotoImage(img_third)
         save_img = save_img._PhotoImage__photo.subsample(15)
 
-        img_fourth = Image.open(resource_path("Core/View/icons/Reload_Icon.png"))
+        img_fourth = Image.open(resource_path("Core\\View\\icons\\Reload_Icon.png"))
         reload_img = ImageTk.PhotoImage(img_fourth)
         reload_img = reload_img._PhotoImage__photo.subsample(15)
 
-        img_fifth = Image.open(resource_path("Core/View/icons/Load_Icon.png"))
+        img_fifth = Image.open(resource_path("Core\\View\\icons\\Load_Icon.png"))
         load_img = ImageTk.PhotoImage(img_fifth)
         load_img = load_img._PhotoImage__photo.subsample(15)
 
@@ -65,7 +67,9 @@ class Toolbar(tk.Frame):
         profileButton.image = reload_img
 
         # * exit application button configuration
-        exitButton = tk.Button(self, image=exit_img, relief=tk.FLAT, command=self.quit)
+        exitButton = tk.Button(
+            self, image=exit_img, relief=tk.FLAT, command=self.on_quit
+        )
         exitButton.image = exit_img
 
         # * activity indicator configuration
@@ -100,28 +104,42 @@ class Toolbar(tk.Frame):
         rollbackButton.pack(side=tk.LEFT, padx=4, pady=2)
 
     def monitor_activity(self, flag):
-        """handles progessbar indication and log messages for the profile loading"""
+        """updates the gui module - progessbar - as activity indicator for the profile loading"""
         if flag == "True":
-            self.progressBar["value"] = 100 # Progressbar full green
+            self.progressBar["value"] = 100  # Progressbar full green
         elif flag == "False":
-            self.progressBar["value"] = 0 # Progressbar empty grey
+            self.progressBar["value"] = 0  # Progressbar empty grey
         else:
-            log_message("Unbekannter Status des Ladevorgangs erkannt!", "error")
+            # log_message("Unbekannter Status des Ladevorgangs erkannt", "error")
             pass
 
-    def quit(self):
-        """handles application exit and pre-exit confirmation"""
+    def on_quit(self):
+        """ask for confirmation if application should be closed and delete advanced.log file on_quit click"""
+
+        log_message("Fehlerspeicher wird gelöscht\n          - Fortfahren ? -", "warning")
+
         if self.parent.controller.get_unsaved_handlers():
+            # notify that changes are not saved yet
             answer = AskDialog(
                 self.parent,
                 self.parent.controller,
-                "Es wurden nicht alle Daten gespeichert!\nTrotzdem fortfahren?",
+                "Änderungen noch nicht gespeichert!\nTrotzdem beenden?",
             ).show()
             if not answer:
                 return
-        answer = AskDialog(
-            self.parent, self.parent.controller, "Möchten Sie wirklich beenden?\nUngespeicherte Änderungen gehen verloren!"
-        ).show()
-        if not answer:
-            return
-        self.parent.destroy() # exit tkinter application
+        else:
+            answer = AskDialog(
+                self.parent,
+                self.parent.controller,
+                "Möchten Sie wirklich beenden?",
+            ).show()
+            if not answer:
+                return
+
+        # * delete advanced.log file
+        log_message("close logging", "delete")
+        advanced_log_path = resource_path("Core\\advanced.log")
+        os.remove(advanced_log_path)
+
+        # * exit tkinter application
+        self.parent.destroy()
