@@ -68,7 +68,7 @@ class Visits(BaseSession, BaseSQLiteClass):
 
     def update(self, delta):
         if not delta:
-            log_message("Kein Delta erhalten in Historie", "error")
+            log_message("Kein Delta Wert erhalten in Historie", "error")
             return
         visited_safe = self.visit_timestamp
         last_visited_safe = self.place.last_visited_timestamp
@@ -132,7 +132,7 @@ class Download(BaseSession, BaseSQLiteClass):
 
     def update(self, delta):
         if not delta:
-            log_message("Kein Delta erhalten in Download", "error")
+            log_message("Kein Delta Wert erhalten in Download", "error")
             return
 
         change_file_time(self.target_path, delta)
@@ -189,7 +189,7 @@ class VisitsHandler(HistoryHandler):
     attr_names = [ID, URL, TITLE, LASTVISITED, VISITED]
 
     def get_all_id_ordered(self):
-        # ! load history data
+        """loads history data"""
         history = self.session.query(Visits).order_by(Visits.id).all()
         return history
 
@@ -200,5 +200,6 @@ class DownloadHandler(HistoryHandler):
     attr_names = [FILE, URL, STARTTIME, ENDTIME, LASTMODIFIED]
 
     def get_all_id_ordered(self):
+        """loads download data"""
         query = self.session.query(Download).order_by(Download.id)
         return query.all()

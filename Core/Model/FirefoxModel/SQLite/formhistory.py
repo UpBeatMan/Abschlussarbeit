@@ -20,7 +20,7 @@ class FormHistory(BaseSession, BaseSQLiteClass):
     last_used_timestamp = Column("lastUsed", Integer)
 
     @orm.reconstructor
-        def init(self):
+    def init(self):
         self.is_date_changed = False
         self.attr_list = []
         self.attr_list.append(BaseAttribute(FIELDNAME, OTHER, self.field_name))
