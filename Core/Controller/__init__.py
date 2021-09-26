@@ -1,76 +1,167 @@
+# import lz4  # lz4 compression library bindings - not used
 import getpass  # password prompt without echoing
 import platform  # providing system information
 import datetime  # module for date and time object
 import logging  # logging module for debugging
-import lz4  # lz4 compression library bindings
 
 from pubsub import pub  # event based programming module - publish-subscribe API
 from dateutil.relativedelta import *  # add time relative to a datetime timestamp
 from urllib.parse import urlparse  # url manipulation module
 from Config import Config  # use projects own Config paths and variable
 from Controller.console import Console  # use projects Controller console component
-from View import View  # use projects View components
-from View.Dialogs.delta_dialog import (
-    TimedeltaDialog,
-)  # use projects timedelta dialog tk component
-from View.Dialogs.date_dialog import DateDialog  # use projects date dialog tk component
-from View.Dialogs.ask_dialog import (
-    AskDialog,
-)  # use projects warning dialog tk component
 
-# ! new additions
-from View.Dialogs.debug_dialog import (
-    DebugDialog,
-)  # use projects debug dialog tk component
-from View.toolbar import Toolbar
+from View import View  # use projects View components
+from View.Dialogs.delta_dialog import TimedeltaDialog
+from View.Dialogs.date_dialog import DateDialog
+from View.Dialogs.ask_dialog import AskDialog
+from View.Dialogs.debug_dialog import DebugDialog
 
 from Model import Model  # use projects Model components
 
 
 class Controller:
+    """controller class"""
+
     def __init__(self):
-        # instantiate Config object
-        # find and set username and os in Config
+        """run __init__ section at class instantiation"""
+
+        # * instantiate Config object
         self.config = Config()
+        # * find and set username and os in Config
         self.config.set_current_username(getpass.getuser())
         self.config.set_current_os(platform.system())
 
-        # FIXME: import relationship errors
-        # self.config.set_load_activity_flag(False)
-
-        # instantiate View object
+        # * instantiate View object
         self.view = View(self)
 
-        # instantiate Console object with logging handler - sidebar
-        self.console = Console(self.view.sidebar.console)
-        self.logger = logging.getLogger()  # create logger
-        self.logger.setLevel(logging.INFO)  # INFO log level for events
-        # ! TODO: Separate DEBUG, WARNING, ERROR, CRITICAL Logs in new a new tk component
-        self.logger.addHandler(self.console)  # add handler object console
+        # * log numeration counter
+        self.numerate = 0
 
-        # instantiate Model object
+        # * create event_logger
+        self.event_logger = logging.getLogger("event")
+        # set Log level to INFO for event_logger
+        self.event_logger.setLevel(logging.INFO)
+        # instantiate Console custom log handler as console_handler for sidebar gui event logger
+        self.console_handler = Console(self.view.sidebar.console)
+        # add custom console handler to event_logger
+        self.event_logger.addHandler(self.console_handler)  # add handler object console
+
+        # * create debug_logger
+        self.debug_logger = logging.getLogger("debug")
+        self.debug_logger.setLevel(logging.DEBUG)
+        # define debug_logger handler type
+        self.file_handler = logging.FileHandler("Core\\advanced.log")
+        # format log messages of handlers
+        file_format = logging.Formatter(
+            "\n %(asctime)s - %(levelname)s -%(message)s", datefmt="%d.%b.%y %H:%M:%S"
+        )
+        self.file_handler.setFormatter(file_format)
+        # store logging messages to file "advanced.log"
+        self.debug_logger.addHandler(self.file_handler)
+
+        # * instantiate Model object
         self.model = Model()
 
-        # subscribe to either INFO or ERROR logger
+        # * subscribe to log_message function
+        # ! see log_message() in Model.util
         pub.subscribe(self.log_listener, "logging")
 
+        # * subscribe to flag publishing function
+        # ! see loading_flag() in Model.util
+        pub.subscribe(self.activity_listener, "activity")
+
+        # * trigger initial browser profile overview loading
         self.view.sidebar.insert_profiles_to_treeview()
 
     def main(self):
-        # indirect instantiate View object through root __init__.py
+        """indirect instantiate View object through root __init__.py"""
+
         self.view.main()
 
-    # # FIXME: Handle load_activity_flag - not working yet
-    # def set_load_activity_flag(self, switch: bool):
-    #     Config.set_load_activity_flag(switch)
+    def unify_enum(self, enum):
+        """returns formatted 3 digit enumeration value"""
+        if enum < 10:  # for logs 1-10
+            enumeration = " 00" + str(enum) + " "
+        elif enum < 100:  # for logs 11-99
+            enumeration = " 0" + str(enum) + " "
+        else:  # for logs > 99
+            enumeration = " " + str(enum) + " "
+        return enumeration
 
-    # def get_load_activity_flag(self):
-    #     status = Config.get_load_activity_flag()
-    #     return status
+    def log_listener(self, message, lvl, debug="no details defined"):
+        """numerates and channels logging messages by their logging levels"""
 
-    # * profile handling
+        # * create numeration feature for logging messages from 1-999
+        # at function call raise numerate counter by one
+        self.numerate += 1
+        # format counter to show a clean enumerator
+        enum = self.unify_enum(self.numerate)
+
+        # * log listener, which redirects all received logs to their loggers and log levels
+        if lvl == "info":
+            # info to custom console handler only - event_logger
+            self.event_logger.info("    " + lvl.upper() + "\n" + enum + " " + message)
+        elif lvl == "warning":
+            # warning to custom console handler only - event_logger
+            self.event_logger.warning(" " + lvl.upper() + "\n" + enum + " " + message)
+        elif lvl == "debug":
+            # warning + short information to event_logger and detailed log message to file handler - debug_logger
+            self.event_logger.warning(
+                " "
+                + "WARNING"
+                + "\n"
+                + enum
+                + " "
+                + message
+                + f"\n      --> siehe{enum}im Debugmodus"
+            )
+            self.debug_logger.debug(enum + "- " + debug)
+        elif lvl == "error":
+            # error hint to event_logger and detailed log message to file handler - debug_logger
+            self.event_logger.error(
+                "   "
+                + lvl.upper()
+                + "\n"
+                + enum
+                + " "
+                + "Neue Fehlermeldung\n      --> Öffne Debugmodus"
+            )
+            self.debug_logger.error(enum + "- " + message)
+        elif lvl == "critical":
+            # critical error hint to event_logger and detailed log message to file handler - debug_logger
+            self.event_logger.critical(
+                lvl.upper()
+                + "\n"
+                + enum
+                + " "
+                + "Neue kritische Fehlermeldung\n      --> Öffne Debugmodus"
+            )
+            self.debug_logger.critical(enum + "- " + message)
+        elif lvl == "delete":
+            # close console and file handler for deletion of advanced.log
+            self.console_handler.close()
+            self.file_handler.close()
+            logging.shutdown()
+        else:
+            # to file handler
+            self.event_logger.error(
+                "   "
+                + lvl.upper()
+                + "\n"
+                + enum
+                + " "
+                + "Neue Fehlermeldung\n      --> Öffne Debugmodus"
+            )
+            self.debug_logger.error(enum + "- " + "Unbekanntes Log Level")
+
+    def activity_listener(self, flag):
+        """redirects received flag status changes to monitor_activity function"""
+
+        self.view.toolbar.monitor_activity(flag)
+
     def load_profiles(self):
-        # search for browser profiles across all browser types - Firefox, Edge and Chrome
+        """searches for browser profiles across all browser types - Firefox, Chrome and Edge"""
+
         profiledict = self.model.search_profiles(
             current_username=self.config.current_username,
             current_os=self.config.current_os,
@@ -78,54 +169,80 @@ class Controller:
         return profiledict
 
     def load_profile(self, browser, name):
-        # load one browser profile
+        """loads one browser profile selected by its browser type and profile name"""
+
         data = None
         if self.get_unsaved_handlers():
-            # check if changes are saved
+            self.log_listener(
+                "Änderungen noch nicht gespeichert!\nTrotzdem neues Profil laden?",
+                "warning",
+            )
+            # notify that changes are not saved yet
             answer = AskDialog(
                 self.view,
                 self,
-                "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?",
+                "Änderungen noch nicht gespeichert!\nTrotzdem neues Profil laden?",
             ).show()
             if not answer:
                 data = "keep"
                 return data
-        # * changed has_profil_loaded to has_profile_loaded
-        if self.model.has_profile_loaded():
-            # check if loaded profile should be replaced
+
+        if self.model.first_profile_loading():
+            # * load confirmation no profile has been loaded and first is about to load
+            # It might seem pointless but is necessary for the activity_indicator to work properly.
             answer = AskDialog(
-                self.view, self, "Möchten Sie das Profil wirklich wechseln?"
+                self.view, self, "Bestätigen Sie um den Ladevorgang zu starten!"
+            ).show()
+            if not answer:
+                data = "keep"
+                return data
+
+        # changed has_profil_loaded to has_profile_loaded !
+        elif self.model.has_profile_loaded():
+            # * check if loaded profile should be replaced by a new profile
+            answer = AskDialog(
+                self.view,
+                self,
+                "Möchten Sie wirklich ein neues Profil laden?\nUngespeicherte Änderungen gehen verloren!",
             ).show()
             if not answer:
                 data = "keep"
                 return data
         data = self.model.load_profile(browser, name, self.config)  # load profile
-        if browser in ["Edge", "Chrome"]:  # choose view
+
+        if browser in ["Edge", "Chrome"]:  # choose view type (chrome and edge similar)
             self.view.menu.chrome_edge_views()
         else:
             self.view.menu.firefox_views()
+
         return data
 
-    # * getter methods for data from the "Model" component
     def get_unsaved_handlers(self):
+        """return unsaved_handlers"""
+
         unsaved_handlers = self.model.get_unsaved_handlers()
         return unsaved_handlers
 
     def get_saved_handlers(self):
+        """return saved_handlers"""  # ! - not used
+
         saved_handlers = self.model.get_saved_handler()
         return saved_handlers
 
-    # * obtain data from sqlite
     def get_history(self):
+        """obtain history data from sqlite"""
+
         data = self.model.get_history()
         return data
 
-    # * "View" data
     def reload_data(self):
+        """reload content "View" data"""
+
         self.change_data_view(self.view.content.dataview_mode)
 
-    # * change data
     def change_data_view(self, data_view):
+        """load specific data to content "View" with a given dataview_mode"""
+
         if data_view == "FormHistory":
             data = self.model.get_specific_data("FormHistoryHandler")
             if data:
@@ -135,7 +252,8 @@ class Controller:
         elif data_view == "History":
             data = self.model.get_history()
             if data:
-                self.view.content.fillHistroyData(data)
+                # changed fillHistroyData to fillHistoryData !
+                self.view.content.fillHistoryData(data)
                 self.view.content.dataview_mode = data_view
                 self.view.content.change_view_label("Historie")
         elif data_view == "Addons":
@@ -247,11 +365,12 @@ class Controller:
                 self.view.content.dataview_mode = data_view
                 self.view.content.change_view_label("Medien")
 
-    # * load data
-    def load_additional_info(self, a):
-        # tkinter gives no focus on default behaviour
-        # focus() sets focus on content.dataview only
+    def load_additional_info(self, a):  # a required for None object in args
+        """load additional info data (lower content area)"""
+
         if self.view.content.dataview_mode == "History":
+            # tkinter sets no focus as default behavior
+            # focus function sets focus on content.dataview only
             item = self.view.content.dataview.item(self.view.content.dataview.focus())
             parsed_uri = urlparse(item["text"])
             split = parsed_uri.hostname.split(".")
@@ -259,7 +378,7 @@ class Controller:
                 sitename = split[1]
             else:
                 sitename = split[0]
-
+            # * get_additional_info history data for selected domain(sitename)
             data = self.model.get_additional_info("history", sitename)
             self.view.content.fill_info_section(data)
         elif self.view.content.dataview_mode == "Session":
@@ -271,9 +390,10 @@ class Controller:
             data = self.model.get_additional_info("media", item["values"][-1])
             self.view.content.fill_info_section(data)
 
-    # * edit time information
     def edit_all_data(self):
-        # Ask for timedelta with dialog, then change all data based on this timedelta
+        """edit time information for all data"""
+
+        # * ask for timedelta with dialog, then change all data based on this timedelta
         delta = TimedeltaDialog(self.view, self).show()
         if delta:
             now = datetime.datetime.now()
@@ -281,24 +401,27 @@ class Controller:
             try:
                 delta = now.timestamp() - delta.timestamp()
             except:
-                self.log_listener("Zeitdelta zu groß!", "error")
+                self.log_listener("Zeitdelta zu groß", "warning")
                 return
         else:
-            self.logger.error("Kein Delta angegeben!")
+            self.log_listener("Kein Delta angegeben", "warning")
             return
         self.model.edit_all_data(delta)
         self.reload_data()
 
-    def edit_selected_data(
-        self, mode, all=False, infoview=False
-    ):  # * default path will be the - else branches - below line "selected_list = []"
-        # Ask for timedelta with dialog, then change all data based on this timedelta
+    def edit_selected_data(self, mode, all=False, infoview=False):
+        """edit time information for selected data"""
+
+        # default path will be mode == delta in the first if-condition
+        # and the "if not all" branch below line "selected_list = []"
+
         if mode == "date":
             date = DateDialog(self.view, self).show()
             if not date:
-                self.logger.error("Kein Datum angegeben!")
+                self.log_listener("Kein Datum angegeben", "warning")
                 return
-        else:
+        else:  # mode == "delta"
+            # * ask for timedelta with dialog, then change all data based on this timedelta
             delta = TimedeltaDialog(self.view, self).show()
             if delta:
                 now = datetime.datetime.now()
@@ -306,20 +429,17 @@ class Controller:
                 try:
                     delta = now.timestamp() - delta.timestamp()
                 except:
-                    self.log_listener("Zeitdelta zu groß!", "error")
+                    self.log_listener("Zeitdelta zu groß", "warning")
                     return
             else:
-                self.logger.error("Kein Delta angegeben!")
+                self.log_listener("Kein Delta angegeben", "warning")
                 return
+
         selected_list = []
-        if (
-            not all
-        ):  # * if all == False - 
-            # * if not (all=)FALSE, then do |
-            # * if not True, then don't
-            if (
-                not infoview
-            ):  # * if infoview == False 
+        if not all:  # * default value: all = False
+            # if not False => True, then do --> if path
+            # if not True => False, then don't --> else path
+            if not infoview:  # * do if infoview is False
                 already_selected_list = []
                 for (
                     selected
@@ -347,7 +467,7 @@ class Controller:
                         [item["values"][-2], item["values"][-1], children_list]
                     )  # extend list of selected parents
                     already_selected_list.append(selected)
-            else:  # * if infoview switched to True
+            else:  # * do if infoview is switched to True
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
                 for selected in self.view.content.info_views[selected_tab][
@@ -355,7 +475,7 @@ class Controller:
                 ].selection():  # get data of selected tab
                     item = self.view.content.info_views[selected_tab][0].item(selected)
                     selected_list.append([item["values"][-2], item["values"][-1]])
-        else:  # * if all == True then go here - get the data without worrying about selected data
+        else:  # * do if all is True - get the data without worrying about selected data
             if not infoview:  # * if infoview == False
                 for element in self.view.content.dataview.get_children():
                     children = self.view.content.dataview.get_children(element)
@@ -367,7 +487,7 @@ class Controller:
                             )
                     item = self.view.content.dataview.item(element)
                     selected_list.append([item["values"][-2], item["values"][-1]])
-            else:  # * if infoview == True
+            else:  # * do if infoview is switched to True
                 selected_id = self.view.content.tab_control.select()
                 selected_tab = self.view.content.tab_control.tab(selected_id, "text")
                 for element in self.view.content.info_views[selected_tab][
@@ -377,40 +497,43 @@ class Controller:
                     selected_list.append([item["values"][-2], item["values"][-1]])
 
         if not selected_list:
-            self.logger.info("Keine Elemente ausgewählt!")
+            self.log_listener("Keine Zeilen ausgewählt", "warning")
             return
 
         if mode == "date":
+            # * date mode - date has been chosen by the popup window
+            # * DateDialog at the beginning of this function
             try:
                 self.model.edit_selected_data_date(date, selected_list)
             except:
-                self.logger.error("Fehler beim editieren")
+                self.log_listener("Fehler beim editieren", "error")
                 return
-        else:
+        else:  # mode == "delta"
             self.model.edit_selected_data_delta(delta, selected_list)
             try:
                 pass
             except:
-                self.logger.error("Fehler beim editieren")
+                self.log_listener("Fehler beim editieren", "error")
                 return
         if not infoview:
             self.reload_data()
         else:
             self.load_additional_info(None)
 
-    # * commit data
     def commit_all_data(self):
-        # commit all data
+        """commit all data"""
+
         self.model.commit()
         self.reload_data()
 
     def commit_selected_data(self, infoview=False):
-        # only commit the selected table
-        if not infoview:  # * if infoview == False
+        """only commit the selected data"""
+
+        if not infoview:  # * do if infoview is False
             data_handler_name = self.view.content.selected_treeview_handler
             self.model.commit(data_handler_name)
             self.reload_data()
-        else:  # * if infoview == True
+        else:  # * do if infoview is True
             selected_id = self.view.content.tab_control.select()
             selected_tab = self.view.content.tab_control.tab(selected_id, "text")
             data_handler_name = self.view.content.info_views[selected_tab][1]
@@ -418,15 +541,16 @@ class Controller:
             self.load_additional_info(None)
         pass
 
-    # * rollback data
     def rollback_all_data(self):
-        # rollback all data
+        """rollback all data"""
+
         self.model.rollback()
         self.model.rollback_filesystem_time(self.config)
         self.reload_data()
 
     def rollback_selected_data(self, infoview=False):
-        # only rollback the selected table
+        """only rollback the selected data"""
+
         if not infoview:
             data_handler_name = self.view.content.selected_treeview_handler
             self.model.rollback(data_handler_name)
@@ -439,66 +563,28 @@ class Controller:
             self.load_additional_info(None)
         pass
 
-    # * edit filesystem time
     def change_filesystem_time(self):
-        #
+        """edit timestamps of the profile files"""
+
         check = AskDialog(
             self.view,
             self,
-            "Möchten Sie die Dateisystemzeit wirklich anpassen?\n Dies sollte erst dann gemacht werden wenn alle anderen Änderungen vollzogen und gespeichert wurden!",
+            "Möchten Sie die Dateisystemzeit wirklich anpassen?\nDies sollte erst dann gemacht werden wenn alle anderen Änderungen vollzogen und gespeichert wurden!",
         ).show()
         if not check:
             return
         if not self.model.has_profile_loaded():
-            self.logger.info("Kein Profil geladen!")
-        self.model.change_filesystem_time(self.config)
+            self.log_listener("Kein Profil geladen", "warning")
         try:
-            # * unknown error occurred
-            pass
+            self.model.change_filesystem_time(self.config)
+            # pass
         except:
-            self.logger.error("Fehler beim ändern der Dateisystem Zeit!")
+            self.log_listener("Fehler beim Ändern der Dateisystem Zeit", "error")
 
     def rollback_filesystem_time(self):
+        """rollback timestamps of the profile files"""
+
         try:
             self.model.rollback_filesystem_time(self.config)
         except:
-            self.logger.error("Fehler beim Rollback der Dateisystem Zeit!")
-
-    # * The listener for the logging event (here standard python logging - without pypubsub)
-    def log_listener(self, message, lvl):
-        if lvl == "info":
-            self.logger.info(message)
-        else:
-            self.logger.error(message)
-
-    # * neu hinzugekommen
-
-    def open_debugwin(self):
-        check = DebugDialog(self.view, self).show()
-        if not check:
-            return
-        try:
-            # * unknown error occurred
-            pass
-        except:
-            self.logger.error("Fehler beim Öffnen des Debugfensters!")
-
-    def query_active(self):
-        check = Toolbar(self.view, self).start()
-        if not check:
-            return
-        try:
-            # * unknown error occurred
-            pass
-        except:
-            self.logger.error("Fehler beim Aktivieren des Akitivitätsstatus!")
-
-    def query_done(self):
-        check = Toolbar(self.view, self).stop()
-        if not check:
-            return
-        try:
-            # * unknown error occurred
-            pass
-        except:
-            self.logger.error("Fehler beim Deaktivieren des Akitivitätsstatus!")
+            self.log_listener("Fehler beim Rollback der Dateisystem Zeit", "error")
