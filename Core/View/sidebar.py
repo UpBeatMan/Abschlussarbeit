@@ -41,17 +41,24 @@ class Sidebar(tk.Frame):
         selected = self.tree.focus()
         parent = self.tree.parent(selected)
         if self.tree.item(selected)["text"] in ["Firefox", "Chrome", "Edge"]:
-            self.parent.controller.logger.warning("Bitte Profil auswählen!")
+            log_message("Bitte ein Profil auswählen", "warning")
             return
         if selected and parent and self.tree.item(selected):
             browser = self.tree.item(parent)["text"]
             profile_name = self.tree.item(selected)["text"]
             # added status message for loading process
-            log_message("Ladevorgang begonnen!", "info")
-            loading_flag("True")  # , "ProgressBar START")
-            time1 = datetime.now().strftime("um %H:%M:%S Uhr am %d.%m.%y: ")
+            if browser == "Firefox":
+                msg1 = f"{browser}     {profile_name}"
+            elif browser == "Chrome":
+                msg1 = f"{browser}      {profile_name}"
+            elif browser == "Edge":
+                msg1 = f"{browser}        {profile_name}"
+            log_message(msg1 + "\n      Ladevorgang begonnen", "info")
+
+            loading_flag("True")  # ! Aktivitatsindikator aktiviert
+            time1 = datetime.now().strftime("um %H:%M:%S Uhr am %d.%m.%y:")
             print(
-                f' Start {time1} Profilladevorgang fuer Browserprofil:  "{profile_name}"  des Webbrowsers:  "{browser}"'
+                f'Start {time1} Profilladevorgang fuer Browserprofil:  "{profile_name}" des Webbrowsers:  "{browser}"'
             )
             data = self.parent.controller.load_profile(
                 browser, profile_name
@@ -60,19 +67,33 @@ class Sidebar(tk.Frame):
                 # changed fillHistroyData to fillHistoryData !
                 self.parent.content.fillHistoryData(data)
                 # added status message for loading process
-                log_message("Ladevorgang abgeschlossen!", "info")
-                loading_flag("False")  # , "ProgressBar STOP")
-                time2 = datetime.now().strftime("um %H:%M:%S Uhr am %d.%m.%y: ")
+                if browser == "Firefox":
+                    msg2 = f"{browser}     {profile_name}"
+                elif browser == "Chrome":
+                    msg2 = f"{browser}      {profile_name}"
+                elif browser == "Edge":
+                    msg2 = f"{browser}        {profile_name}"
+                log_message(msg2 + "\n      Ladevorgang abgeschlossen", "info")
+
+                loading_flag("False")  # ! Aktivitatsindikator deaktiviert
+                time2 = datetime.now().strftime("um %H:%M:%S Uhr am %d.%m.%y:")
                 print(
-                    f'  Ende {time2} Profilladevorgang fuer Browserprofil:  "{profile_name}"  des Webbrowsers:  "{browser}"'
+                    f' Ende {time2} Profilladevorgang fuer Browserprofil:  "{profile_name}" des Webbrowsers:  "{browser}"'
                 )
             elif data and data == "keep":
                 # added status message for loading process
-                log_message("Ladevorgang abgebrochen!", "info")
-                loading_flag("False")  # , "ProgressBar STOP")
-                time2 = datetime.now().strftime("um %H:%M:%S Uhr: ")
+                if browser == "Firefox":
+                    msg3 = f"{browser}     {profile_name}"
+                elif browser == "Chrome":
+                    msg3 = f"{browser}      {profile_name}"
+                elif browser == "Edge":
+                    msg3 = f"{browser}        {profile_name}"
+                log_message(msg3 + "\n      Ladevorgang abgebrochen", "info")
+
+                loading_flag("False")  # ! Aktivitatsindikator deaktiviert
+                time2 = datetime.now().strftime("um %H:%M:%S Uhr:")
                 print(
-                    f'    Abgebrochen {time2}    Profilladevorgang fuer Browserprofil:  "{profile_name}"  des Webbrowsers:  "{browser}"'
+                    f'   Abgebrochen {time2}    Profilladevorgang fuer Browserprofil:  "{profile_name}" des Webbrowsers:  "{browser}"'
                 )
                 return
             else:
@@ -86,7 +107,7 @@ class Sidebar(tk.Frame):
         for child in self.tree.get_children():
             self.tree.delete(child)
 
-        log_message("Webrowser-Profile aktualisiert!", "info")
+        log_message("Browser-Profile aktualisiert", "info")
         profiles = self.parent.controller.load_profiles()  # refresh profile overview
         if profiles:
             for browser in profiles:
@@ -106,5 +127,5 @@ class Sidebar(tk.Frame):
                     elif "Profil" in profile:
                         self.tree.insert(parent, "end", text=profile)
         else:
-            log_message("Keine Profile gefunden!", "error")
+            log_message("Keine Profile gefunden", "error")
             pass
