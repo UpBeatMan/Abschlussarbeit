@@ -409,7 +409,7 @@ class Controller:
         self.model.edit_all_data(delta)
         self.reload_data()
 
-    def edit_selected_data(self, mode, all=False, infoview=False):
+    def edit_selected_data(self, mode="delta", all=False, infoview=False):
         """edit time information for selected data"""
 
         # default path will be mode == delta in the first if-condition
