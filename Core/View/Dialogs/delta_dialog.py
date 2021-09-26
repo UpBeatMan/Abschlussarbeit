@@ -1,8 +1,8 @@
 # ToolKit module
 import tkinter as tk
 
+# dateutil extension to datetime module
 from dateutil.relativedelta import *
-from tkcalendar import DateEntry
 
 
 class TimedeltaDialog(tk.Toplevel):

@@ -1,7 +1,9 @@
-import datetime # handle date and time values
-import tkinter as tk # ToolKit module
+# ToolKit module
+import tkinter as tk
+# handles date and time values
+import datetime
 
-from dateutil.relativedelta import *
+# calendar input widget
 from tkcalendar import DateEntry
 
 
@@ -61,7 +63,6 @@ class DateDialog(tk.Toplevel):
 
         self.ok_button.pack(side=tk.LEFT, padx=5)
         self.cancel_button.pack(side=tk.RIGHT, padx=5) # changed from cancle_button to cancel_button !
-        self.cancel_button.pack(side=tk.RIGHT, padx=5) 
 
     def set_new_date(self, e):
         """stores selected date in calendar widget into self.date"""
