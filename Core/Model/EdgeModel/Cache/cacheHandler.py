@@ -106,7 +106,7 @@ class CacheEntryHandler(BaseCacheHandler):
 
         """
         This part should manipulate the http header timestamps
-        Dosen´t work properly at the moment
+        Dosen´t work properly at the moment (by Marco Hirth)
 
         if entry.httpHeader:
             http = entry.httpHeader

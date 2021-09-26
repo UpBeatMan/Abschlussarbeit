@@ -39,7 +39,7 @@ class Login(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.date_created = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in  Login für " + attr.name, "error")
+                    log_message("Fehler bei Update in Login für " + attr.name, "error")
                     continue
                 self.is_date_changed = True
             elif attr.name == LASTUSED:
@@ -48,7 +48,7 @@ class Login(BaseSession, BaseSQLiteClass):
                     attr.date_to_timestamp()
                     self.date_last_used = attr.timestamp
                 except:
-                    log_message("Fehler bei Update in  Login für " + attr.name, "error")
+                    log_message("Fehler bei Update in Login für " + attr.name, "error")
                     continue
                 self.is_date_changed = True
 
@@ -81,7 +81,7 @@ class CompromisedCredential(BaseSession, BaseSQLiteClass):
                     self.date_created = attr.timestamp
                 except:
                     log_message(
-                        "Fehler bei Update in  CompromisedCredentials für " + attr.name,
+                        "Fehler bei Update in CompromisedCredentials für " + attr.name,
                         "error",
                     )
                     continue
