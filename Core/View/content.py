@@ -1,10 +1,11 @@
+# import tkinter gui modules
 import tkinter as tk
 from tkinter import ttk
 
-from datetime import datetime
-
 
 class Content(tk.Frame):
+    """content class"""
+
     def __init__(self, parent):
         tk.Frame.__init__(self, width=200, height=150)
         self.parent = parent
@@ -24,7 +25,9 @@ class Content(tk.Frame):
         self.body()
 
     def body(self):
-        # Popup menu
+        """defines gui elements in the content gui section and their function calls"""
+
+        # * right click popup menus for main dataview
         self.popup_menu = tk.Menu(self, tearoff=False)
         self.popup_menu.add_command(
             label="Ausgewählte editieren via Delta",
@@ -49,6 +52,7 @@ class Content(tk.Frame):
             command=lambda: self.parent.controller.commit_selected_data(),
         )
 
+        # * right click popup menus for additional information dataview
         self.addi_popup_menu = tk.Menu(self, tearoff=False)
         self.addi_popup_menu.add_command(
             label="Ausgewählte editieren via Delta",
@@ -79,28 +83,29 @@ class Content(tk.Frame):
             command=lambda: self.parent.controller.commit_selected_data(infoview=True),
         )
 
-        # Treeview style
+        # * right click menu - treeview style configuration
         self.style = ttk.Style()
         self.style.configure(
             "mystyle.Treeview", highlightthickness=0, bd=0, font=("Calibri", 11)
-        )  # Modify the font of the body
+        )  # modifies the font of the body
         self.style.configure(
             "mystyle.Treeview.Heading", font=("Calibri", 13, "bold")
-        )  # Modify the font of the headings
+        )  # modifies the font of the headings
         self.style.map(
             "mystyle.Treeview",
             foreground=self.fixed_map("foreground"),
             background=self.fixed_map("background"),
         )
 
-        # Treeview in frame and scrollbars
+        # * treeview frame and scrollbars
         self.tree_frame = tk.Frame(self, height=25)
-
+        # scrollbars for the content viewer
         self.tree_scroll_vertical = tk.Scrollbar(self.tree_frame)
         self.tree_scroll_vertical.pack(side=tk.RIGHT, fill=tk.Y)
         self.tree_scroll_horizontal = tk.Scrollbar(self.tree_frame, orient="horizontal")
         self.tree_scroll_horizontal.pack(side=tk.BOTTOM, fill=tk.X)
 
+        # * section in tree frame where loaded url and timedata will be shown
         self.dataview = ttk.Treeview(
             self.tree_frame,
             height=25,
@@ -108,23 +113,27 @@ class Content(tk.Frame):
             yscrollcommand=self.tree_scroll_vertical.set,
             xscrollcommand=self.tree_scroll_horizontal.set,
         )
+        # * pack main dataview and assign scrollbars to it
         self.dataview.pack(fill="both")
         self.tree_scroll_vertical.config(command=self.dataview.yview)
         self.tree_scroll_horizontal.config(command=self.dataview.xview)
 
-        # Notebook for the additional information
+        # * additional information dataview - seperated in tabs (the bottom part of the content section)
         self.tab_control = ttk.Notebook(self)
 
-        # Label to show selected view
+        # * label configuration
         self.label_frame = tk.Frame(self, height=5)
         self.view_label = tk.Label(self.label_frame, textvariable=self.view_label_text)
         self.view_label.pack()
 
+        # * pack tab_control
+        # * pack label and tree frames
         self.label_frame.pack(side=tk.TOP, fill="x", expand=False)
         self.tree_frame.pack(fill="both")
         self.tab_control.pack(side=tk.BOTTOM, fill="both", expand=True)
 
     def rebuild_treeview(self):
+        """resets and rebuilds treeview"""
         self.dataview.pack_forget()
         self.tree_scroll_vertical.pack_forget()
         self.tree_scroll_horizontal.pack_forget()
@@ -146,19 +155,20 @@ class Content(tk.Frame):
         self.tree_scroll_horizontal.config(command=self.dataview.xview)
         self.dataview.bind("<Button-3>", self.dateview_popup)
 
-    # Start popup menu
     def dateview_popup(self, e):
+        """starts popup menu for selected line e in main dataview"""
         self.popup_menu.tk_popup(e.x_root, e.y_root)
 
     def addi_info_popup(self, e):
+        """stars popup menu for selected line e in additional data view"""
         self.addi_popup_menu.tk_popup(e.x_root, e.y_root)
 
-    # Change view label to show name of selected view
     def change_view_label(self, text):
+        """changes view label to show the name of text"""
         self.view_label_text.set(text)
 
-    # Receives additional data and builds tabs and treeviews to show it
     def fill_info_section(self, data):
+        """receives additional info data and builds tabs in tab_control and treeviews to show them"""
         self.info_views = {}
         for tab in self.tab_control.tabs():
             self.tab_control.forget(tab)
@@ -205,8 +215,10 @@ class Content(tk.Frame):
                 label = tk.Label(tab, text=text)
                 label.pack(expand=True, fill="both")
 
-    # Receives data and inserts it into the main treeview (dataview)
     def fill_dataview(self, data, addi_infos):
+        """fills lower content view for additional data with via the different file handlers"""
+
+        # commented by Marco Hirth ?
         # self.dataview.pack_forget()
         # self.dataview = ttk.Treeview(self, height=25, style="mystyle.Treeview")
         # self.dataview.pack(fill="both")
@@ -248,8 +260,10 @@ class Content(tk.Frame):
                 "<Double-1>", self.parent.controller.load_additional_info
             )
 
-    # Fill the main treeview (dataview) with history data. Extra method to load dependencies correctly
-    def fillHistroyData(self, history_data):
+    def fillHistoryData(self, history_data):
+        """fills the upper content view with history data - visited websites with their timestamps"""
+        # changed fillHistroyData to fillHistoryData !
+
         self.dataview_mode = "History"
         for child in self.dataview.get_children():
             self.dataview.delete(child)
@@ -325,7 +339,7 @@ class Content(tk.Frame):
         self.dataview.tag_configure("editedchild", background="#0ecf2b")
 
     def fixed_map(self, option):
-        # Fix for setting text colour for Tkinter 8.6.9
+        """introduces fix for setting text colour with Tkinter 8.6.9"""
         # From: https://core.tcl.tk/tk/info/509cafafae
         #
         # Returns the style map for 'option' with any styles starting with
@@ -333,6 +347,7 @@ class Content(tk.Frame):
 
         # style.map() returns an empty list for missing options, so this
         # should be future-safe.
+
         return [
             elm
             for elm in self.style.map("Treeview", query_opt=option)
