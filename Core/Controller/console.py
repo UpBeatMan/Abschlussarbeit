@@ -1,6 +1,6 @@
 import logging  # logging module for debugging
 import tkinter as tk  # tkinter gui module
-from datetime import datetime  # module for date and time object
+from datetime import datetime  # date and time module
 
 
 class Console(logging.Handler):
@@ -15,17 +15,15 @@ class Console(logging.Handler):
         self.textfield = textfield
         self.textfield.config(state=tk.DISABLED)  # disable textfield
 
-        # * set log numerate start value
-        self.numerate = 0
-
-        # * colorization of the different log levels
+        # * colorization of the different log levels only for event_logger
         self.textfield.tag_config("INFO", foreground="black")
         self.textfield.tag_config("WARNING", foreground="blue")
 
-        # ! DEBUG, ERROR and CRITICAL log levels only shown in advanced.log
-        # self.textfield.tag_config("DEBUG", foreground="green")
-        # self.textfield.tag_config("ERROR", foreground="red")
-        # self.textfield.tag_config("CRITICAL", foreground="red", underline=1)
+        # DEBUG, ERROR and CRITICAL log levels only show all details in advanced.log
+        # They are handled by the debug_logger without tk colorization
+        self.textfield.tag_config("DEBUG", foreground="green")
+        self.textfield.tag_config("ERROR", foreground="red")
+        self.textfield.tag_config("CRITICAL", foreground="red", underline=1)
 
     def emit(self, record):
         """defines procedure when log messages are send to the log listener and displayed in the event console"""
@@ -33,20 +31,12 @@ class Console(logging.Handler):
         # * re-enable textfield and insert a message in the console
         self.textfield.config(state=tk.NORMAL)
 
-        # * enumerate log messages
-        self.numerate += 1
-        if self.numerate < 10:  # adds prefix null for readability
-            name = "   - 0" + str(self.numerate) + ".log"
-        else:
-            name = "   - " + str(self.numerate) + ".log"
-
         # * add timestamp to log
-        time = datetime.now().strftime("  %H:%M:%S %d.%m.%y -")
-        message = name + time + "\n" + self.format(record) + "\n\n"
+        time = datetime.now().strftime("      %H:%M:%S")
+        message = time + "            " + self.format(record) + "\n\n"
 
         # * add message and log level
-        if record.levelname == "INFO" or record.levelname == "WARNING":
-            self.textfield.insert(tk.INSERT, message, record.levelname)
+        self.textfield.insert(tk.INSERT, message, record.levelname)
 
         # * finally display the message in the textfield
         self.textfield.see(tk.END)
