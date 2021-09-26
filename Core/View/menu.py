@@ -1,14 +1,22 @@
+# import tkinter gui modules
 import tkinter as tk  # ToolKit module
 import webbrowser  # webrowser module
+import os
 
-from View.Dialogs.guide_dialog import GuideDialog  # manual
-from View.Dialogs.ask_dialog import AskDialog  # confirmation popup window
-
+# import popup gui elements from View.Dialog.ask_dialog and *.guide_dialog
+from View.Dialogs.ask_dialog import AskDialog  # confirmation window
+from View.Dialogs.guide_dialog import GuideDialog  # manual txt viewer
 from View.Dialogs.debug_dialog import DebugDialog  # debug mode
-from View.toolbar import Toolbar  # activity indicator
+
+from Model.util import resource_path  # get absolute path to temp _MEIPASS location
+from Model.util import (
+    log_message,
+)  # sends log message to log listener in controller module
 
 
 class MainMenu(tk.Menu):
+    """menu bar class"""
+
     def __init__(self, parent):
         tk.Menu.__init__(self)
         self.parent = parent  # parent tk widget
@@ -25,7 +33,7 @@ class MainMenu(tk.Menu):
             label="Alle Änderungen speichern",
             command=self.parent.controller.commit_all_data,  # * trigger commit for all changes
         )
-        self.filemenu.add_command(label="Beenden", command=self.quit)
+        self.filemenu.add_command(label="Beenden", command=self.on_quit)
         self.add_cascade(label="Datei", menu=self.filemenu)
 
         self.editmenu = tk.Menu(self, tearoff=0)
@@ -68,15 +76,10 @@ class MainMenu(tk.Menu):
 
         debugmenu = tk.Menu(self, tearoff=0)
         debugmenu.add_command(
-            label="Öffnen", command=self.parent.controller.open_debugwin
+            label="Öffnen",
+            command=lambda: DebugDialog(self.parent, self.parent.controller).show()
+            # self.parent.controller.open_debugwin
         )
-        debugmenu.add_command(
-            label="Start Progressbar Test", command=self.parent.controller.query_active
-        )
-        debugmenu.add_command(
-            label="Stop Progressbar Test", command=self.parent.controller.query_done
-        )
-
         self.add_cascade(label="Debugmodus", menu=debugmenu)
 
     def firefox_views(self):
@@ -193,18 +196,35 @@ class MainMenu(tk.Menu):
             command=lambda: self.parent.controller.change_data_view("CompCred"),
         )
 
-    def quit(self):
+    def on_quit(self):
+        """ask for confirmation if application should be closed and delete advanced.log file on_quit click"""
+
+        log_message(
+            "Fehlerspeicher wird gelöscht\n          - Fortfahren ? -", "warning"
+        )
+
         if self.parent.controller.get_unsaved_handlers():
+            # notify that changes are not saved yet
             answer = AskDialog(
                 self.parent,
                 self.parent.controller,
-                "Es wurden nicht alle Daten gespeichert!\n Trotzdem fortfahren?",
+                "Änderungen noch nicht gespeichert!\nTrotzdem beenden?",
             ).show()
             if not answer:
                 return
-        answer = AskDialog(
-            self.parent, self.parent.controller, "Möchten Sie wirklich beenden?"
-        ).show()
-        if not answer:
-            return
+        else:
+            answer = AskDialog(
+                self.parent,
+                self.parent.controller,
+                "Möchten Sie wirklich beenden?",
+            ).show()
+            if not answer:
+                return
+
+        # * delete advanced.log file
+        log_message("close logging", "delete")
+        advanced_log_path = resource_path("Core\\advanced.log")
+        os.remove(advanced_log_path)
+
+        # * exit tkinter application
         self.parent.destroy()
