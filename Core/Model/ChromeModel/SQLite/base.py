@@ -103,6 +103,7 @@ class BaseAttribute:
 
     def date_to_timestamp(self):
         """Transforms datetime to timestamps"""
+
         if self.type == OTHER or self.type == DT_ZERO:
             return
 
@@ -190,6 +191,8 @@ class BaseSQLiteClass:
 
 
 class BaseSQliteHandler:
+    """manages sqlite database connections"""
+
     pre_path = "sqlite:///"
     post_path = ""
 
