@@ -19,9 +19,10 @@ class DataSourcesCache:
                 instance = Class_(profile_path=profile_path)
             except Exception as e:
                 log_message(
-                    "Fehler in Datenquelle Cache, Modul %s, Klasse %s: %s. Überspringe"
+                    f"Überspringe Datei der Klasse\n      {class_name}",
+                    "debug",
+                    "Fehler in Datenquelle Cache, Modul %s, Klasse %s \n    %s\n    Überspringe Datei"
                     % (module_name, class_name, e),
-                    "info",
                 )
                 continue
             self.sources[class_name] = instance
@@ -32,7 +33,7 @@ class DataSourcesCache:
             try:
                 data[source] = self.sources[source].get_all_id_ordered()
             except Exception as e:
-                log_message("Fehler in " + source + ": " + str(e), "info")
+                log_message("Fehler in " + source + ": " + str(e), "error")
 
         return data
 

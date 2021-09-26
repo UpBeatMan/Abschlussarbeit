@@ -27,14 +27,12 @@ class DataSourcesJSON:
                 Class_ = getattr(module, class_name)
                 instance = Class_(profile_path=profile_path, cache_path=cache_path)
             except Exception as e:
-                message = (
-                    "Fehler in SQlite, Klasse "
-                    + str(class_name)
-                    + ": "
-                    + str(e)
-                    + ". Überspringe"
+                log_message(
+                    f"Überspringe Datei der Klasse\n      {class_name}",
+                    "debug",
+                    "Fehler in Datenquelle JSON, Modul %s, Klasse %s \n    %s\n    Überspringe Datei"
+                    % (module_name, class_name, e),
                 )
-                log_message(message, "info")
                 continue
             self.sources[class_name] = instance
 
@@ -44,7 +42,7 @@ class DataSourcesJSON:
             try:
                 data[source] = self.sources[source].get_all_id_ordered()
             except Exception as e:
-                log_message("Fehler in " + source + ": " + str(e), "info")
+                log_message("Fehler in " + source + ": " + str(e), "error")
 
         return data
 

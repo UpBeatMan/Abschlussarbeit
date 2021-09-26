@@ -4,13 +4,15 @@ from Model.util import log_message
 
 class DataSourcesCache:
     def __init__(self, profile_path: str):
-        self.sources = {}
-        source_names = []
+        self.sources = {} # dictionary
+        source_names = [] # nested lists
 
+        # Create list of module names and handlers, that are required to build the view
         source_names.append(
             ["Model.ChromeModel.Cache.cacheHandler", "CacheEntryHandler"]
         )
 
+        # load lists (containing module and handler/class names) in source_name list
         for source_name in source_names:
             module_name = source_name[0]
             class_name = source_name[1]
@@ -21,9 +23,10 @@ class DataSourcesCache:
                 instance = Class_(profile_path=profile_path)
             except Exception as e:
                 log_message(
-                    "Fehler in Datenquelle Cache, Modul %s, \n    Klasse %s: %s\n    Überspringe Datei"
+                    f"Überspringe Datei der Klasse\n      {class_name}",
+                    "debug",
+                    "Fehler in Datenquelle Cache, Modul %s, Klasse %s \n    %s\n    Überspringe Datei"
                     % (module_name, class_name, e),
-                    "error",
                 )
                 continue
             self.sources[class_name] = instance
