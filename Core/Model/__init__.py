@@ -1,31 +1,45 @@
-import os
-import configparser
-import json
-import platform
-from time import sleep
-from pubsub import pub
-from datetime import datetime, timedelta
+# import pyhton modules
+import os  # os
+import configparser  # configparser
+import json  # json
+from time import sleep  # sleep function
 
+# import  Model.<BrowserModel> and utility functions Model.util
 from Model.FirefoxModel import FirefoxModel
 from Model.EdgeModel import EdgeModel
 from Model.ChromeModel import ChromeModel
-from Model.util import change_file_time, log_message
+from Model.util import change_file_time
+from Model.util import log_message
+
+# * from Model.util import loading_flag
 
 
 class Model:
+    """model class"""
+
     def __init__(self):
         self.profiledict = {}
         self.browsermodel = None
         self.filesystem_changed = False
 
+    def first_profile_loading(self):
+        """check if there is no profile loaded"""
+        if not self.browsermodel:
+            return True
+        else:
+            return False
+
     def has_profile_loaded(self):
+        """check if there is already a profile loaded"""
         if self.browsermodel:
             return True
         else:
             return False
 
     def load_profile(self, browser, name, config):
+        """close a still opened profile and load a new selected profile"""
         if self.browsermodel:
+            # * close previous browser profile
             self.browsermodel.close()
         if browser == "Firefox":
             config.set_profile_path(self.profiledict[browser][name][0])
@@ -37,15 +51,8 @@ class Model:
                 )
             except:
                 self.browsermodel = None
-                pub.sendMessage(
-                    "logging",
-                    message="Firefox Daten konnten nicht geladen werden!",
-                    lvl="error",
-                )
+                log_message("Firefox Daten konnten nicht geladen werden", "error")
             if self.browsermodel:
-                pub.sendMessage(
-                    "logging", message="Profildaten erfolgreich geladen!", lvl="info"
-                )
                 return self.browsermodel.get_history()
             else:
                 return None
@@ -58,15 +65,8 @@ class Model:
                 )
             except:
                 self.browsermodel = None
-                pub.sendMessage(
-                    "logging",
-                    message="Edge Daten konnten nicht geladen werden!",
-                    lvl="error",
-                )
+                log_message("Edge Daten konnten nicht geladen werden", "error")
             if self.browsermodel:
-                pub.sendMessage(
-                    "logging", message="Profildaten erfolgreich geladen", lvl="info"
-                )
                 return self.browsermodel.get_history()
             else:
                 return None
@@ -79,41 +79,45 @@ class Model:
                 )
             except:
                 self.browsermodel = None
-                pub.sendMessage(
-                    "logging",
-                    message="Chrome Daten konnten nicht geladen werden!",
-                    lvl="error",
-                )
+                log_message("Chrome Daten konnten nicht geladen werden", "error")
             if self.browsermodel:
-                pub.sendMessage(
-                    "logging", message="Profildaten erfolgreich geladen", lvl="info"
-                )
                 return self.browsermodel.get_history()
             else:
                 return None
 
-    def get_saved_handlers(self):
-        if self.browsermodel:
-            saved_handler = self.browsermodel.get_saved_handlers()
-        else:
-            log_message("Kein Profil geladen!", "info")
-            saved_handler = None
-        return saved_handler
-
     def get_unsaved_handlers(self):
+        """returns a list of unsaved handlers from the list comprehension"""
         if self.browsermodel:
             unsaved_handler = self.browsermodel.get_unsaved_handlers()
         else:
-            log_message("Kein Profil geladen!", "info")
             unsaved_handler = None
         return unsaved_handler
 
+    def get_saved_handlers(self): # ! not used
+        """returns a list of saved handlers from the list comprehension"""
+
+        if self.browsermodel:
+            saved_handler = self.browsermodel.get_saved_handlers() # ! does not exist
+        else:
+            saved_handler = None
+        return saved_handler
+
     # Get additional infos (cookies, permissions, etc.) for a given website
-    def get_additional_info(self, data_type, indentifier):
-        data = self.browsermodel.get_additional_info(data_type, indentifier)
+    def get_additional_info(self, data_type, identifier):
+        """returns a dictionary containing the data for the domain view in the lower content area"""
+        # data will be received by following handlers
+        # CookieHandler
+        # FaviconHandler
+        # DownloadHandler
+        # LoginHandler
+        # CompromisedCredentialHandler
+
+        data = self.browsermodel.get_additional_info(data_type, identifier)
         return data
 
     def get_specific_data(self, id):
+        """returns the data dictionary containing all the data for a specific DataHandler"""
+
         if self.browsermodel:
             data = self.browsermodel.get_specific_data(id)
         else:
@@ -121,6 +125,8 @@ class Model:
         return data
 
     def get_form_history(self):
+        """returns a dictionary dict containing the data received by the FormHistoryHandler for Firefox and the AutofillHandler for Chrome/Edge"""
+
         if self.browsermodel:
             data = self.browsermodel.get_form_history()
         else:
@@ -128,6 +134,8 @@ class Model:
         return data
 
     def get_history(self):
+        """returns a dictionary containing the data received by the PlacesHandler for Firefox or the VisitsHandler for Chrome/Edge"""
+
         if self.browsermodel:
             data = self.browsermodel.get_history()
         else:
@@ -135,6 +143,8 @@ class Model:
         return data
 
     def get_addons(self):
+        """returns a dictionary containing the data received by the AddonsHandler"""
+
         if self.browsermodel:
             data = self.browsermodel.get_addons()
         else:
@@ -142,6 +152,8 @@ class Model:
         return data
 
     def get_bookmarks(self):
+        """returns a dictionary containing the data received by the BookmarkHandler"""
+
         if self.browsermodel:
             data = self.browsermodel.get_bookmarks()
         else:
@@ -149,6 +161,8 @@ class Model:
         return data
 
     def get_extensions(self):
+        """returns a dictionary containing the data received by the ExtensionsHandler for Firefox only"""
+
         if self.browsermodel:
             data = self.browsermodel.get_extensions()
         else:
@@ -156,20 +170,26 @@ class Model:
         return data
 
     def get_session(self):
+        """returns a dictionary containing the data received by the WindowHandler for Firefox only"""
+
         if self.browsermodel:
             data = self.browsermodel.get_session()
         else:
             data = None
         return data
 
-    def get_session_info(self, window_id):
+    def get_session_info(self, window_id): # ! not used
+        """returns a dictionary containing the data received by the ??? Handler"""
+
         if self.browsermodel:
-            data = self.browsermodel.get_session_info(window_id)
+            data = self.browsermodel.get_session_info(window_id) # ! does not exist
         else:
             data = None
         return data
 
     def get_profile(self):
+        """returns a dictionary containing the data received by the ProfileHandler"""
+
         if self.browsermodel:
             data = self.browsermodel.get_profile()
         else:
@@ -177,6 +197,7 @@ class Model:
         return data
 
     def get_keywords(self):
+        """returns a dictionary containing the data received by the KeywordHandler"""
         if self.browsermodel:
             data = self.browsermodel.get_keywords()
         else:
@@ -184,6 +205,8 @@ class Model:
         return data
 
     def get_cache(self):
+        """returns a dictionary containing the data received by the CacheEntryHandler"""
+
         if self.browsermodel:
             data = self.browsermodel.get_cache()
         else:
@@ -191,40 +214,67 @@ class Model:
         return data
 
     def edit_all_data(self, delta):
+        """changes timestamps of all data via a requested delta (timeperiod)"""
         if self.browsermodel:
             self.browsermodel.edit_all_data(delta)
+            log_message(
+                "Alle Daten via Delta\n      manipuliert\n       - Commit noch notwendig! -",
+                "info",
+            )
         else:
-            pub.sendMessage("logging", message="Kein Profil ausgewählt!", lvl="info")
+            log_message("Kein Profil ausgewählt", "info")
 
     def edit_selected_data_delta(self, delta, selection):
+        """changes timestamps of selected data via a requested delta (timeperiod)"""
+
         if self.browsermodel:
             self.browsermodel.edit_selected_data_delta(delta, selection)
+            log_message(
+                "Ausgewählte Daten via Delta\n      manipuliert\n       - Commit noch notwendig! -",
+                "info",
+            )
         else:
-            pub.sendMessage("logging", message="Kein Profil ausgewählt!", lvl="info")
+            log_message("Kein Profil ausgewählt", "info")
 
     def edit_selected_data_date(self, date, selection):
+        """changes timestamps of selected data via a requested specific timestamp"""
+
         if self.browsermodel:
             self.browsermodel.edit_selected_data_date(date, selection)
+            log_message(
+                "Ausgewählte Daten via Datum\n      manipuliert\n       - Commit noch notwendig! -",
+                "info",
+            )
         else:
-            pub.sendMessage("logging", message="Kein Profil ausgewählt!", lvl="info")
+            log_message("Kein Profil ausgewählt", "info")
 
     def commit(self, name: str = None):
+        """commits changes to the sqlite databases, JSON files and others"""
+
         if self.browsermodel:
             self.browsermodel.commit(name)
+            log_message(
+                "Änderungen gespeichert\n        - Commit erfolgreich! -", "info"
+            )
         else:
-            pub.sendMessage("logging", message="Kein Profil ausgewählt!", lvl="info")
+            log_message("Kein Profil ausgewählt", "info")
 
     def rollback(self, name: str = None):
+        """initiates rollback procedure"""
+
         if self.browsermodel:
             self.browsermodel.rollback(name)
         else:
-            pub.sendMessage("logging", message="Kein Profil ausgewählt!", lvl="info")
+            log_message("Kein Profil ausgewählt", "info")
 
-    # Rollback the changes on file timestamps
     def rollback_filesystem_time(self, config):
+        """rollbacks the timestamp changes on profile files"""
+
         if not self.filesystem_changed:
-            pub.sendMessage(
-                "logging", message="Dateisystem wurde noch nicht verändert!", lvl="info"
+            log_message(
+                "Rollback Dateisystemzeit\n      übersprungen\n      Sie wurde nicht manipuliert!"
+                + "\n\n      Änderungen rückgängig gemacht\n        - Rollback erfolgreich! -",
+                "info",
             )
             return
         delta = config.file_system_rollback_delta
@@ -244,33 +294,39 @@ class Model:
                     try:
                         change_file_time(path, delta)
                     except:
-                        pub.sendMessage(
-                            "logging",
-                            message="Datei " + path + " konnten nicht editiert werden!",
-                            lvl="info",
+                        log_message(
+                            "Ornder nicht zurückgerollt",
+                            "debug",
+                            "Dateisystemzeit des Ordners: \n    "
+                            + path
+                            + " konnte nicht zurückgerollt werden",
                         )
                 for f in files:
                     path = os.path.join(root, f)
                     try:
                         change_file_time(path, delta)
                     except:
-                        pub.sendMessage(
-                            "logging",
-                            message="Datei " + path + " konnten nicht editiert werden!",
-                            lvl="info",
+                        log_message(
+                            "Datei nicht zurückgerollt",
+                            "debug",
+                            "Dateisystemzeit der Datei: \n    "
+                            + path
+                            + " konnte nicht zurückgerollt werden",
                         )
         self.filesystem_changed = False
         self.browsermodel.get_data()
+        log_message(
+            "Änderungen rückgängig gemacht\n        - Rollback erfolgreich! -", "info"
+        )
 
-    # Change timestamps of the profile files
     def change_filesystem_time(self, config):
+        """changes timestamps values of the profile files"""
+
         now_history_last_time = self.browsermodel.get_history_last_time()
         self.browsermodel.close()
         sleep(1)
         if not now_history_last_time:
-            pub.sendMessage(
-                "logging", message="Konnte keine History finden", lvl="error"
-            )
+            log_message("Konnte keine History finden", "error")
         paths = [config.profile_path]
         if config.cache_path:
             paths.append(config.cache_path)
@@ -288,10 +344,12 @@ class Model:
                     try:
                         change_file_time(path, delta)
                     except:
-                        pub.sendMessage(
-                            "logging",
-                            message="Datei " + path + " konnten nicht editiert werden!",
-                            lvl="info",
+                        log_message(
+                            "Ordner nicht verändert",
+                            "debug",
+                            "Dateisystemzeit des Ordners: \n    "
+                            + path
+                            + " konnte nicht editiert werden",
                         )
                 for f in files:
                     path = os.path.join(root, f)
@@ -299,27 +357,28 @@ class Model:
                     try:
                         pass
                     except:
-                        pub.sendMessage(
-                            "logging",
-                            message="Datei " + path + " konnten nicht editiert werden!",
-                            lvl="info",
+                        log_message(
+                            "Datei nicht verändert",
+                            "debug",
+                            "Dateisystemzeit der Datei: \n    "
+                            + path
+                            + " konnte nicht verändert werden",
                         )
         self.filesystem_changed = True
+        log_message(
+            "Dateisystemzeit manipuliert\n       - Commit noch notwendig! -", "info"
+        )
 
-    # This searches for installations of Firefox, Edge and Chrome
-    # Then stores the profiles of them to the profiledict
     def search_profiles(self, current_username, current_os):
+        """searches for installation folders of Firefox, Chrome and Edge and stores the their profile paths to a dictionary"""
+
         firepath = None
         firecachepath = None
         chromepath = None
         edgepath = None
 
         if not current_username:
-            pub.sendMessage(
-                "logging",
-                message="Der Nutzername konnte nicht ermittelt werden!",
-                lvl="error",
-            )
+            log_message("Der Nutzername konnte nicht ermittelt werden!", "error")
             return None
 
         if current_os == "Windows":  # Microsoft Windows
@@ -339,7 +398,7 @@ class Model:
                 + current_username
                 + "/AppData/Local/Google/Chrome/User Data/"
             )
-        elif current_os == "Linux":  # Linux Distro
+        elif current_os == "Linux":  # Linux Distribution
             firepath = "/home/" + current_username + "/.mozilla/firefox/"
             firecachepath = "/home/" + current_username + "/.cache/mozilla/firefox/"
             chromepath = "/home/" + current_username + "/.config/google-chrome/"
@@ -357,9 +416,7 @@ class Model:
             )
             edgepath = ""
         else:
-            pub.sendMessage(
-                "logging", message="Kein kompatibles OS gefunden!", lvl="error"
-            )
+            log_message("Kein kompatibles Betriebssystem gefunden", "error")
             return None
 
         if os.path.exists(firepath):
@@ -378,11 +435,7 @@ class Model:
                         ].append(firecachepath + config_parser[section].get("Path"))
 
         else:
-            pub.sendMessage(
-                "logging",
-                message="Firefox scheint nicht installiert zu sein!",
-                lvl="info",
-            )
+            log_message("Firefox nicht installiert", "info")
             pass
 
         if os.path.exists(chromepath):
@@ -397,23 +450,17 @@ class Model:
                         else:
                             self.profiledict["Chrome"][file] = path
                     else:
-                        pub.sendMessage(
-                            "logging",
-                            message="Preferences-Datei für Profil "
+                        log_message(
+                            "Datei: Preferences\n      nicht gefunden",
+                            "debug",
+                            "Datei: Preferences in Chrome "
                             + file
-                            + " in Chrome wurde nicht gefunden!",
-                            lvl="info",
+                            + " wurde nicht gefunden",
                         )
             if not self.profiledict["Chrome"]:
-                pub.sendMessage(
-                    "logging", message="Keine Profile für Chrome gefunden", lvl="info"
-                )
+                log_message("Keine Profile für Chrome gefunden", "info")
         else:
-            pub.sendMessage(
-                "logging",
-                message="Chrome scheint nicht installiert zu sein!",
-                lvl="info",
-            )
+            log_message("Chrome nicht installiert", "info")
             pass
 
         if os.path.exists(edgepath):
@@ -428,20 +475,16 @@ class Model:
                         else:
                             self.profiledict["Edge"][file] = path
                     else:
-                        pub.sendMessage(
-                            "logging",
-                            message="Preferences-Datei für Profil "
+                        log_message(
+                            "Datei: Preferences\n      nicht gefunden",
+                            "debug",
+                            "Preferences-Datei in Edge "
                             + file
-                            + " in Edge wurde nicht gefunden!",
-                            lvl="info",
+                            + " wurde nicht gefunden!",
                         )
             if not self.profiledict["Edge"]:
-                pub.sendMessage(
-                    "logging", message="Keine Profile für Edge gefunden", lvl="info"
-                )
+                log_message("Keine Profile für Edge gefunden", "info")
         else:
-            pub.sendMessage(
-                "logging", message="Edge scheint nicht installiert zu sein!", lvl="info"
-            )
+            log_message("Edge nicht installiert", "info")
             pass
         return self.profiledict
