@@ -77,7 +77,7 @@ class HistoryVisit(BaseSession, BaseSQLiteClass):
                 if visited_safe == last_visited_safe or is_bigger:
                     try:
                         if is_bigger:
-                            print(is_bigger, addi_delta)
+                            # print(is_bigger, addi_delta)
                             attr.change_date(addi_delta - delta)
                         else:
                             attr.change_date(delta)
