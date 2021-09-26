@@ -15,13 +15,23 @@ if platform.system() == "Windows":
     )
 
 
-def log_message(message, lvl):
-    pub.sendMessage("logging", message=message, lvl=lvl)
+def log_message(message, lvl, debug="empty"):
+    pub.sendMessage("logging", message=message, lvl=lvl, debug=debug)
+
+
+def loading_flag(flag):
+    pub.sendMessage("activity", flag=flag)
 
 
 def change_file_time(path, delta):
     if not os.path.exists(path):
-        log_message("Pfad: " + path + " existiert nicht!", "info")
+        log_message(
+            "Datei existiert nicht mehr",
+            "debug",
+            "Zeitinformationen der Datei: \n    "
+            + path
+            + " können nicht manipuliert werden. \n    Diese Datei existiert nicht mehr",
+        )
         return
     if platform.system() == "Windows":
         # * modify filetimes on Windows
@@ -46,15 +56,17 @@ def change_file_time(path, delta):
         m_time = os.path.getmtime(path)
         a_time = a_time - delta
         m_time = m_time - delta
-        # * add creation time workaround - see the manual change_ctime.sh bash script in Core/Model/ directory
-        # https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
         os.utime(path, (a_time, m_time))
+        # * add manual creation time workaround - open and work with the change_ctime.sh bash script in Core/Model/ directory
+        # https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
 
 
 def resource_path(relative_path):
-    # * Get absolute path to resource, works for dev and for PyInstaller
+    """resource_path gets absolute path to resource,
+    works for dev and for PyInstaller"""
     try:
-        # PyInstaller creates a temp folder and stores the absolute path in _MEIPASS
+        # * PyInstaller creates a temp folder
+        # * and stores the absolute path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
