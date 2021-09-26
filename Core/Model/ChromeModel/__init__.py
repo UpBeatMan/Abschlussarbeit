@@ -1,24 +1,27 @@
-from datetime import datetime
+from datetime import datetime # python datetime module
 
+# imports all chrome sub modules
 from Model.ChromeModel.JSON import DataSourcesJSON
 from Model.ChromeModel.SQLite import DataSourcesSQLite
 from Model.ChromeModel.Cache import DataSourcesCache
 from Model.ChromeModel.SQLite.history import VISITED
 from Model.ChromeModel.SQLite.base import OTHER
 
+# sends log message to log listener in controller module
 from Model.util import log_message
-import logging
 
-""" TODO: Überprüfe auf fehlende Fehlermeldungen!"""
 
 class ChromeModel:
+    """submodel class modeling the Chrome data backend"""
+
     def __init__(self, profile_path: str = None):
+        """run __init__ section at class instantiation"""
+
         if profile_path is None:
-            #raise ValueError("profile")
-            self.logger.error("Fehler - kein gültiger Profilpfad gefunden!")
+            log_message("Kein gültiger Chrome Profilpfad gefunden", "error")
             return
 
-        self.sources = {}
+        self.sources = {} # dict with key-value pairs
 
         self.sources["SQLite"] = DataSourcesSQLite(profile_path)
         self.sources["JSON"] = DataSourcesJSON(profile_path)
@@ -29,7 +32,15 @@ class ChromeModel:
         for key in self.data_dict:
             self.save_state[key] = True
 
+        # * TEST LOG MESSAGES for all defined log levels
+        # log_message("This is an info message", "info")
+        # log_message("This is a warning message", "warning")
+        # log_message("This is a debug message", "debug")
+        # log_message("This is an error message", "error")
+        # log_message("This is a critical message", "critical")
+
     def get_unsaved_handlers(self):
+        """returns a list of unsaved handlers from the list comprehension"""
         return [
             self.save_state[handler]
             for handler in self.save_state
@@ -37,20 +48,24 @@ class ChromeModel:
         ]
 
     def get_saved_handlers(self):
+        """returns a list of saved handlers from the list comprehension"""
+        # ! - not used
         return [
             self.save_state[handler]
             for handler in self.save_state
             if self.save_state[handler] == True
         ]
 
-    # ! OVERRIDE - get_data() for update! - misleading
     def get_data(self):
+        """loads data from profile files"""
         data_dict = {}
         for source in self.sources:
             data_dict.update(self.sources[source].get_data())
         return data_dict
 
     def reload_data_attributes(self):
+        """gets DataHandler attributes from data_dict"""
+
         for source in self.data_dict:
             for item in self.data_dict[source]:
                 try:
@@ -59,22 +74,27 @@ class ChromeModel:
                     pass
 
     def get_history(self):
-        histroy_tree = {}   # ! why histroy instead of history ?
+        """builds tree view in the history content view"""
+
+        # changed histroy_tree to history_tree in this function !
+        history_tree = {}
         for entry in self.data_dict["VisitsHandler"]:
             # * initial/direct visit of an url
             if entry.from_visit == 0:
-                histroy_tree[entry] = []
+                history_tree[entry] = []
             else:
                 # * visit url over a link from a other url
-                for tree_entry in histroy_tree:
+                for tree_entry in history_tree:
                     # * for each tracked from_visit id append to tree
                     if entry.from_visit == tree_entry.id or entry.from_visit in [
-                        sube.id for sube in histroy_tree[tree_entry]
+                        sube.id for sube in history_tree[tree_entry]
                     ]:
-                        histroy_tree[tree_entry].append(entry)
-        return histroy_tree
+                        history_tree[tree_entry].append(entry)
+        return history_tree
 
     def get_history_last_time(self):
+        """returns timestamp when history was successfully loaded last time"""
+
         history_last_time = None
         try:
             last_history_item = self.data_dict["VisitsHandler"][-1]
@@ -87,6 +107,14 @@ class ChromeModel:
         return history_last_time
 
     def get_additional_info(self, data_type, identifier):
+        """returns a dictionary containing the data for the domain view in the lower content area"""
+        # data will be received by following handlers
+        # CookieHandler
+        # FaviconHandler
+        # DownloadHandler
+        # LoginHandler
+        # CompromisedCredentialHandler"""
+
         if data_type == "history":
             data_dict = {
                 "Cookies": [],
@@ -134,35 +162,51 @@ class ChromeModel:
         return data_dict
 
     def get_addons(self):
+        """returns a dictionary containing the data received by the AddonsHandler"""
+
         return self.data_dict["AddonsHandler"]
 
     def get_bookmarks(self):
+        """returns a dictionary containing the data received by the BookmarkHandler"""
+
         return self.data_dict["BookmarkHandler"]
 
     def get_profile(self):
+        """returns a dictionary containing the data received by the ProfileHandler"""
+
         return self.data_dict["ProfileHandler"]
 
     def get_keywords(self):
+        """returns a dictionary containing the data received by the KeywordHandler"""
+
         return self.data_dict["KeywordHandler"]
 
     def get_form_history(self):
+        """returns a dictionary dict containing the data received by the AutofillHandler for Chrome/Edge"""
+
         return self.data_dict["AutofillHandler"]
 
     def get_cache(self):
+        """returns a dictionary containing the data received by the CacheEntryHandler"""
+
         return self.data_dict["CacheEntryHandler"]
 
     def get_specific_data(self, id):
+        """returns the data dictionary containing all the data for a specific DataHandler"""
+
         if id in self.data_dict:
             if self.data_dict[id]:
                 return self.data_dict[id]
             else:
-                log_message("Keine Daten verfügbar!", "info")
+                log_message(f"Keine Daten verfügbar\n      für {id}", "info")
                 return None
         else:
-            log_message("Daten nicht gefunden!", "info")
+            log_message(f"DataHandler unbekannt: {id}", "error")
             return None
 
     def edit_all_data(self, delta):
+        """changes timestamps of all data via a requested delta (timeperiod)"""
+
         for source in self.data_dict:
             for item in self.data_dict[source]:
                 item.update(delta)
@@ -171,6 +215,8 @@ class ChromeModel:
             self.save_state[handler] = False
 
     def edit_selected_data_delta(self, delta, selection):
+        """changes timestamps of selected data via a requested delta (timeperiod)"""
+
         for selected in selection:
             for item in self.data_dict[selected[0]]:
                 if int(item.id) == int(selected[1]):
@@ -195,7 +241,9 @@ class ChromeModel:
                                 pass
 
     def edit_selected_data_date(self, date, selection):
-        delta = None
+        """changes timestamps of selected data via a requested specific timestamp"""
+
+        delta = None  #
         for selected in selection:
             for item in self.data_dict[selected[0]]:
                 if int(item.id) == int(selected[1]):
@@ -224,6 +272,8 @@ class ChromeModel:
                                 pass
 
     def rollback(self, name: str = None):
+        """initiates rollback procedure"""
+
         for source in self.sources:
             self.sources[source].rollback(name)
         if name:
@@ -240,6 +290,8 @@ class ChromeModel:
                 self.save_state[handler] = True
 
     def commit(self, name: str = None):
+        """initiates commit procedure"""
+
         for source in self.sources:
             self.sources[source].commit(name)
         if name:
@@ -254,5 +306,7 @@ class ChromeModel:
                 self.save_state[handler] = True
 
     def close(self):
+        """closes data sources"""
+
         for source in self.sources:
             self.sources[source].close()

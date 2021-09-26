@@ -1,5 +1,5 @@
 from datetime import datetime
-from pubsub import pub #! no usage in this file
+from pubsub import pub  #! no usage in this file
 
 from Model.FirefoxModel.JSON import DataSourcesJSON
 from Model.FirefoxModel.SQLite import DataSourcesSQLite
@@ -11,8 +11,13 @@ from Model.FirefoxModel.SQLite.base import OTHER
 
 
 class FirefoxModel:
+    """submodel class modeling the Firefox data backend"""
+
     def __init__(self, profile_path: str = None, cache_path: str = None):
+        """run __init__ section at class instantiation"""
+
         if profile_path is None:
+            log_message("Kein gültiger Firefox Profilpfad gefunden", "error")
             return
 
         if cache_path is None:
@@ -30,6 +35,7 @@ class FirefoxModel:
             self.save_state[key] = True
 
     def get_unsaved_handlers(self):
+        """returns a list of unsaved handlers from the list comprehension"""
         return [
             self.save_state[handler]
             for handler in self.save_state
@@ -37,13 +43,14 @@ class FirefoxModel:
         ]
 
     def get_saved_handler(self):
+        """returns a list of saved handlers from the list comprehension"""
+        # ! - not used
         return [
             self.save_state[handler]
             for handler in self.save_state
             if self.save_state[handler] == True
         ]
 
-    # ! OVERRIDE - get_data() for update! - very misleading
     def get_data(self):
         data_dict = {}
         for source in self.sources:
@@ -59,17 +66,18 @@ class FirefoxModel:
                     pass
 
     def get_history(self):
-        histroy_tree = {}
+        # * changed histroy_tree to history_tree !
+        history_tree = {}
         for entry in self.data_dict["HistoryVisitHandler"]:
             if entry.from_visit == 0:
-                histroy_tree[entry] = []
+                history_tree[entry] = []
             else:
-                for tree_entry in histroy_tree:
+                for tree_entry in history_tree:
                     if entry.from_visit == tree_entry.id or entry.from_visit in [
-                        sube.id for sube in histroy_tree[tree_entry]
+                        sube.id for sube in history_tree[tree_entry]
                     ]:
-                        histroy_tree[tree_entry].append(entry)
-        return histroy_tree
+                        history_tree[tree_entry].append(entry)
+        return history_tree
 
     def get_history_last_time(self):
         history_last_time = None
@@ -175,10 +183,10 @@ class FirefoxModel:
             if self.data_dict[id]:
                 return self.data_dict[id]
             else:
-                log_message("Keine Daten verfügbar!", "info")
+                log_message(f"Keine Daten verfügbar\n      für {id}", "info")
                 return None
         else:
-            log_message("Daten nicht gefunden!", "info")
+            log_message(f"DataHandler unbekannt: {id}", "error")
             return None
 
     def edit_all_data(self, delta):
