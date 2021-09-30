@@ -16,10 +16,14 @@ if platform.system() == "Windows":
 
 
 def log_message(message, lvl, debug="empty"):
+    """unifies sending process of log data to the logging listener in the controller module"""
+
     pub.sendMessage("logging", message=message, lvl=lvl, debug=debug)
 
 
 def loading_flag(flag):
+    """sets flag state and sends it to the activity listener in the controller module"""
+
     pub.sendMessage("activity", flag=flag)
 
 
