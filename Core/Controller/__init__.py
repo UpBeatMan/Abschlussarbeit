@@ -17,7 +17,7 @@ from View.Dialogs.ask_dialog import AskDialog
 from View.Dialogs.debug_dialog import DebugDialog
 
 from Model import Model  # use projects Model components
-
+from Model.util import log_message # unifies log messages
 
 class Controller:
     """controller class"""
@@ -173,7 +173,7 @@ class Controller:
 
         data = None
         if self.get_unsaved_handlers():
-            self.log_listener(
+            log_message(
                 "Änderungen noch nicht gespeichert!\nTrotzdem neues Profil laden?",
                 "warning",
             )
@@ -401,10 +401,10 @@ class Controller:
             try:
                 delta = now.timestamp() - delta.timestamp()
             except:
-                self.log_listener("Zeitdelta zu groß", "warning")
+                log_message("Zeitdelta zu groß", "warning")
                 return
         else:
-            self.log_listener("Kein Delta angegeben", "warning")
+            log_message("Kein Delta angegeben", "warning")
             return
         self.model.edit_all_data(delta)
         self.reload_data()
@@ -418,7 +418,7 @@ class Controller:
         if mode == "date":
             date = DateDialog(self.view, self).show()
             if not date:
-                self.log_listener("Kein Datum angegeben", "warning")
+                log_message("Kein Datum angegeben", "warning")
                 return
         else:  # mode == "delta"
             # * ask for timedelta with dialog, then change all data based on this timedelta
@@ -429,10 +429,10 @@ class Controller:
                 try:
                     delta = now.timestamp() - delta.timestamp()
                 except:
-                    self.log_listener("Zeitdelta zu groß", "warning")
+                    log_message("Zeitdelta zu groß", "warning")
                     return
             else:
-                self.log_listener("Kein Delta angegeben", "warning")
+                log_message("Kein Delta angegeben", "warning")
                 return
 
         selected_list = []
@@ -497,7 +497,7 @@ class Controller:
                     selected_list.append([item["values"][-2], item["values"][-1]])
 
         if not selected_list:
-            self.log_listener("Keine Zeilen ausgewählt", "warning")
+            log_message("Keine Zeilen ausgewählt", "warning")
             return
 
         if mode == "date":
@@ -506,14 +506,14 @@ class Controller:
             try:
                 self.model.edit_selected_data_date(date, selected_list)
             except:
-                self.log_listener("Fehler beim editieren", "error")
+                log_message("Fehler beim editieren", "error")
                 return
         else:  # mode == "delta"
             self.model.edit_selected_data_delta(delta, selected_list)
             try:
                 pass
             except:
-                self.log_listener("Fehler beim editieren", "error")
+                log_message("Fehler beim editieren", "error")
                 return
         if not infoview:
             self.reload_data()
@@ -574,12 +574,12 @@ class Controller:
         if not check:
             return
         if not self.model.has_profile_loaded():
-            self.log_listener("Kein Profil geladen", "warning")
+            log_message("Kein Profil geladen", "warning")
         try:
             self.model.change_filesystem_time(self.config)
             # pass
         except:
-            self.log_listener("Fehler beim Ändern der Dateisystem Zeit", "error")
+            log_message("Fehler beim Ändern der Dateisystem Zeit", "error")
 
     def rollback_filesystem_time(self):
         """rollback timestamps of the profile files"""
@@ -587,4 +587,4 @@ class Controller:
         try:
             self.model.rollback_filesystem_time(self.config)
         except:
-            self.log_listener("Fehler beim Rollback der Dateisystem Zeit", "error")
+            log_message("Fehler beim Rollback der Dateisystem Zeit", "error")
