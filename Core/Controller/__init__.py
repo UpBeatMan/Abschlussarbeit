@@ -187,9 +187,10 @@ class Controller:
                 data = "keep"
                 return data
 
-        if self.model.first_profile_loading():
+        if not self.model.has_profile_loaded():
+        #if self.model.first_profile_loading():
             # * load confirmation no profile has been loaded and first is about to load
-            # It might seem pointless but is necessary for the activity_indicator to work properly.
+            # It might seem pointless but is necessary for the activity_indicator to work
             answer = AskDialog(
                 self.view, self, "Bestätigen Sie um den Ladevorgang zu starten!"
             ).show()

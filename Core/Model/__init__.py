@@ -22,12 +22,12 @@ class Model:
         self.browsermodel = None
         self.filesystem_changed = False
 
-    def first_profile_loading(self):
-        """check if there is no profile loaded"""
-        if not self.browsermodel:
-            return True
-        else:
-            return False
+    # def first_profile_loading(self):
+    #     """check if there is no profile loaded"""
+    #     if not self.browsermodel:
+    #         return True
+    #     else:
+    #         return False
 
     def has_profile_loaded(self):
         """check if there is already a profile loaded"""
