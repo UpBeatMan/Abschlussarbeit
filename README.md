@@ -38,7 +38,7 @@ Version 0.2.0
 ### On going
 - possible changes in the browser profile database structure after browser updates
   - updating profile database changes in the browser model and views
-  - e.g. time data format mismatch in Edge DownloadHandler
+  - e.g. time data format mismatch in browsermodel Edge DownloadHandler
 
 ### In future
 
