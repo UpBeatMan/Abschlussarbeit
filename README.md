@@ -23,8 +23,8 @@ Version 0.2.0
     - introduce of a second logger to completely separate them
   - Design improvements of all log messages in the gui console logger
     - enumeration feature to have a unique identifier
-    - show log level information to every log message
-    - add a hint to log messages which also create new log informations entries in the debug-mode
+    - show log level information in every log message
+    - add a hint to log messages which also create new log information entries in the debug-mode
   - Manual script "change_ctime.sh" in Model to solve c-time manipulation under UNIX systems
     - https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
   - GUI usability improvements - closed with new toolbar interface
