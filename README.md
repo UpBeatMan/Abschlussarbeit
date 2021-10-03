@@ -4,26 +4,32 @@ former Name: FiProTima
 
 Firefox Browser Profile Timestamp Manipulator forked from hirthirt - https://github.com/hirthirt/fiprotima
 
-A tool for viewing and manipulating browser profiles in one place.
+The vision of a one tool solution for viewing and manipulating browser profiles in one place.
 Currently sorting profile entries based on there initial url access and according to their timestamps.
 Manipulation-wise there is already a feature to manipulate timestamps on large scale bases
 thanks to the work of @hirthirt.
 
-Version 0.1.0
+Version 0.2.0
 
 ## Development Roadmap (English)
 
 - closed task
   - PoC to verify if Multithreading is actual capable to improve the loading speed of sqlite databases
-    - For at the least one browser engine type Chromium (Chrome) or Gecko (Firefox)
-    - After getting not the expected results with the Firefox Gecko Engine
-    - Development was based solely on the Google Chrome Browser base
-  - Creation of a debug-mode (split it the ERROR debug log from the user-event INFO log)
+    - for at the least one browser engine type Chromium (Chrome) or Gecko (Firefox)
+    - after getting not the expected results with the Firefox Gecko Engine
+    - further development was based solely on the Google Chrome Browser base
+  - Creation of an additional debug-mode window for more detailed and complex log messages 
+    - slit the ERROR/DEBUG/CRITICAL log from the user-event INFO/WARNING log
+    - introduce of a second logger to completely separate them
+  - Design improvements of all log messages in the gui console logger
+    - enumeration feature to have a unique identifier
+    - show log level information to every log message
+    - add a hint to log messages which also create new log informations entries in the debug-mode
   - Manual script "change_ctime.sh" in Model to solve c-time manipulation under UNIX systems
     - https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
   - GUI usability improvements - closed with new toolbar interface
-    - changed "profile load" button placement and redesigned toolbar
-    - profile loading activity indicator visualized as loading bar
+    - changed "profile load" button placement and redesigned toolbar + adjusted gui sections positions
+    - profile loading activity indicator visualized as loading bar + redesigned toolbar(order & logos)
 
 - open task
   - Edge Downloads won't show
@@ -32,6 +38,7 @@ Version 0.1.0
 ### On going
 - possible changes in the browser profile database structure after browser updates
   - updating profile database changes in the browser model and views
+  - e.g. time data format mismatch in Edge DownloadHandler
 
 ### In future
 
@@ -42,7 +49,7 @@ Version 0.1.0
   - Backup profile before manipulation process
   - GUI changes for adding, deleting and changing data
 - Testing detection rate of a manipulated profile in forensic tools with specific forensic test cases
-- Smaller GUI improvements e.g. resizing GUI fields dynamically
+- GUI improvements e.g. resizing GUI sections in main view dynamically
 
 ## Installationsanleitung (German)
 
