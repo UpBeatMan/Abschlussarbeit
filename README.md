@@ -19,7 +19,7 @@ Version 0.2.0
     - after getting not the expected results with the Firefox Gecko Engine
     - further development was based solely on the Google Chrome Browser base
   - Creation of an additional debug-mode window for more detailed and complex log messages 
-    - slit the ERROR/DEBUG/CRITICAL log from the user-event INFO/WARNING log
+    - split the ERROR/DEBUG/CRITICAL log from the user-event INFO/WARNING log
     - introduce of a second logger to completely separate them
   - Design improvements of all log messages in the gui console logger
     - enumeration feature to have a unique identifier
