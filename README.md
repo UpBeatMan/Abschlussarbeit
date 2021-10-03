@@ -20,7 +20,7 @@ Version 0.2.0
     - further development was based solely on the Google Chrome Browser base
   - Creation of an additional debug-mode window for more detailed and complex log messages 
     - split the ERROR/DEBUG/CRITICAL log from the user-event INFO/WARNING log
-    - introduce of a second logger to completely separate them
+    - introduction of a second logger to completely separate them
   - Design improvements of all log messages in the gui console logger
     - enumeration feature to have a unique identifier
     - show log level information in every log message
