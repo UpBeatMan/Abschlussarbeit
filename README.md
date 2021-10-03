@@ -29,7 +29,7 @@ Version 0.2.0
     - https://stackoverflow.com/questions/16126992/setting-changing-the-ctime-or-change-time-attribute-on-a-file/17066309#17066309
   - GUI usability improvements - closed with new toolbar interface
     - changed "profile load" button placement and redesigned toolbar + adjusted gui sections positions
-    - profile loading activity indicator visualized as loading bar + redesigned toolbar(order & logos)
+    - profile loading activity indicator visualized as loading bar + redesigned toolbar(order & icons)
 
 - open task
   - Edge Downloads won't show
