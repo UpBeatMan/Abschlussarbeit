@@ -1,52 +1,52 @@
-#! TODO: an Programmaenderungen anpassen.
-
 Digital Forensics Scenario Creator (DFSC) Nutzerhandbuch - ehemals FiProTiMa:
 
-DFSC ist ein Programm zur Manipulation von Zeitinformationen in Browser-Profilen und ... #TODO: hinzufügen!
+DFSC ist ein Programm zur Manipulation von Zeitinformationen in Browser-Profilen
 
 Aktuell werden folgende Browser unterstuetzt:
 
-    - offiziell nur Google Chrome in der neuen Version
-
-    - Mozilla Firefox
+    - Mozilla Firefox (das leere 'default' Profil wird ausgeblendet!)
     - Google Chrome
     - Microsoft Edge
 
 Beschreibung der verschiedenen Elemente des Programms:
 
     Menueleiste:
-        Die Menueleiste, welche sich am oberen Rand des Programms befindet bietet verscheidene Optionen an.
+        Die Menueleiste, welche sich am oberen Rand des Programms befindet bietet verschiedene Optionen an.
         Unter 'Datei' finden sich Optionen wie das Speichern von Aenderungen und dem Beenden des Programms.
         Der Menuepunkt 'Bearbeiten' bietet Funktionen zur Bearbeitung der Profildaten. Dazu gehoert das Veraendern
         von Daten, wobei ausgewaehlt werden kann, ob alle oder nur ausgewaehlte Daten veraendert werden. Ebenfalls
         koennen diese Aenderungen hier Rueckgaengig gemacht werden. Die Manipulation der Dateien auf Dateisystemeben
         is auch unter 'Bearbeiten' zu finden.
-        Um zwischen den verschiednen Daten einens Browser-Profils zu wechseln koennen unter 'Ansicht' verschiedene
+        Um zwischen den verschiedenen Daten einens Browser-Profils zu wechseln koennen unter 'Ansicht' verschiedene
         Ansichten ausgewaehlt werden.
         Unter 'Hilfe' befindet sich zum einen dieses Nutzerhandbuch und zum anderen eine Link zum GitHub-Repository
         dieses Programms.
+        Unter 'Debugmodus' kann der neue Debugmodus geoeffnet werden.
 
     Toolbar:
         Unterhalb der Menueleiste befindet sich die Toolbar. Hier werden verscheidene Menueoptionen zur Schnellauswahl
-        angeboten. Verfuegbar sind aktuell (von links nach rechts): Beenden, Speichern, Rueckgaengig machen und Profil-
-        Liste akutalisieren.
+        angeboten. Verfuegbar sind aktuell (von links nach rechts): Speichern, Profil-Liste aktualisieren, Beenden,
+        Aktivitätsindikator(nicht klickbar - Statusanzeige), Profil laden, Aenderunge rueckgaengig machen.
 
     Profilauswahl:
         In der linken Seitenleiste befindet sich im oberen Teil die Profilauswahl. Hier werden alle verfuegbaren
         Browser und deren Profile angezeigt. Ueber einen Mausklick kann ein Profil ausgewaehlt werden und mit dem
-        'Laden'-Knopf unterhalb der Profil-Liste die Profil-Daten geladen werden.
+        'Profil laden'- Knopf in der Toolbar geladen werden.
 
     Statuskonsole:
-        Unterhalb der Profilauswahl in der Statuskonsole werden Meldungen an den Nutzer angezeigt. Sowohl
-        Fehlermeldungen als auch postive Statusberichte erscheinen hier.
+        Unterhalb der Profilauswahl in der Statuskonsole werden Logmeldungen an den Nutzer angezeigt. In der Statuskonsole
+        werden nur Ereignisse und kurze Warnungen angezeigt. Fehlermeldungen und Debugmeldungen(ausfuehrliche Warnmeldungen)
+        werden nur noch im Debugmodus angezeigt. In der Statuskonsole erscheinen Hinweise bei neuen Meldungen im Debugmodus.
+        Ein neuer Zähler nummeriert alle Logmeldungen durch. Verknuepfte Logs in der Statuskonsole und dem Debugmodus haben 
+        dieselbe dreistellige Nummer.
 
     Haupt-Datenanzeige:
         Mittig rechts von der Seitenleiste befindet sich die Hauptanzeige fuer die Profil-Daten. Im oberen Teil
         wird angezeigt, welche Ansicht aktuell ausgewaehlt ist. Unterhalb befindet sich eine Tabelle in der die
         Daten des Profils aufgelister werden. Hier koennen einzelne oder mehrere Eintraege ausgewaehlt und bearbeitet
         werden. Ein Klick rechten Mausklick laesst zudem ein Menue erscheinen, welches tabellenspezifische Optionen
-        anbietet. Ist das Laden von zusaetzlichen Informationen fuer die ausgewaehlte Ansicht verfuegbar, koennen diese mittels
-        einens Doppelklick auf einen Eintrag geladen werden.
+        anbietet. Ist das Laden von zusaetzlichen Informationen fuer die ausgewaehlte Ansicht verfuegbar, koennen diese
+        mittels einens Doppelklick auf einen Eintrag geladen werden.
 
     Anzeige fuer zusaetzliche Informationen:
         Diese befindet sich unterhalb der Haupt-Datenanzeige. Wurde in der Hauptanzeige ein Eintrag doppelt geklickt und
