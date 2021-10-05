@@ -26,7 +26,7 @@ Beschreibung der verschiedenen Elemente des Programms:
     Toolbar:
         Unterhalb der Menueleiste befindet sich die Toolbar. Hier werden verscheidene Menueoptionen zur Schnellauswahl
         angeboten. Verfuegbar sind aktuell (von links nach rechts): Speichern, Profil-Liste aktualisieren, Beenden,
-        Aktivitätsindikator(nicht klickbar - Statusanzeige), Profil laden, Aenderunge rueckgaengig machen.
+        Aktivitätsindikator(nicht klickbar - Statusanzeige), Profil laden, Aenderungen rueckgaengig machen.
 
     Profilauswahl:
         In der linken Seitenleiste befindet sich im oberen Teil die Profilauswahl. Hier werden alle verfuegbaren
@@ -37,7 +37,7 @@ Beschreibung der verschiedenen Elemente des Programms:
         Unterhalb der Profilauswahl in der Statuskonsole werden Logmeldungen an den Nutzer angezeigt. In der Statuskonsole
         werden nur Ereignisse und kurze Warnungen angezeigt. Fehlermeldungen und Debugmeldungen(ausfuehrliche Warnmeldungen)
         werden nur noch im Debugmodus angezeigt. In der Statuskonsole erscheinen Hinweise bei neuen Meldungen im Debugmodus.
-        Ein neuer Zähler nummeriert alle Logmeldungen durch. Verknuepfte Logs in der Statuskonsole und dem Debugmodus haben 
+        Ein neuer Zaehler nummeriert alle Logmeldungen durch. Verknuepfte Logs in der Statuskonsole und dem Debugmodus haben
         dieselbe dreistellige Nummer.
 
     Haupt-Datenanzeige:
