@@ -15,7 +15,7 @@ if platform.system() == "Windows":
     )
 
 
-def log_message(message, lvl, debug="empty"):
+def log_message(message, lvl, debug="Keine Debugmeldung vorhanden"):
     """unifies sending process of log data to the logging listener in the controller module"""
 
     pub.sendMessage("logging", message=message, lvl=lvl, debug=debug)

@@ -88,7 +88,7 @@ class Controller:
             enumeration = " " + str(enum) + " "
         return enumeration
 
-    def log_listener(self, message, lvl, debug="no details defined"):
+    def log_listener(self, message, lvl, debug="Keine Debugmeldung vorhanden"):
         """numerates and channels logging messages by their logging levels"""
 
         # * create numeration feature for logging messages from 1-999
